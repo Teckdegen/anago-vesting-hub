@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Mail, Twitter, Github } from "lucide-react";
+import { Send } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -22,50 +22,23 @@ const ABOUT_VIDEO =
 const CTA_VIDEO =
   "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260331_055729_72d66327-b59e-4ae9-bb70-de6ccb5ecdb0.mp4";
 
+const DOG_IMG = "/dog.png";
+
 const FEATURES = [
-  {
-    title: "Vesting",
-    score: "8.7/10",
-    video:
-      "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260331_053923_22c0a6a5-313c-474c-85ff-3b50d25e944a.mp4",
-  },
-  {
-    title: "Token Lock",
-    score: "9/10",
-    video:
-      "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260331_054411_511c1b7a-fb2f-42ef-bf6c-32c0b1a06e79.mp4",
-  },
-  {
-    title: "DLMM",
-    score: "8.9/10",
-    video:
-      "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260331_055427_ac7035b5-9f3b-4289-86fc-941b2432317d.mp4",
-  },
-  {
-    title: "Yield Farm",
-    score: "8.2/10",
-    video:
-      "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260331_053923_22c0a6a5-313c-474c-85ff-3b50d25e944a.mp4",
-  },
+  { title: "Vesting", score: "8.7/10" },
+  { title: "Token Lock", score: "9/10" },
+  { title: "DLMM", score: "8.9/10" },
+  { title: "Yield Farm", score: "8.2/10" },
 ];
 
 const NAV_LINKS = ["Home", "Vesting", "Token Lock", "DLMM", "Yield Farm"];
 
-function SocialButtons({ vertical = true }: { vertical?: boolean }) {
-  const Btn = ({ children }: { children: React.ReactNode }) => (
-    <button
-      type="button"
-      className="liquid-glass rounded-[1rem] w-14 h-14 flex items-center justify-center text-cream hover:bg-white/10 transition"
-    >
-      {children}
-    </button>
-  );
+// X (Twitter) icon
+function XIcon({ className }: { className?: string }) {
   return (
-    <div className={vertical ? "flex flex-col gap-3" : "flex flex-row gap-3 justify-center"}>
-      <Btn><Mail className="w-5 h-5" /></Btn>
-      <Btn><Twitter className="w-5 h-5" /></Btn>
-      <Btn><Github className="w-5 h-5" /></Btn>
-    </div>
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M18.244 2H21.5l-7.5 8.57L23 22h-6.844l-5.36-6.99L4.6 22H1.34l8.04-9.19L1 2h7.02l4.84 6.39L18.244 2Zm-1.2 18h1.9L7.04 4H5.04l12.004 16Z" />
+    </svg>
   );
 }
 
@@ -135,15 +108,6 @@ function Index() {
               <p className="mt-6 font-mono text-[12px] sm:text-[14px] uppercase text-cream/80 max-w-md">
                 Vesting · Token Lock · DLMM · Yield Farm — on Monad. Powered by $ANAGO.
               </p>
-
-              <div className="mt-8 lg:hidden">
-                <SocialButtons vertical={false} />
-              </div>
-            </div>
-
-            {/* Desktop social */}
-            <div className="hidden lg:block absolute right-0 top-8">
-              <SocialButtons />
             </div>
           </div>
         </div>
@@ -233,99 +197,14 @@ function Index() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {FEATURES.slice(0, 3).map((f) => (
-              <div
-                key={f.title}
-                className="liquid-glass rounded-[32px] p-[18px] hover:bg-white/10 transition"
-              >
-                <div className="relative w-full pb-[100%] rounded-[24px] overflow-hidden">
-                  <video
-                    src={f.video}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                  <div className="absolute left-3 right-3 bottom-3">
-                    <div className="liquid-glass rounded-[20px] px-5 py-4 flex items-center justify-between">
-                      <div>
-                        <div className="font-grotesk uppercase text-cream text-[14px] tracking-wider">
-                          {f.title}
-                        </div>
-                        <div className="text-[11px] text-cream/70 uppercase mt-0.5">
-                          Trust score:
-                        </div>
-                        <div className="text-[16px] text-cream font-grotesk">{f.score}</div>
-                      </div>
-                      <button
-                        type="button"
-                        className="w-12 h-12 rounded-full bg-gradient-to-br from-[#b724ff] to-[#7c3aed] flex items-center justify-center shadow-lg shadow-purple-500/50 hover:scale-110 transition"
-                        aria-label={`Open ${f.title}`}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={2.5}
-                          className="w-5 h-5 text-white"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <FeatureCard key={f.title} title={f.title} score={f.score} />
             ))}
           </div>
 
           {/* 4th feature (Yield Farm) on its own row, centered */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
             <div className="lg:col-start-2">
-              <div className="liquid-glass rounded-[32px] p-[18px] hover:bg-white/10 transition">
-                <div className="relative w-full pb-[100%] rounded-[24px] overflow-hidden">
-                  <video
-                    src={FEATURES[3].video}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                  <div className="absolute left-3 right-3 bottom-3">
-                    <div className="liquid-glass rounded-[20px] px-5 py-4 flex items-center justify-between">
-                      <div>
-                        <div className="font-grotesk uppercase text-cream text-[14px] tracking-wider">
-                          {FEATURES[3].title}
-                        </div>
-                        <div className="text-[11px] text-cream/70 uppercase mt-0.5">
-                          Trust score:
-                        </div>
-                        <div className="text-[16px] text-cream font-grotesk">
-                          {FEATURES[3].score}
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        className="w-12 h-12 rounded-full bg-gradient-to-br from-[#b724ff] to-[#7c3aed] flex items-center justify-center shadow-lg shadow-purple-500/50 hover:scale-110 transition"
-                        aria-label="Open Yield Farm"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={2.5}
-                          className="w-5 h-5 text-white"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <FeatureCard title={FEATURES[3].title} score={FEATURES[3].score} />
             </div>
           </div>
         </div>
@@ -365,19 +244,23 @@ function Index() {
               </a>
             </div>
 
+            {/* Bottom-left socials: X + Telegram only */}
             <div className="absolute left-[5%] sm:left-[6%] lg:left-[8%] bottom-[10%] sm:bottom-[14%] lg:bottom-[18%]">
               <div className="liquid-glass rounded-[0.75rem] sm:rounded-[1rem] lg:rounded-[1.25rem] flex flex-col overflow-hidden">
-                {[Mail, Twitter, Github].map((Icon, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    className={`w-[14vw] sm:w-[10rem] lg:w-[14rem] h-[14vw] sm:h-[3.5rem] lg:h-[4.5rem] flex items-center justify-center text-cream hover:bg-white/10 transition ${
-                      i < 2 ? "border-b border-white/10" : ""
-                    }`}
-                  >
-                    <Icon className="w-5 h-5" />
-                  </button>
-                ))}
+                <a
+                  href="#"
+                  aria-label="X (Twitter)"
+                  className="w-[14vw] sm:w-[10rem] lg:w-[14rem] h-[14vw] sm:h-[3.5rem] lg:h-[4.5rem] flex items-center justify-center text-cream hover:bg-white/10 transition border-b border-white/10"
+                >
+                  <XIcon className="w-5 h-5" />
+                </a>
+                <a
+                  href="#"
+                  aria-label="Telegram"
+                  className="w-[14vw] sm:w-[10rem] lg:w-[14rem] h-[14vw] sm:h-[3.5rem] lg:h-[4.5rem] flex items-center justify-center text-cream hover:bg-white/10 transition"
+                >
+                  <Send className="w-5 h-5" />
+                </a>
               </div>
             </div>
           </div>
@@ -391,10 +274,51 @@ function Index() {
             </span>
           </div>
           <span className="font-mono text-[11px] uppercase text-cream/60">
-            © {new Date().getFullYear()} The Dog House
+            © 2026 The Dog House
           </span>
         </footer>
       </section>
     </main>
+  );
+}
+
+function FeatureCard({ title, score }: { title: string; score: string }) {
+  return (
+    <div className="liquid-glass rounded-[32px] p-[18px] hover:bg-white/10 transition">
+      <div className="relative w-full pb-[100%] rounded-[24px] overflow-hidden bg-gradient-to-br from-[#0b1440] via-[#1a0f3a] to-[#010828]">
+        <img
+          src={DOG_IMG}
+          alt={title}
+          className="absolute inset-0 w-full h-full object-contain p-6"
+        />
+        <div className="absolute left-3 right-3 bottom-3">
+          <div className="liquid-glass rounded-[20px] px-5 py-4 flex items-center justify-between">
+            <div>
+              <div className="font-grotesk uppercase text-cream text-[14px] tracking-wider">
+                {title}
+              </div>
+              <div className="text-[11px] text-cream/70 uppercase mt-0.5">Trust score:</div>
+              <div className="text-[16px] text-cream font-grotesk">{score}</div>
+            </div>
+            <button
+              type="button"
+              className="w-12 h-12 rounded-full bg-gradient-to-br from-[#b724ff] to-[#7c3aed] flex items-center justify-center shadow-lg shadow-purple-500/50 hover:scale-110 transition"
+              aria-label={`Open ${title}`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+                className="w-5 h-5 text-white"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
