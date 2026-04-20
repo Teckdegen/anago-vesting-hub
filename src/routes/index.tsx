@@ -111,12 +111,9 @@ function Index() {
 
       {/* SECTION 2 — ABOUT */}
       <section className="relative w-full overflow-hidden">
-        <video
-          src={ABOUT_VIDEO}
-          autoPlay
-          loop
-          muted
-          playsInline
+        <img
+          src="/about.jpg"
+          alt="The Dog House astronauts"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-background/40" />
