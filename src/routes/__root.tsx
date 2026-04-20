@@ -1,4 +1,5 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { Analytics } from "@vercel/analytics/react";
 
 import appCss from "../styles.css?url";
 
@@ -73,5 +74,10 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+      <Analytics />
+    </>
+  );
 }
