@@ -49,12 +49,9 @@ function Index() {
 
       {/* SECTION 1 — HERO */}
       <section className="relative w-full h-screen min-h-[700px] overflow-hidden rounded-b-[32px]">
-        <video
-          src={HERO_VIDEO}
-          autoPlay
-          loop
-          muted
-          playsInline
+        <img
+          src="/hero.jpg"
+          alt="The Dog House astronaut"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-background/30" />
