@@ -100,8 +100,7 @@ function Index() {
                 needs a ( home )
               </h1>
               <span
-                className="font-condiment text-neon absolute right-0 lg:-right-12 top-2 sm:top-4 text-[24px] sm:text-[32px] md:text-[40px] lg:text-[48px] -rotate-1 opacity-90"
-                style={{ mixBlendMode: "exclusion" }}
+                className="font-condiment text-neon absolute -right-2 lg:-right-16 -top-6 sm:-top-8 lg:-top-10 text-[36px] sm:text-[52px] md:text-[68px] lg:text-[84px] -rotate-[8deg] drop-shadow-[0_0_24px_rgba(111,255,0,0.55)] leading-none"
               >
                 The Dog House
               </span>
