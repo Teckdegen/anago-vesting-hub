@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Send } from "lucide-react";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/")({
   component: Index,
