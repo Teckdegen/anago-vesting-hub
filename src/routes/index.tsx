@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Send } from "lucide-react";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -43,6 +44,23 @@ function XIcon({ className }: { className?: string }) {
 }
 
 function Index() {
+  useEffect(() => {
+    const els = document.querySelectorAll<HTMLElement>(".reveal");
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-visible");
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -60px 0px" },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
   return (
     <main className="bg-background text-cream min-h-screen overflow-x-hidden">
       <div className="texture-overlay" aria-hidden="true" />
@@ -193,17 +211,12 @@ function Index() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {FEATURES.slice(0, 3).map((f) => (
-              <FeatureCard key={f.title} title={f.title} score={f.score} />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {FEATURES.map((f, i) => (
+              <div key={f.title} className="reveal" style={{ transitionDelay: `${i * 80}ms` }}>
+                <FeatureCard title={f.title} score={f.score} />
+              </div>
             ))}
-          </div>
-
-          {/* 4th feature (Yield Farm) on its own row, centered */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            <div className="lg:col-start-2">
-              <FeatureCard title={FEATURES[3].title} score={FEATURES[3].score} />
-            </div>
           </div>
         </div>
       </section>
@@ -226,8 +239,8 @@ function Index() {
               { label: "Vesting", value: "$0", sub: "Under vesting" },
               { label: "DLMM", value: "$0", sub: "Liquidity processed" },
               { label: "Yield Farm", value: "$0", sub: "Staked TVL" },
-            ].map((s) => (
-              <div key={s.label} className="liquid-glass rounded-[24px] p-6 sm:p-8 hover:-translate-y-1 transition-transform duration-300">
+            ].map((s, i) => (
+              <div key={s.label} className="liquid-glass reveal rounded-[24px] p-6 sm:p-8 hover:-translate-y-1 transition-transform duration-300" style={{ transitionDelay: `${i * 80}ms` }}>
                 <div className="font-mono text-[11px] sm:text-[12px] uppercase text-cream/60 tracking-wider">
                   {s.label}
                 </div>
