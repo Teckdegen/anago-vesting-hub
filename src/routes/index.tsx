@@ -317,12 +317,13 @@ function Index() {
 
 function FeatureCard({ title, score }: { title: string; score: string }) {
   return (
-    <div className="liquid-glass rounded-[32px] p-[18px] hover:bg-white/10 transition">
+    <div className="liquid-glass rounded-[32px] p-[18px] hover:-translate-y-2 transition-all duration-500 group">
       <div className="relative w-full pb-[100%] rounded-[24px] overflow-hidden bg-gradient-to-br from-[#0b1440] via-[#1a0f3a] to-[#010828]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(111,255,0,0.12),transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         <img
           src={DOG_IMG}
           alt={title}
-          className="absolute inset-0 w-full h-full object-contain p-6"
+          className="absolute inset-0 w-full h-full object-contain p-6 group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute left-3 right-3 bottom-3">
           <div className="liquid-glass rounded-[20px] px-5 py-4 flex items-center justify-between">
@@ -330,12 +331,12 @@ function FeatureCard({ title, score }: { title: string; score: string }) {
               <div className="font-grotesk uppercase text-cream text-[14px] tracking-wider">
                 {title}
               </div>
-              <div className="text-[11px] text-cream/70 uppercase mt-0.5">Trust score:</div>
-              <div className="text-[16px] text-cream font-grotesk">{score}</div>
+              <div className="text-[11px] text-cream/60 uppercase mt-0.5 tracking-wider">Trust score</div>
+              <div className="text-[16px] text-neon font-grotesk drop-shadow-[0_0_12px_rgba(111,255,0,0.4)]">{score}</div>
             </div>
             <button
               type="button"
-              className="w-12 h-12 rounded-full bg-gradient-to-br from-[#b724ff] to-[#7c3aed] flex items-center justify-center shadow-lg shadow-purple-500/50 hover:scale-110 transition"
+              className="w-12 h-12 rounded-full bg-gradient-to-br from-[#b724ff] to-[#7c3aed] flex items-center justify-center shadow-lg shadow-purple-500/50 group-hover:scale-110 group-hover:shadow-purple-500/80 transition-all duration-300"
               aria-label={`Open ${title}`}
             >
               <svg
@@ -344,7 +345,7 @@ function FeatureCard({ title, score }: { title: string; score: string }) {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth={2.5}
-                className="w-5 h-5 text-white"
+                className="w-5 h-5 text-cream group-hover:translate-x-0.5 transition-transform"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
