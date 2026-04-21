@@ -227,14 +227,14 @@ function Index() {
               { label: "DLMM", value: "$0", sub: "Liquidity processed" },
               { label: "Yield Farm", value: "$0", sub: "Staked TVL" },
             ].map((s) => (
-              <div key={s.label} className="liquid-glass rounded-[24px] p-6 sm:p-8">
+              <div key={s.label} className="liquid-glass rounded-[24px] p-6 sm:p-8 hover:-translate-y-1 transition-transform duration-300">
                 <div className="font-mono text-[11px] sm:text-[12px] uppercase text-cream/60 tracking-wider">
                   {s.label}
                 </div>
-                <div className="font-grotesk uppercase text-neon text-[32px] sm:text-[44px] lg:text-[56px] leading-none mt-3 drop-shadow-[0_0_18px_rgba(111,255,0,0.35)]">
+                <div className="font-grotesk uppercase text-neon text-[32px] sm:text-[44px] lg:text-[56px] leading-none mt-3 drop-shadow-[0_0_18px_rgba(111,255,0,0.4)]">
                   {s.value}
                 </div>
-                <div className="font-mono text-[11px] uppercase text-cream/70 mt-2">
+                <div className="font-mono text-[11px] uppercase text-cream/60 mt-2 tracking-wider">
                   {s.sub}
                 </div>
               </div>
