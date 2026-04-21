@@ -62,6 +62,6 @@ html, body {
   pointer-events: none;
   background-image: url('/texture.png');
   background-size: cover;
-  mix-blend-mode: lighten;
-  opacity: 0.6;
+  mix-blend-mode: overlay;
+  opacity: 0.12;
 }
