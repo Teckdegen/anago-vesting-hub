@@ -193,17 +193,12 @@ function Index() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {FEATURES.slice(0, 3).map((f) => (
-              <FeatureCard key={f.title} title={f.title} score={f.score} />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {FEATURES.map((f, i) => (
+              <div key={f.title} className="reveal" style={{ transitionDelay: `${i * 80}ms` }}>
+                <FeatureCard title={f.title} score={f.score} />
+              </div>
             ))}
-          </div>
-
-          {/* 4th feature (Yield Farm) on its own row, centered */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            <div className="lg:col-start-2">
-              <FeatureCard title={FEATURES[3].title} score={FEATURES[3].score} />
-            </div>
           </div>
         </div>
       </section>
