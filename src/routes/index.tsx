@@ -92,15 +92,15 @@ function Index() {
           {/* Hero content */}
           <div className="flex-1 flex items-center relative">
             <div className="relative max-w-[780px] lg:ml-32">
+              <span
+                className="font-condiment text-neon block text-[32px] sm:text-[48px] md:text-[60px] lg:text-[72px] -rotate-[4deg] drop-shadow-[0_0_24px_rgba(111,255,0,0.55)] leading-none mb-4 lg:mb-6 ml-2"
+              >
+                The Dog House
+              </span>
               <h1 className="font-grotesk uppercase text-cream text-[40px] sm:text-[60px] md:text-[75px] lg:text-[90px] leading-[1.05] sm:leading-[1]">
                 Every token <br />
                 needs a ( home )
               </h1>
-              <span
-                className="font-condiment text-neon absolute -right-2 lg:-right-16 -top-6 sm:-top-8 lg:-top-10 text-[36px] sm:text-[52px] md:text-[68px] lg:text-[84px] -rotate-[8deg] drop-shadow-[0_0_24px_rgba(111,255,0,0.55)] leading-none"
-              >
-                The Dog House
-              </span>
               <p className="mt-6 font-mono text-[12px] sm:text-[14px] uppercase text-cream/80 max-w-md">
                 Vesting · Token Lock · DLMM · Yield Farm — on Monad. Powered by $ANAGO.
               </p>
@@ -121,16 +121,15 @@ function Index() {
         <div className="relative z-10 max-w-[1831px] mx-auto px-6 sm:px-10 lg:px-16 py-16 sm:py-20 lg:py-24">
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10">
             <div className="relative">
+              <span
+                className="font-condiment text-neon block text-[28px] sm:text-[40px] lg:text-[56px] -rotate-2 mb-3 drop-shadow-[0_0_24px_rgba(111,255,0,0.55)] leading-none"
+              >
+                Anago
+              </span>
               <h2 className="font-grotesk uppercase text-cream text-[32px] sm:text-[44px] md:text-[52px] lg:text-[60px] leading-[1]">
                 Hello! <br />
                 We're The Dog House
               </h2>
-              <span
-                className="font-condiment text-neon absolute -bottom-4 right-0 lg:-right-8 text-[36px] sm:text-[48px] lg:text-[68px] -rotate-2"
-                style={{ mixBlendMode: "exclusion" }}
-              >
-                Anago
-              </span>
             </div>
 
             <p className="font-mono text-[14px] sm:text-[16px] uppercase text-cream max-w-[266px]">
@@ -248,16 +247,6 @@ function Index() {
           playsInline
           className="w-full h-auto block"
         />
-
-        {/* ANAGO overlay covering the video screen */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[5]">
-          <span
-            className="font-condiment text-neon leading-none text-[18vw] drop-shadow-[0_0_40px_rgba(111,255,0,0.55)]"
-            style={{ mixBlendMode: "exclusion" }}
-          >
-            ANAGO
-          </span>
-        </div>
 
         <div className="absolute inset-0">
           <div className="max-w-[1831px] mx-auto h-full px-6 sm:px-10 lg:px-16 py-10 sm:py-16 lg:py-24 relative">
