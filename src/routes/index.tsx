@@ -239,8 +239,8 @@ function Index() {
               { label: "Vesting", value: "$0", sub: "Under vesting" },
               { label: "DLMM", value: "$0", sub: "Liquidity processed" },
               { label: "Yield Farm", value: "$0", sub: "Staked TVL" },
-            ].map((s) => (
-              <div key={s.label} className="liquid-glass rounded-[24px] p-6 sm:p-8 hover:-translate-y-1 transition-transform duration-300">
+            ].map((s, i) => (
+              <div key={s.label} className="liquid-glass reveal rounded-[24px] p-6 sm:p-8 hover:-translate-y-1 transition-transform duration-300" style={{ transitionDelay: `${i * 80}ms` }}>
                 <div className="font-mono text-[11px] sm:text-[12px] uppercase text-cream/60 tracking-wider">
                   {s.label}
                 </div>
