@@ -249,6 +249,16 @@ function Index() {
           className="w-full h-auto block"
         />
 
+        {/* ANAGO overlay covering the video screen */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[5]">
+          <span
+            className="font-condiment text-neon leading-none text-[18vw] drop-shadow-[0_0_40px_rgba(111,255,0,0.55)]"
+            style={{ mixBlendMode: "exclusion" }}
+          >
+            ANAGO
+          </span>
+        </div>
+
         <div className="absolute inset-0">
           <div className="max-w-[1831px] mx-auto h-full px-6 sm:px-10 lg:px-16 py-10 sm:py-16 lg:py-24 relative">
             <div className="lg:pr-[20%] lg:pl-[15%] text-right ml-auto relative inline-block float-right">
