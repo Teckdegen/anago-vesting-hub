@@ -217,10 +217,10 @@ function Index() {
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {[
-              { label: "Token Locks", value: "$12.4M", sub: "Total locked" },
-              { label: "Vesting", value: "$8.7M", sub: "Under vesting" },
-              { label: "DLMM", value: "$5.2M", sub: "Liquidity processed" },
-              { label: "Yield Farm", value: "$3.1M", sub: "Staked TVL" },
+              { label: "Token Locks", value: "$0", sub: "Total locked" },
+              { label: "Vesting", value: "$0", sub: "Under vesting" },
+              { label: "DLMM", value: "$0", sub: "Liquidity processed" },
+              { label: "Yield Farm", value: "$0", sub: "Staked TVL" },
             ].map((s) => (
               <div key={s.label} className="liquid-glass rounded-[24px] p-6 sm:p-8">
                 <div className="font-mono text-[11px] sm:text-[12px] uppercase text-cream/60 tracking-wider">
