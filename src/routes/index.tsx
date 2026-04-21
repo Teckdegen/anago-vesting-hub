@@ -83,7 +83,7 @@ function Index() {
 
             <a
               href="#"
-              className="liquid-glass rounded-[20px] px-6 py-3 font-grotesk text-[13px] uppercase tracking-wider text-cream hover:text-neon transition"
+              className="liquid-glass rounded-[20px] px-6 py-3 font-grotesk text-[13px] uppercase tracking-wider text-cream hover:text-neon hover:-translate-y-0.5 transition-all duration-300"
             >
               Launch App
             </a>
@@ -91,19 +91,25 @@ function Index() {
 
           {/* Hero content */}
           <div className="flex-1 flex items-center relative">
-            <div className="relative max-w-[780px] lg:ml-32">
+            <div className="relative max-w-[780px] lg:ml-32 fade-up">
               <span
                 className="font-condiment text-neon block text-[32px] sm:text-[48px] md:text-[60px] lg:text-[72px] -rotate-[4deg] drop-shadow-[0_0_24px_rgba(111,255,0,0.55)] leading-none mb-4 lg:mb-6 ml-2"
               >
                 The Dog House
               </span>
-              <h1 className="font-grotesk uppercase text-cream text-[40px] sm:text-[60px] md:text-[75px] lg:text-[90px] leading-[1.05] sm:leading-[1]">
+              <h1 className="font-grotesk uppercase text-cream text-[40px] sm:text-[60px] md:text-[75px] lg:text-[90px] leading-[1.05] sm:leading-[1] tracking-tight">
                 Every token <br />
-                needs a ( home )
+                needs a <span className="text-neon">(</span> home <span className="text-neon">)</span>
               </h1>
-              <p className="mt-6 font-mono text-[12px] sm:text-[14px] uppercase text-cream/80 max-w-md">
+              <p className="mt-6 font-mono text-[12px] sm:text-[14px] uppercase text-cream/70 max-w-md tracking-wider">
                 Vesting · Token Lock · DLMM · Yield Farm — on Monad. Powered by $ANAGO.
               </p>
+              <div className="mt-8 flex items-center gap-3">
+                <span className="inline-flex items-center gap-2 liquid-glass rounded-full px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-cream/80">
+                  <span className="w-2 h-2 rounded-full bg-neon animate-pulse" />
+                  Live on Monad
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -221,14 +227,14 @@ function Index() {
               { label: "DLMM", value: "$0", sub: "Liquidity processed" },
               { label: "Yield Farm", value: "$0", sub: "Staked TVL" },
             ].map((s) => (
-              <div key={s.label} className="liquid-glass rounded-[24px] p-6 sm:p-8">
+              <div key={s.label} className="liquid-glass rounded-[24px] p-6 sm:p-8 hover:-translate-y-1 transition-transform duration-300">
                 <div className="font-mono text-[11px] sm:text-[12px] uppercase text-cream/60 tracking-wider">
                   {s.label}
                 </div>
-                <div className="font-grotesk uppercase text-neon text-[32px] sm:text-[44px] lg:text-[56px] leading-none mt-3 drop-shadow-[0_0_18px_rgba(111,255,0,0.35)]">
+                <div className="font-grotesk uppercase text-neon text-[32px] sm:text-[44px] lg:text-[56px] leading-none mt-3 drop-shadow-[0_0_18px_rgba(111,255,0,0.4)]">
                   {s.value}
                 </div>
-                <div className="font-mono text-[11px] uppercase text-cream/70 mt-2">
+                <div className="font-mono text-[11px] uppercase text-cream/60 mt-2 tracking-wider">
                   {s.sub}
                 </div>
               </div>
@@ -311,12 +317,13 @@ function Index() {
 
 function FeatureCard({ title, score }: { title: string; score: string }) {
   return (
-    <div className="liquid-glass rounded-[32px] p-[18px] hover:bg-white/10 transition">
+    <div className="liquid-glass rounded-[32px] p-[18px] hover:-translate-y-2 transition-all duration-500 group">
       <div className="relative w-full pb-[100%] rounded-[24px] overflow-hidden bg-gradient-to-br from-[#0b1440] via-[#1a0f3a] to-[#010828]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(111,255,0,0.12),transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         <img
           src={DOG_IMG}
           alt={title}
-          className="absolute inset-0 w-full h-full object-contain p-6"
+          className="absolute inset-0 w-full h-full object-contain p-6 group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute left-3 right-3 bottom-3">
           <div className="liquid-glass rounded-[20px] px-5 py-4 flex items-center justify-between">
@@ -324,12 +331,12 @@ function FeatureCard({ title, score }: { title: string; score: string }) {
               <div className="font-grotesk uppercase text-cream text-[14px] tracking-wider">
                 {title}
               </div>
-              <div className="text-[11px] text-cream/70 uppercase mt-0.5">Trust score:</div>
-              <div className="text-[16px] text-cream font-grotesk">{score}</div>
+              <div className="text-[11px] text-cream/60 uppercase mt-0.5 tracking-wider">Trust score</div>
+              <div className="text-[16px] text-neon font-grotesk drop-shadow-[0_0_12px_rgba(111,255,0,0.4)]">{score}</div>
             </div>
             <button
               type="button"
-              className="w-12 h-12 rounded-full bg-gradient-to-br from-[#b724ff] to-[#7c3aed] flex items-center justify-center shadow-lg shadow-purple-500/50 hover:scale-110 transition"
+              className="w-12 h-12 rounded-full bg-gradient-to-br from-[#b724ff] to-[#7c3aed] flex items-center justify-center shadow-lg shadow-purple-500/50 group-hover:scale-110 group-hover:shadow-purple-500/80 transition-all duration-300"
               aria-label={`Open ${title}`}
             >
               <svg
@@ -338,7 +345,7 @@ function FeatureCard({ title, score }: { title: string; score: string }) {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth={2.5}
-                className="w-5 h-5 text-white"
+                className="w-5 h-5 text-cream group-hover:translate-x-0.5 transition-transform"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
