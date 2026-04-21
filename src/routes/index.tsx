@@ -273,11 +273,13 @@ function Index() {
             alt="Anago dog mascot"
             className="absolute pointer-events-none select-none object-contain"
             style={{
-              top: "8%",
-              left: "6.5%",
-              width: "20%",
-              height: "38%",
-              filter: "drop-shadow(0 0 28px rgba(111,255,0,0.45))",
+              top: "-30%",
+              left: "-10%",
+              width: "55%",
+              height: "120%",
+              transform: "rotate(-8deg)",
+              transformOrigin: "center",
+              filter: "drop-shadow(0 0 40px rgba(111,255,0,0.5))",
             }}
           />
         </div>
