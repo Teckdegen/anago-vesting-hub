@@ -203,6 +203,41 @@ function Index() {
         </div>
       </section>
 
+      {/* SECTION 3.5 — PROTOCOL STATS */}
+      <section className="relative w-full bg-background border-t border-white/5">
+        <div className="max-w-[1831px] mx-auto px-6 sm:px-10 lg:px-16 py-16 sm:py-20 lg:py-24">
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12">
+            <h2 className="font-grotesk uppercase text-cream text-[32px] sm:text-[44px] md:text-[52px] lg:text-[60px] leading-[1]">
+              Protocol <span className="font-condiment text-neon normal-case">stats</span>
+            </h2>
+            <p className="font-mono text-[12px] sm:text-[14px] uppercase text-cream/70 max-w-md">
+              Live on Monad — total value processed across every Dog House product.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {[
+              { label: "Token Locks", value: "$12.4M", sub: "Total locked" },
+              { label: "Vesting", value: "$8.7M", sub: "Under vesting" },
+              { label: "DLMM", value: "$5.2M", sub: "Liquidity processed" },
+              { label: "Yield Farm", value: "$3.1M", sub: "Staked TVL" },
+            ].map((s) => (
+              <div key={s.label} className="liquid-glass rounded-[24px] p-6 sm:p-8">
+                <div className="font-mono text-[11px] sm:text-[12px] uppercase text-cream/60 tracking-wider">
+                  {s.label}
+                </div>
+                <div className="font-grotesk uppercase text-neon text-[32px] sm:text-[44px] lg:text-[56px] leading-none mt-3 drop-shadow-[0_0_18px_rgba(111,255,0,0.35)]">
+                  {s.value}
+                </div>
+                <div className="font-mono text-[11px] uppercase text-cream/70 mt-2">
+                  {s.sub}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* SECTION 4 — CTA */}
       <section className="relative w-full bg-background">
         <video
