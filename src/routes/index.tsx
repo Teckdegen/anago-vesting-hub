@@ -83,7 +83,7 @@ function Index() {
 
             <a
               href="#"
-              className="liquid-glass rounded-[20px] px-6 py-3 font-grotesk text-[13px] uppercase tracking-wider text-cream hover:text-neon transition"
+              className="liquid-glass rounded-[20px] px-6 py-3 font-grotesk text-[13px] uppercase tracking-wider text-cream hover:text-neon hover:-translate-y-0.5 transition-all duration-300"
             >
               Launch App
             </a>
@@ -91,19 +91,25 @@ function Index() {
 
           {/* Hero content */}
           <div className="flex-1 flex items-center relative">
-            <div className="relative max-w-[780px] lg:ml-32">
+            <div className="relative max-w-[780px] lg:ml-32 fade-up">
               <span
                 className="font-condiment text-neon block text-[32px] sm:text-[48px] md:text-[60px] lg:text-[72px] -rotate-[4deg] drop-shadow-[0_0_24px_rgba(111,255,0,0.55)] leading-none mb-4 lg:mb-6 ml-2"
               >
                 The Dog House
               </span>
-              <h1 className="font-grotesk uppercase text-cream text-[40px] sm:text-[60px] md:text-[75px] lg:text-[90px] leading-[1.05] sm:leading-[1]">
+              <h1 className="font-grotesk uppercase text-cream text-[40px] sm:text-[60px] md:text-[75px] lg:text-[90px] leading-[1.05] sm:leading-[1] tracking-tight">
                 Every token <br />
-                needs a ( home )
+                needs a <span className="text-neon">(</span> home <span className="text-neon">)</span>
               </h1>
-              <p className="mt-6 font-mono text-[12px] sm:text-[14px] uppercase text-cream/80 max-w-md">
+              <p className="mt-6 font-mono text-[12px] sm:text-[14px] uppercase text-cream/70 max-w-md tracking-wider">
                 Vesting · Token Lock · DLMM · Yield Farm — on Monad. Powered by $ANAGO.
               </p>
+              <div className="mt-8 flex items-center gap-3">
+                <span className="inline-flex items-center gap-2 liquid-glass rounded-full px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-cream/80">
+                  <span className="w-2 h-2 rounded-full bg-neon animate-pulse" />
+                  Live on Monad
+                </span>
+              </div>
             </div>
           </div>
         </div>
