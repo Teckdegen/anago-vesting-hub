@@ -258,14 +258,28 @@ function Index() {
 
       {/* SECTION 4 — CTA */}
       <section className="relative w-full bg-background">
-        <video
-          src={CTA_VIDEO}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-auto block"
-        />
+        <div className="relative w-full">
+          <video
+            src={CTA_VIDEO}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-auto block"
+          />
+          {/* Dog mascot overlay covering the TV screen in the video */}
+          <img
+            src="/cta-dog.png"
+            alt="Anago dog mascot"
+            className="absolute pointer-events-none select-none"
+            style={{
+              top: "13%",
+              left: "10.2%",
+              width: "13%",
+              filter: "drop-shadow(0 0 24px rgba(111,255,0,0.35))",
+            }}
+          />
+        </div>
 
         <div className="absolute inset-0">
           <div className="max-w-[1831px] mx-auto h-full px-6 sm:px-10 lg:px-16 py-10 sm:py-16 lg:py-24 relative">
