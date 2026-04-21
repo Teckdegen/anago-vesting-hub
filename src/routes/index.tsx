@@ -271,12 +271,13 @@ function Index() {
           <img
             src="/cta-dog.png"
             alt="Anago dog mascot"
-            className="absolute pointer-events-none select-none"
+            className="absolute pointer-events-none select-none object-contain"
             style={{
-              top: "13%",
-              left: "10.2%",
-              width: "13%",
-              filter: "drop-shadow(0 0 24px rgba(111,255,0,0.35))",
+              top: "8%",
+              left: "6.5%",
+              width: "20%",
+              height: "38%",
+              filter: "drop-shadow(0 0 28px rgba(111,255,0,0.45))",
             }}
           />
         </div>
