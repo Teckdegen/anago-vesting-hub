@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Send } from "lucide-react";
 import { useEffect } from "react";
+import { Send, Timer, LockKeyhole, BarChart2, Sprout } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -23,13 +24,43 @@ const ABOUT_VIDEO =
 const CTA_VIDEO =
   "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260331_055729_72d66327-b59e-4ae9-bb70-de6ccb5ecdb0.mp4";
 
-const DOG_IMG = "/feature-dog.png";
-
-const FEATURES = [
-  { title: "Vesting", score: "8.7/10" },
-  { title: "Token Lock", score: "9/10" },
-  { title: "DLMM", score: "8.9/10" },
-  { title: "Yield Farm", score: "8.2/10" },
+const FEATURES: { title: string; score: string; icon: LucideIcon; from: string; via: string; to: string; glow: string }[] = [
+  {
+    title: "Vesting",
+    score: "8.7/10",
+    icon: Timer,
+    from: "#7c3aed",
+    via: "#4f46e5",
+    to: "#010828",
+    glow: "rgba(124,58,237,0.55)",
+  },
+  {
+    title: "Token Lock",
+    score: "9/10",
+    icon: LockKeyhole,
+    from: "#b724ff",
+    via: "#7c3aed",
+    to: "#010828",
+    glow: "rgba(183,36,255,0.55)",
+  },
+  {
+    title: "DLMM",
+    score: "8.9/10",
+    icon: BarChart2,
+    from: "#0ea5e9",
+    via: "#2563eb",
+    to: "#010828",
+    glow: "rgba(14,165,233,0.55)",
+  },
+  {
+    title: "Yield Farm",
+    score: "8.2/10",
+    icon: Sprout,
+    from: "#6FFF00",
+    via: "#16a34a",
+    to: "#010828",
+    glow: "rgba(111,255,0,0.55)",
+  },
 ];
 
 const NAV_LINKS = ["Home", "Vesting", "Token Lock", "DLMM", "Yield Farm"];
@@ -134,7 +165,7 @@ function Index() {
       </section>
 
       {/* SECTION 2 — ABOUT */}
-      <section className="relative w-full overflow-hidden">
+      <section className="relative w-full overflow-hidden mt-6">
         <img
           src="/about.jpg"
           alt="The Dog House astronauts"
@@ -188,6 +219,8 @@ function Index() {
       {/* SECTION 3 — FEATURES GRID */}
       <section className="relative w-full bg-background">
         <div className="max-w-[1831px] mx-auto px-6 sm:px-10 lg:px-16 py-16 sm:py-20 lg:py-24">
+
+          {/* Section header */}
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 mb-12">
             <h2 className="font-grotesk uppercase text-cream text-[32px] sm:text-[44px] md:text-[52px] lg:text-[60px] leading-[1]">
               A home for <br />
@@ -196,7 +229,6 @@ function Index() {
                 token
               </span>
             </h2>
-
             <div className="text-right">
               <div className="flex items-end justify-end gap-3">
                 <span className="font-grotesk uppercase text-cream text-[32px] sm:text-[48px] lg:text-[60px] leading-none">
@@ -211,16 +243,24 @@ function Index() {
             </div>
           </div>
 
+<<<<<<< HEAD
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {FEATURES.map((f, i) => (
               <div key={f.title} className="reveal" style={{ transitionDelay: `${i * 80}ms` }}>
                 <FeatureCard title={f.title} score={f.score} />
               </div>
+=======
+          {/* Top row — 3 cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {FEATURES.slice(0, 3).map((f) => (
+              <FeatureCard key={f.title} title={f.title} score={f.score} icon={f.icon} from={f.from} via={f.via} to={f.to} glow={f.glow} />
+>>>>>>> 9c48560 (heheh)
             ))}
           </div>
         </div>
       </section>
 
+<<<<<<< HEAD
       {/* SECTION 3.5 — PROTOCOL STATS */}
       <section className="relative w-full bg-background border-t border-white/5">
         <div className="max-w-[1831px] mx-auto px-6 sm:px-10 lg:px-16 py-16 sm:py-20 lg:py-24">
@@ -252,6 +292,70 @@ function Index() {
                 </div>
               </div>
             ))}
+=======
+          {/* Bottom row — mascot + Yield Farm */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+
+            {/* Mascot card */}
+            <div className="lg:col-start-1 liquid-glass rounded-[32px] p-[18px] flex flex-col items-center justify-between overflow-hidden relative">
+              {/* neon glow behind dog */}
+              <div
+                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-56 h-56 rounded-full blur-3xl opacity-30 pointer-events-none"
+                style={{ background: "radial-gradient(circle, #6FFF00 0%, transparent 70%)" }}
+              />
+              <div className="relative z-10 flex flex-col items-center gap-4 py-4">
+                <img
+                  src="/dog.png"
+                  alt="ANAGO mascot"
+                  className="w-36 sm:w-40 lg:w-44 drop-shadow-[0_0_32px_rgba(111,255,0,0.45)] select-none"
+                  draggable={false}
+                />
+                <div className="text-center">
+                  <p className="font-condiment text-neon text-[32px] leading-none drop-shadow-[0_0_12px_rgba(111,255,0,0.6)]">
+                    $ANAGO
+                  </p>
+                  <p className="font-mono text-[11px] uppercase text-cream/60 mt-1 tracking-widest">
+                    Powered by Monad
+                  </p>
+                </div>
+                {/* Protocol stats */}
+                <div className="w-full grid grid-cols-2 gap-3 mt-2">
+                  {[
+                    { label: "Protocols", value: "4" },
+                    { label: "Chain", value: "Monad" },
+                    { label: "Token", value: "$ANAGO" },
+                    { label: "Status", value: "Live" },
+                  ].map(({ label, value }) => (
+                    <div
+                      key={label}
+                      className="liquid-glass rounded-[14px] px-3 py-2 text-center"
+                    >
+                      <p className="font-grotesk uppercase text-neon text-[13px] font-bold leading-none">
+                        {value}
+                      </p>
+                      <p className="font-mono text-[10px] uppercase text-cream/50 mt-0.5">
+                        {label}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Yield Farm card */}
+            <div className="lg:col-start-2">
+              <FeatureCard
+                title={FEATURES[3].title}
+                score={FEATURES[3].score}
+                icon={FEATURES[3].icon}
+                from={FEATURES[3].from}
+                via={FEATURES[3].via}
+                to={FEATURES[3].to}
+                glow={FEATURES[3].glow}
+              />
+            </div>
+
+>>>>>>> 9c48560 (heheh)
           </div>
         </div>
       </section>
@@ -345,6 +449,7 @@ function Index() {
   );
 }
 
+<<<<<<< HEAD
 function FeatureCard({ title, score: _score }: { title: string; score: string }) {
   return (
     <div className="liquid-glass rounded-[28px] p-2 sm:p-3 hover:-translate-y-2 transition-all duration-500 group">
@@ -363,6 +468,64 @@ function FeatureCard({ title, score: _score }: { title: string; score: string })
             <button
               type="button"
               className="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-[#b724ff] to-[#7c3aed] flex items-center justify-center shadow-lg shadow-purple-500/50 group-hover:scale-110 group-hover:shadow-purple-500/80 transition-all duration-300"
+=======
+function FeatureCard({
+  title,
+  score,
+  icon: Icon,
+  from,
+  via,
+  to,
+  glow,
+}: {
+  title: string;
+  score: string;
+  icon: LucideIcon;
+  from: string;
+  via: string;
+  to: string;
+  glow: string;
+}) {
+  return (
+    <div className="liquid-glass rounded-[32px] p-[18px] hover:bg-white/10 transition">
+      <div
+        className="relative w-full pb-[100%] rounded-[24px] overflow-hidden"
+        style={{ background: `linear-gradient(135deg, ${from}, ${via}, ${to})` }}
+      >
+        {/* Centered icon */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div
+            className="rounded-full p-8"
+            style={{
+              background: `radial-gradient(circle, ${glow} 0%, transparent 70%)`,
+            }}
+          >
+            <Icon
+              className="w-20 h-20 sm:w-24 sm:h-24"
+              style={{ color: from, filter: `drop-shadow(0 0 18px ${glow})` }}
+              strokeWidth={1.5}
+            />
+          </div>
+        </div>
+
+        {/* Bottom info bar */}
+        <div className="absolute left-3 right-3 bottom-3">
+          <div className="liquid-glass rounded-[20px] px-5 py-4 flex items-center justify-between">
+            <div>
+              <div className="font-grotesk uppercase text-cream text-[14px] tracking-wider">
+                {title}
+              </div>
+              <div className="text-[11px] text-cream/70 uppercase mt-0.5">Trust score:</div>
+              <div className="text-[16px] text-cream font-grotesk">{score}</div>
+            </div>
+            <button
+              type="button"
+              className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition"
+              style={{
+                background: `linear-gradient(135deg, ${from}, ${via})`,
+                boxShadow: `0 4px 20px ${glow}`,
+              }}
+>>>>>>> 9c48560 (heheh)
               aria-label={`Open ${title}`}
             >
               <svg
