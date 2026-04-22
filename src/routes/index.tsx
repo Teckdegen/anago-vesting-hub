@@ -181,32 +181,35 @@ function Index() {
           </div>
         )}
 
-        {/* ── HERO CONTENT — centered ── */}
-        <div className="relative z-10 flex-1 flex flex-col justify-center items-center text-center px-5 sm:px-8 lg:px-14 pt-8 pb-24 sm:pb-32">
+        {/* ── HERO CONTENT ── */}
+        {/* Desktop: left-aligned center | Mobile: left-aligned top */}
+        <div className="relative z-10 flex-1 flex flex-col justify-start sm:justify-center px-5 sm:px-8 lg:px-14 pt-10 sm:pt-0 pb-24 sm:pb-32">
 
           {/* tag */}
-          <p className="hero-tag font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.22em] mb-5 flex items-center gap-2 justify-center" style={{ color: "#9B7FD4" }}>
+          <p className="hero-tag font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.22em] mb-4 sm:mb-5 flex items-center gap-2" style={{ color: "#9B7FD4" }}>
             <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 animate-pulse" style={{ background: "#9B7FD4" }} />
             Powered by $ANAGO · Live on Monad
           </p>
 
-          {/* headline */}
+          {/* headline — big on both, left-aligned */}
           <div className="overflow-hidden">
-            <h1 className="font-grotesk uppercase leading-[0.9] tracking-tight hero-line-1"
-              style={{ fontSize: "clamp(38px, 6.5vw, 80px)" }}>
+            <h1
+              className="font-grotesk uppercase leading-[0.88] tracking-tight hero-line-1"
+              style={{ fontSize: "clamp(44px, 9vw, 110px)" }}
+            >
               <span className="block shimmer-text">Every token</span>
               <span className="block shimmer-text">needs a home.</span>
             </h1>
           </div>
 
           {/* sub */}
-          <p className="hero-sub font-mono text-[11px] sm:text-[13px] text-cream/50 tracking-wide mt-5 max-w-sm">
+          <p className="hero-sub font-mono text-[11px] sm:text-[12px] text-cream/45 tracking-wide mt-5 max-w-xs sm:max-w-sm">
             Vesting · Token Lock · DLMM · Yield Farm — one protocol, one roof.
           </p>
 
-          {/* single CTA — no second Launch App */}
-          <div className="hero-cta mt-7 flex items-center gap-3 justify-center">
-            <a href="#tools" className="font-mono text-[10px] uppercase tracking-widest text-cream/35 hover:text-cream/65 transition flex items-center gap-1.5">
+          {/* explore link */}
+          <div className="hero-cta mt-6">
+            <a href="#tools" className="font-mono text-[10px] uppercase tracking-widest text-cream/30 hover:text-cream/65 transition flex items-center gap-1.5">
               Explore tools
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3 h-3">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -214,19 +217,19 @@ function Index() {
             </a>
           </div>
 
-          {/* TVL — bold, bottom-right, overlaid on video */}
+          {/* TVL — bottom-right on desktop, bottom-left on mobile */}
           <div
-            className="absolute bottom-6 right-5 sm:right-10 lg:right-14 flex flex-col items-end gap-0.5 pointer-events-none"
+            className="absolute bottom-6 left-5 sm:left-auto sm:right-10 lg:right-14 flex flex-col items-start sm:items-end gap-0.5 pointer-events-none"
             aria-hidden="true"
           >
-            <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-cream/35">Total Value Locked</span>
+            <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-cream/40">Total Value Locked</span>
             <span
               className="font-grotesk leading-none text-cream"
-              style={{ fontSize: "clamp(48px, 7vw, 96px)", opacity: 0.55, fontWeight: 900 }}
+              style={{ fontSize: "clamp(52px, 8vw, 108px)", opacity: 0.6, fontWeight: 900 }}
             >
               $0
             </span>
-            <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-cream/25">across all products</span>
+            <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-cream/28">across all products</span>
           </div>
         </div>
       </section>
