@@ -3,14 +3,6 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
-function XIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
-      <path d="M18.244 2H21.5l-7.5 8.57L23 22h-6.844l-5.36-6.99L4.6 22H1.34l8.04-9.19L1 2h7.02l4.84 6.39L18.244 2Zm-1.2 18h1.9L7.04 4H5.04l12.004 16Z" />
-    </svg>
-  );
-}
-
 const NAV = [
   { label: "Home", href: "/" },
   { label: "Vesting", href: "/vesting" },
@@ -149,33 +141,6 @@ export function AppShell({ children }: { children: ReactNode }) {
       <main className="relative z-10">
         {children}
       </main>
-
-      {/* ── FOOTER ── */}
-      <footer
-        className="relative z-10 max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-14 py-7 mt-8 flex items-center justify-between"
-        style={{ borderTop: "1px solid rgba(155,127,212,0.07)" }}
-      >
-        <div className="flex items-center gap-2">
-          <img src="/logo.png" alt="" className="w-5 h-5 rounded opacity-40" />
-          <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-cream/20">
-            © 2026 The Dog House
-          </span>
-        </div>
-        <div className="flex items-center gap-2">
-          <a href="#" aria-label="X"
-            className="w-7 h-7 rounded-full flex items-center justify-center text-cream/25 hover:text-cream/60 transition"
-            style={{ border: "1px solid rgba(155,127,212,0.1)" }}>
-            <XIcon className="w-2.5 h-2.5" />
-          </a>
-          <a href="#" aria-label="Telegram"
-            className="w-7 h-7 rounded-full flex items-center justify-center text-cream/25 hover:text-cream/60 transition"
-            style={{ border: "1px solid rgba(155,127,212,0.1)" }}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-2.5 h-2.5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" />
-            </svg>
-          </a>
-        </div>
-      </footer>
     </div>
   );
 }
