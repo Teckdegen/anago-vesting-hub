@@ -55,7 +55,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         {/* logo */}
         <Link to="/" className="flex items-center gap-2.5 shrink-0">
           <img src="/logo.png" alt="The Dog House" className="w-8 h-8 rounded-md" />
-          <span className="hidden sm:block font-grotesk text-[12px] uppercase tracking-wider text-cream/60">
+          <span className="hidden sm:block font-grotesk text-[12px] uppercase tracking-wider text-cream/85">
             The Dog House
           </span>
         </Link>
@@ -75,7 +75,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <li key={l.label}>
                 <Link
                   to={l.href}
-                  className="font-grotesk text-[11px] uppercase tracking-[0.1em] text-cream/45 hover:text-cream/80 px-4 py-1.5 rounded-full transition-colors duration-200 block whitespace-nowrap"
+                  className="font-grotesk text-[11px] uppercase tracking-[0.1em] text-cream/75 hover:text-cream/80 px-4 py-1.5 rounded-full transition-colors duration-200 block whitespace-nowrap"
                   activeProps={{ style: { color: "#F5F0FF", background: "rgba(155,127,212,0.12)" } }}
                 >
                   {l.label}
@@ -92,8 +92,8 @@ export function AppShell({ children }: { children: ReactNode }) {
             className="rounded-full px-4 py-2 font-grotesk text-[11px] uppercase tracking-wider transition hover:bg-white/[0.06]"
             style={{
               background: "rgba(155,127,212,0.1)",
-              color: "rgba(245,240,255,0.7)",
-              border: "1px solid rgba(155,127,212,0.2)",
+              color: "#F5F0FF",
+              border: "1px solid rgba(155,127,212,0.35)",
             }}
           >
             Connect
@@ -101,7 +101,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
           {/* mobile hamburger */}
           <button
-            className="lg:hidden w-9 h-9 rounded-full flex items-center justify-center text-cream/50 hover:text-cream transition"
+            className="lg:hidden w-9 h-9 rounded-full flex items-center justify-center text-cream/80 hover:text-cream transition"
             style={{ border: "1px solid rgba(155,127,212,0.15)", background: "rgba(6,4,15,0.7)" }}
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Toggle menu"
@@ -127,7 +127,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               key={l.label}
               to={l.href}
               onClick={() => setMobileOpen(false)}
-              className="flex items-center px-5 py-3.5 font-grotesk text-[11px] uppercase tracking-[0.12em] text-cream/50 hover:text-cream hover:bg-white/[0.03] transition-all"
+              className="flex items-center px-5 py-3.5 font-grotesk text-[11px] uppercase tracking-[0.12em] text-cream/80 hover:text-cream hover:bg-white/[0.03] transition-all"
               style={{ borderBottom: i < NAV.length - 1 ? "1px solid rgba(155,127,212,0.06)" : "none" }}
               activeProps={{ style: { color: "#F5F0FF" } }}
             >

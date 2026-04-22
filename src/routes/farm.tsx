@@ -31,33 +31,33 @@ function FarmPage() {
           <h1 className="font-grotesk uppercase text-cream text-[22px] sm:text-[28px] leading-none tracking-tight">
             Yield Farms
           </h1>
-          <p className="font-mono text-[10px] text-cream/30 mt-1 tracking-wide">
+          <p className="font-mono text-[10px] text-cream/65 mt-1 tracking-wide">
             Stake LP tokens · earn $ANAGO rewards
           </p>
         </div>
 
         {/* tabs + search */}
         <div className="flex items-center justify-between flex-wrap gap-3 mb-5">
-          <div className="flex items-center gap-0.5 p-1 rounded-full" style={{ background: "rgba(155,127,212,0.07)", border: "1px solid rgba(155,127,212,0.12)" }}>
+          <div className="flex items-center gap-0.5 p-1 rounded-full" style={{ background: "rgba(155,127,212,0.12)", border: "1px solid rgba(155,127,212,0.28)" }}>
             {TABS.map((t) => (
               <button key={t} onClick={() => setActiveTab(t)}
                 className="px-4 py-1.5 rounded-full font-grotesk text-[11px] uppercase tracking-wider transition whitespace-nowrap"
-                style={activeTab === t ? { background: ACCENT, color: "#F5F0FF", boxShadow: `0 0 12px ${ACCENT}55` } : { color: "rgba(245,240,255,0.35)" }}
+                style={activeTab === t ? { background: ACCENT, color: "#F5F0FF", boxShadow: `0 0 12px ${ACCENT}55` } : { color: "rgba(245,240,255,0.65)" }}
               >{t}</button>
             ))}
           </div>
-          <div className="flex items-center gap-2 px-3 py-2 rounded-full" style={{ background: "rgba(155,127,212,0.05)", border: "1px solid rgba(155,127,212,0.1)" }}>
-            <Search className="w-3.5 h-3.5 text-cream/25" strokeWidth={1.5} />
+          <div className="flex items-center gap-2 px-3 py-2 rounded-full" style={{ background: "rgba(155,127,212,0.1)", border: "1px solid rgba(155,127,212,0.25)" }}>
+            <Search className="w-3.5 h-3.5 text-cream/60" strokeWidth={1.5} />
             <input type="text" placeholder="Search farms…" value={search} onChange={(e) => setSearch(e.target.value)}
-              className="bg-transparent font-mono text-[11px] text-cream/60 placeholder-cream/20 outline-none w-32 sm:w-44" />
+              className="bg-transparent font-mono text-[11px] text-cream/80 placeholder-cream/40 outline-none w-32 sm:w-44" />
           </div>
         </div>
 
         {/* table */}
-        <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(155,127,212,0.1)" }}>
+        <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(155,127,212,0.25)" }}>
           {/* thead */}
-          <div className="hidden sm:grid px-5 py-3 text-[9px] font-mono uppercase tracking-[0.2em] text-cream/20"
-            style={{ gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 80px", borderBottom: "1px solid rgba(155,127,212,0.07)", background: "rgba(155,127,212,0.03)" }}>
+          <div className="hidden sm:grid px-5 py-3 text-[9px] font-mono uppercase tracking-[0.2em] text-cream/55"
+            style={{ gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 80px", borderBottom: "1px solid rgba(155,127,212,0.12)", background: "rgba(155,127,212,0.12)" }}>
             <div>Farm</div>
             <div className="text-right">Staked</div>
             <div className="text-right">APR</div>
@@ -69,13 +69,13 @@ function FarmPage() {
           {/* empty */}
           <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-              style={{ background: `${ACCENT}12`, border: `1px solid ${ACCENT}22` }}>
-              <Sprout className="w-4 h-4 text-cream/25" strokeWidth={1.5} />
+              style={{ background: `${ACCENT}25`, border: `1px solid ${ACCENT}45` }}>
+              <Sprout className="w-4 h-4 text-cream/60" strokeWidth={1.5} />
             </div>
-            <p className="font-grotesk uppercase text-cream/40 text-[13px] tracking-wider">
+            <p className="font-grotesk uppercase text-cream/75 text-[13px] tracking-wider">
               {activeTab === "My Farms" ? "No active farms" : activeTab === "Boosted" ? "No boosted farms" : "No farms yet"}
             </p>
-            <p className="font-mono text-[10px] text-cream/20 mt-1.5 max-w-[200px]">
+            <p className="font-mono text-[10px] text-cream/55 mt-1.5 max-w-[200px]">
               {activeTab === "My Farms" ? "Connect your wallet to see your farms." : "Farms will appear once the protocol launches."}
             </p>
           </div>
@@ -83,11 +83,11 @@ function FarmPage() {
 
         {/* boost info bar */}
         <div className="mt-6 flex items-center gap-3 px-5 py-4 rounded-xl"
-          style={{ border: "1px solid rgba(155,127,212,0.1)", background: "rgba(155,127,212,0.04)" }}>
+          style={{ border: "1px solid rgba(155,127,212,0.25)", background: "rgba(155,127,212,0.1)" }}>
           <Zap className="w-4 h-4 shrink-0" style={{ color: ACCENT }} strokeWidth={1.5} />
           <div>
             <p className="font-grotesk uppercase text-cream/70 text-[11px] tracking-wider">Boost your APR</p>
-            <p className="font-mono text-[10px] text-cream/30 mt-0.5">Hold $ANAGO to earn boosted rewards on all farms.</p>
+            <p className="font-mono text-[10px] text-cream/65 mt-0.5">Hold $ANAGO to earn boosted rewards on all farms.</p>
           </div>
         </div>
       </div>
