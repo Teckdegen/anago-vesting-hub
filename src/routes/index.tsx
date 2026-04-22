@@ -164,16 +164,9 @@ function Index() {
         </div>
       </section>
 
-      {/* SECTION 2 — ABOUT */}
-      <section className="relative w-full overflow-hidden mt-6">
-        <img
-          src="/about.jpg"
-          alt="The Dog House astronauts"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-background/40" />
-
-        <div className="relative z-10 max-w-[1831px] mx-auto px-6 sm:px-10 lg:px-16 py-16 sm:py-20 lg:py-24">
+      {/* SECTION 2 — ABOUT (plain background) */}
+      <section className="relative w-full bg-background reveal">
+        <div className="max-w-[1831px] mx-auto px-6 sm:px-10 lg:px-16 py-20 sm:py-24 lg:py-28">
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10">
             <div className="relative">
               <span
@@ -181,37 +174,60 @@ function Index() {
               >
                 Anago
               </span>
-              <h2 className="font-grotesk uppercase text-cream text-[32px] sm:text-[44px] md:text-[52px] lg:text-[60px] leading-[1]">
+              <h2 className="font-grotesk uppercase text-cream font-black text-[36px] sm:text-[52px] md:text-[64px] lg:text-[76px] leading-[1] tracking-tight">
                 Hello! <br />
                 We're The Dog House
               </h2>
             </div>
 
-            <p className="font-mono text-[14px] sm:text-[16px] uppercase text-cream max-w-[266px]">
+            <p className="font-mono text-[14px] sm:text-[16px] uppercase text-cream/80 max-w-[320px]">
               A home for every token on Monad. Vesting, locks, dynamic liquidity & yield —
               one roof, no leaks.
             </p>
           </div>
+        </div>
+      </section>
 
-          <div className="mt-16 flex justify-between gap-10">
-            <div className="space-y-4 max-w-[266px]">
-              <p className="font-mono text-[14px] uppercase opacity-10 text-cream">
-                A home for every token on Monad. Vesting, locks, dynamic liquidity & yield —
-                one roof, no leaks.
-              </p>
-              <p className="font-mono text-[14px] uppercase opacity-10 text-cream">
-                Built for builders. Powered by $ANAGO. Secured by Monad.
-              </p>
-            </div>
-            <div className="hidden lg:block space-y-4 max-w-[266px]">
-              <p className="font-mono text-[14px] uppercase opacity-10 text-cream">
-                A home for every token on Monad. Vesting, locks, dynamic liquidity & yield —
-                one roof, no leaks.
-              </p>
-              <p className="font-mono text-[14px] uppercase opacity-10 text-cream">
-                Built for builders. Powered by $ANAGO. Secured by Monad.
-              </p>
-            </div>
+      {/* SECTION 2.5 — PROTOCOL STATS */}
+      <section className="relative w-full bg-background reveal">
+        <div className="max-w-[1831px] mx-auto px-6 sm:px-10 lg:px-16 py-12 sm:py-16">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 mb-10">
+            <h2 className="font-grotesk uppercase text-cream font-black text-[44px] sm:text-[60px] lg:text-[80px] leading-none tracking-tight">
+              Protocol{" "}
+              <span className="font-condiment text-neon normal-case font-normal drop-shadow-[0_0_24px_rgba(111,255,0,0.55)]">
+                stats
+              </span>
+            </h2>
+            <p className="font-mono text-[12px] sm:text-[13px] uppercase text-cream/70 max-w-[360px] tracking-wider lg:text-right">
+              Live on Monad — total value processed across every Dog House product.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {[
+              { tag: "Token Locks", value: "$0", label: "Total locked" },
+              { tag: "Vesting", value: "$0", label: "Under vesting" },
+              { tag: "DLMM", value: "$0", label: "Liquidity processed" },
+              { tag: "Yield Farm", value: "$0", label: "Staked TVL" },
+            ].map((s) => (
+              <div
+                key={s.tag}
+                className="liquid-glass rounded-[24px] p-6 sm:p-8 border border-white/5 relative overflow-hidden"
+              >
+                <p className="font-mono text-[11px] uppercase tracking-widest text-cream/60">
+                  {s.tag}
+                </p>
+                <p
+                  className="mt-6 font-grotesk font-black text-neon text-[48px] sm:text-[64px] leading-none"
+                  style={{ textShadow: "0 0 28px rgba(111,255,0,0.55)" }}
+                >
+                  {s.value}
+                </p>
+                <p className="mt-6 font-mono text-[11px] uppercase tracking-widest text-cream/70">
+                  {s.label}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -222,19 +238,19 @@ function Index() {
 
           {/* Section header */}
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 mb-12">
-            <h2 className="font-grotesk uppercase text-cream text-[32px] sm:text-[44px] md:text-[52px] lg:text-[60px] leading-[1]">
+            <h2 className="font-grotesk uppercase text-cream font-black text-[40px] sm:text-[56px] md:text-[68px] lg:text-[80px] leading-[0.95] tracking-tight">
               A home for <br />
               <span className="inline-block ml-12 md:ml-24 lg:ml-32">
-                <span className="font-condiment text-neon normal-case">every</span>{" "}
+                <span className="font-condiment text-neon normal-case font-normal drop-shadow-[0_0_24px_rgba(111,255,0,0.55)]">every</span>{" "}
                 token
               </span>
             </h2>
             <div className="text-right">
               <div className="flex items-end justify-end gap-3">
-                <span className="font-grotesk uppercase text-cream text-[32px] sm:text-[48px] lg:text-[60px] leading-none">
+                <span className="font-grotesk uppercase text-cream font-black text-[40px] sm:text-[60px] lg:text-[76px] leading-none tracking-tight">
                   Launch
                 </span>
-                <div className="flex flex-col font-grotesk uppercase text-cream text-[20px] sm:text-[28px] lg:text-[36px] leading-none">
+                <div className="flex flex-col font-grotesk uppercase text-cream font-black text-[24px] sm:text-[34px] lg:text-[44px] leading-none tracking-tight">
                   <span>App</span>
                   <span>Now</span>
                 </div>
@@ -243,64 +259,11 @@ function Index() {
             </div>
           </div>
 
-          {/* Top row — 3 cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {FEATURES.slice(0, 3).map((f) => (
+          {/* All 4 utility cards on one line */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {FEATURES.map((f) => (
               <FeatureCard key={f.title} title={f.title} score={f.score} icon={f.icon} from={f.from} via={f.via} to={f.to} glow={f.glow} />
             ))}
-          </div>
-
-          {/* Bottom row — mascot + Yield Farm */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            {/* Mascot card */}
-            <div className="lg:col-start-1 liquid-glass rounded-[32px] p-[18px] flex flex-col items-center justify-between overflow-hidden relative">
-              <div
-                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-56 h-56 rounded-full blur-3xl opacity-30 pointer-events-none"
-                style={{ background: "radial-gradient(circle, #6FFF00 0%, transparent 70%)" }}
-              />
-              <div className="relative z-10 flex flex-col items-center gap-4 py-4">
-                <img
-                  src="/dog.png"
-                  alt="ANAGO mascot"
-                  className="w-36 sm:w-40 lg:w-44 drop-shadow-[0_0_32px_rgba(111,255,0,0.45)] select-none"
-                  draggable={false}
-                />
-                <div className="text-center">
-                  <p className="font-condiment text-neon text-[32px] leading-none drop-shadow-[0_0_12px_rgba(111,255,0,0.6)]">
-                    $ANAGO
-                  </p>
-                  <p className="font-mono text-[11px] uppercase text-cream/60 mt-1 tracking-widest">
-                    Powered by Monad
-                  </p>
-                </div>
-                <div className="w-full grid grid-cols-2 gap-3 mt-2">
-                  {[
-                    { label: "Protocols", value: "4" },
-                    { label: "Chain", value: "Monad" },
-                    { label: "Token", value: "$ANAGO" },
-                    { label: "Status", value: "Live" },
-                  ].map(({ label, value }) => (
-                    <div key={label} className="liquid-glass rounded-[14px] px-3 py-2 text-center">
-                      <p className="font-grotesk uppercase text-neon text-[13px] font-bold leading-none">{value}</p>
-                      <p className="font-mono text-[10px] uppercase text-cream/50 mt-0.5">{label}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Yield Farm card */}
-            <div className="lg:col-start-2">
-              <FeatureCard
-                title={FEATURES[3].title}
-                score={FEATURES[3].score}
-                icon={FEATURES[3].icon}
-                from={FEATURES[3].from}
-                via={FEATURES[3].via}
-                to={FEATURES[3].to}
-                glow={FEATURES[3].glow}
-              />
-            </div>
           </div>
         </div>
       </section>

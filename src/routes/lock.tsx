@@ -18,17 +18,11 @@ function LockPage() {
     <PortfolioPage
       title="Token Lock"
       subtitle="Secure your tokens with time-based locks on Monad"
-      theme={{
-        name: "lock",
-        accent: "#b724ff",
-        accent2: "#7c3aed",
-        tag: "Lock Vault",
-      }}
       segments={[
-        { label: "Active locks", pct: 0, color: "#b724ff" },
-        { label: "Pending unlock", pct: 0, color: "#7c3aed" },
-        { label: "Released", pct: 0, color: "#ef4444" },
-        { label: "Scheduled", pct: 0, color: "#f59e0b" },
+        { label: "Active locks", pct: 0, color: "#6FFF00" },
+        { label: "Pending unlock", pct: 0, color: "#16a34a" },
+        { label: "Released", pct: 0, color: "#84cc16" },
+        { label: "Scheduled", pct: 0, color: "#22c55e" },
         { label: "Claimed", pct: 0, color: "#10b981" },
       ]}
       tabs={["Locks", "Unlocks", "Schedules", "Released", "History"]}

@@ -18,18 +18,12 @@ function FarmPage() {
     <PortfolioPage
       title="Yield Farm"
       subtitle="Stake, farm, and harvest rewards on Monad"
-      theme={{
-        name: "farm",
-        accent: "#6FFF00",
-        accent2: "#16a34a",
-        tag: "Farm Field",
-      }}
       segments={[
         { label: "Staked", pct: 0, color: "#6FFF00" },
         { label: "Pending rewards", pct: 0, color: "#16a34a" },
-        { label: "Harvested", pct: 0, color: "#06b6d4" },
-        { label: "Boosts", pct: 0, color: "#f59e0b" },
-        { label: "Locked", pct: 0, color: "#b724ff" },
+        { label: "Harvested", pct: 0, color: "#84cc16" },
+        { label: "Boosts", pct: 0, color: "#22c55e" },
+        { label: "Locked", pct: 0, color: "#10b981" },
       ]}
       tabs={["Pools", "Staked", "Rewards", "Boosts", "History"]}
       emptyHeading="No active farms"

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { EyeOff, HelpCircle, Sparkles } from "lucide-react";
+import { EyeOff } from "lucide-react";
 import { useState } from "react";
 
 export type Theme = {
@@ -14,10 +14,18 @@ export type Theme = {
 
 type Segment = { label: string; pct: number; color: string };
 
+// Single shared theme used across Lock / Vesting / Farm / DLMM pages.
+export const SHARED_THEME: Theme = {
+  name: "doghouse",
+  accent: "#6FFF00",
+  accent2: "#16a34a",
+  tag: "Dog House",
+};
+
 export function PortfolioPage({
   title,
   subtitle,
-  theme,
+  theme = SHARED_THEME,
   segments,
   tabs,
   emptyHeading,
@@ -26,7 +34,7 @@ export function PortfolioPage({
 }: {
   title: string;
   subtitle: string;
-  theme: Theme;
+  theme?: Theme;
   segments: Segment[];
   tabs: string[];
   emptyHeading: string;
@@ -60,7 +68,7 @@ export function PortfolioPage({
           <Link to="/dlmm" className="hover:text-cream transition" activeProps={{ className: "text-cream" }}>DLMM</Link>
         </nav>
         <button
-          className="px-4 py-2 rounded-full text-[12px] font-grotesk uppercase tracking-wider"
+          className="px-4 py-2 rounded-full text-[12px] font-grotesk uppercase tracking-wider text-[#0a0a0c]"
           style={{
             background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent2})`,
             boxShadow: `0 4px 24px ${theme.accent}55`,
@@ -89,72 +97,46 @@ export function PortfolioPage({
           </div>
         </div>
 
-        {/* top cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Net worth card */}
-          <div className="rounded-[20px] border border-white/5 bg-white/[0.02] p-6 sm:p-8 backdrop-blur-sm">
-            <div className="flex items-start justify-between">
-              <span className="font-mono text-[12px] uppercase text-cream/60 tracking-wider">
-                Net worth
-              </span>
-              <button
-                onClick={() => setHidden((v) => !v)}
-                className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition"
-                aria-label="Hide balance"
-              >
-                <EyeOff className="w-4 h-4 text-cream/70" />
-              </button>
-            </div>
-            <div className="mt-3 font-grotesk text-cream text-[44px] sm:text-[56px] leading-none">
-              {hidden ? "•••••" : <>$<span className="opacity-100">0</span><span className="text-cream/40">.00</span></>}
-            </div>
-
-            {/* segmented bar */}
-            <div className="mt-6 flex h-3 w-full rounded-full overflow-hidden">
-              {segments.map((s) => (
-                <div
-                  key={s.label}
-                  className="h-full"
-                  style={{
-                    width: `${Math.max(s.pct, 14)}%`,
-                    background: `repeating-linear-gradient(45deg, ${s.color}cc, ${s.color}cc 6px, ${s.color}66 6px, ${s.color}66 12px)`,
-                  }}
-                />
-              ))}
-            </div>
-
-            {/* legend */}
-            <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 gap-y-3 gap-x-4">
-              {segments.map((s) => (
-                <div key={s.label} className="flex items-center gap-2 text-[12px] font-mono text-cream/70">
-                  <span className="w-2.5 h-2.5 rounded-sm" style={{ background: s.color }} />
-                  <span>{s.label} ({s.pct.toFixed(2)}%)</span>
-                </div>
-              ))}
-            </div>
+        {/* Net worth card (single, full-width) */}
+        <div className="rounded-[20px] border border-white/5 bg-white/[0.02] p-6 sm:p-8 backdrop-blur-sm">
+          <div className="flex items-start justify-between">
+            <span className="font-mono text-[12px] uppercase text-cream/60 tracking-wider">
+              Net worth
+            </span>
+            <button
+              onClick={() => setHidden((v) => !v)}
+              className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition"
+              aria-label="Hide balance"
+            >
+              <EyeOff className="w-4 h-4 text-cream/70" />
+            </button>
+          </div>
+          <div className="mt-3 font-grotesk text-cream text-[44px] sm:text-[56px] leading-none">
+            {hidden ? "•••••" : <>$<span className="opacity-100">0</span><span className="text-cream/40">.00</span></>}
           </div>
 
-          {/* Empty illustration card */}
-          <div className="rounded-[20px] border border-white/5 bg-white/[0.02] p-6 sm:p-8 backdrop-blur-sm flex items-center gap-6">
-            <div className="flex-1">
-              <p className="font-grotesk text-cream text-[18px] sm:text-[20px] leading-tight">
-                {emptyHeading}
-              </p>
-              <p className="font-mono text-[12px] text-cream/60 mt-2 leading-relaxed">
-                {emptyBody}
-              </p>
-            </div>
-            <div className="shrink-0">
+          {/* segmented bar */}
+          <div className="mt-6 flex h-3 w-full rounded-full overflow-hidden">
+            {segments.map((s) => (
               <div
-                className="w-28 h-28 sm:w-36 sm:h-36 rounded-full flex items-center justify-center"
+                key={s.label}
+                className="h-full"
                 style={{
-                  background: `radial-gradient(circle at 30% 30%, ${theme.accent}55, #1a1a1f 65%)`,
-                  boxShadow: `inset 0 0 40px ${theme.accent}22`,
+                  width: `${Math.max(s.pct, 14)}%`,
+                  background: `repeating-linear-gradient(45deg, ${s.color}cc, ${s.color}cc 6px, ${s.color}66 6px, ${s.color}66 12px)`,
                 }}
-              >
-                <HelpCircle className="w-10 h-10 text-cream/50" />
+              />
+            ))}
+          </div>
+
+          {/* legend */}
+          <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-y-3 gap-x-4">
+            {segments.map((s) => (
+              <div key={s.label} className="flex items-center gap-2 text-[12px] font-mono text-cream/70">
+                <span className="w-2.5 h-2.5 rounded-sm" style={{ background: s.color }} />
+                <span>{s.label} ({s.pct.toFixed(2)}%)</span>
               </div>
-            </div>
+            ))}
           </div>
         </div>
 
@@ -205,11 +187,6 @@ export function PortfolioPage({
               <EyeOff className="w-3.5 h-3.5" />
               Show hidden
             </button>
-            <span className="text-cream/20">|</span>
-            <button className="flex items-center gap-1.5 hover:text-cream transition">
-              <Sparkles className="w-3.5 h-3.5" />
-              Hide dust
-            </button>
             <div className="flex p-0.5 rounded-md bg-white/[0.06] border border-white/10">
               {(["MON", "USD"] as const).map((u) => (
                 <button
@@ -237,15 +214,6 @@ export function PortfolioPage({
           </div>
 
           <div className="py-24 flex flex-col items-center justify-center text-center px-6">
-            <div
-              className="w-12 h-12 rounded-lg flex items-center justify-center mb-4"
-              style={{
-                background: `${theme.accent}18`,
-                border: `1px solid ${theme.accent}44`,
-              }}
-            >
-              <Sparkles className="w-5 h-5" style={{ color: theme.accent }} />
-            </div>
             <p className="font-grotesk text-cream text-[16px]">{emptyHeading}</p>
             <p className="font-mono text-[12px] text-cream/60 mt-1 max-w-xs">{emptyBody}</p>
             <button

@@ -18,18 +18,12 @@ function VestingPage() {
     <PortfolioPage
       title="Vesting"
       subtitle="Linear and cliff vesting schedules on Monad"
-      theme={{
-        name: "vesting",
-        accent: "#7c3aed",
-        accent2: "#4f46e5",
-        tag: "Vesting Hub",
-      }}
       segments={[
-        { label: "Allocated", pct: 0, color: "#7c3aed" },
-        { label: "Vested", pct: 0, color: "#4f46e5" },
-        { label: "Claimable", pct: 0, color: "#06b6d4" },
-        { label: "Cliff", pct: 0, color: "#f59e0b" },
-        { label: "Revoked", pct: 0, color: "#ef4444" },
+        { label: "Allocated", pct: 0, color: "#6FFF00" },
+        { label: "Vested", pct: 0, color: "#16a34a" },
+        { label: "Claimable", pct: 0, color: "#84cc16" },
+        { label: "Cliff", pct: 0, color: "#22c55e" },
+        { label: "Revoked", pct: 0, color: "#10b981" },
       ]}
       tabs={["Schedules", "Claimable", "Cliffs", "Revoked", "History"]}
       emptyHeading="No vesting schedules"
