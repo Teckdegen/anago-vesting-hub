@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Send, Timer, LockKeyhole, BarChart2, Sprout } from "lucide-react";
 import { HlsVideo } from "@/components/HlsVideo";
 
@@ -65,6 +65,8 @@ const STATS = [
 ];
 
 function Index() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   useEffect(() => {
     const els = document.querySelectorAll<HTMLElement>(".reveal");
     const io = new IntersectionObserver(
@@ -121,15 +123,16 @@ function Index() {
         </div>
 
         {/* ── NAV ── */}
-        <header className="relative z-20 flex items-center justify-between px-6 sm:px-10 lg:px-14 pt-6 pb-4 gap-4">
+        <header className="relative z-20 flex items-center justify-between px-5 sm:px-8 lg:px-14 pt-6 pb-4 gap-3">
           <div className="flex items-center gap-2.5 shrink-0">
             <img src="/logo.png" alt="The Dog House" className="w-8 h-8 rounded-lg" />
-            <span className="hidden sm:block font-grotesk text-[13px] uppercase tracking-wider text-cream/75">
+            <span className="font-grotesk text-[13px] uppercase tracking-wider text-cream/75">
               The Dog House
             </span>
           </div>
 
-          <nav className="flex-1 flex justify-center">
+          {/* desktop pill nav — hidden on mobile */}
+          <nav className="hidden lg:flex flex-1 justify-center">
             <ul
               className="flex items-center gap-0.5 px-4 py-2.5 rounded-full"
               style={{
@@ -151,10 +154,8 @@ function Index() {
                 <li key={l.label}>
                   <Link
                     to={l.href}
-                    className="font-grotesk text-[11px] sm:text-[12px] uppercase tracking-[0.1em] text-cream/50 hover:text-cream/90 px-3 sm:px-4 py-1.5 rounded-full transition-colors duration-200 block"
-                    activeProps={{
-                      style: { color: "#F5F0FF" },
-                    }}
+                    className="font-grotesk text-[11px] uppercase tracking-[0.1em] text-cream/50 hover:text-cream/90 px-4 py-1.5 rounded-full transition-colors duration-200 block whitespace-nowrap"
+                    activeProps={{ style: { color: "#F5F0FF" } }}
                   >
                     {l.label}
                   </Link>
@@ -163,18 +164,65 @@ function Index() {
             </ul>
           </nav>
 
-          <a
-            href="#"
-            className="shrink-0 rounded-full px-5 py-2.5 font-grotesk text-[12px] uppercase tracking-wider transition-all duration-300 hover:opacity-85 hover:-translate-y-px"
+          {/* right: launch app + mobile menu */}
+          <div className="flex items-center gap-2.5 shrink-0">
+            <a
+              href="#"
+              className="rounded-full px-4 sm:px-5 py-2.5 font-grotesk text-[11px] sm:text-[12px] uppercase tracking-wider transition-all duration-300 hover:opacity-85 hover:-translate-y-px whitespace-nowrap"
+              style={{
+                background: "linear-gradient(135deg, #9B7FD4, #5B4FE8)",
+                color: "#F5F0FF",
+                boxShadow: "0 0 0 1px rgba(155,127,212,0.3), 0 4px 20px rgba(91,79,232,0.4)",
+              }}
+            >
+              Launch App
+            </a>
+            {/* mobile hamburger */}
+            <button
+              className="lg:hidden w-9 h-9 rounded-full flex items-center justify-center text-cream/60 hover:text-cream transition"
+              style={{ border: "1px solid rgba(155,127,212,0.2)", background: "rgba(6,4,15,0.6)" }}
+              onClick={() => setMobileMenuOpen((v) => !v)}
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen
+                ? <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                : <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
+              }
+            </button>
+          </div>
+        </header>
+
+        {/* mobile nav drawer */}
+        {mobileMenuOpen && (
+          <div
+            className="lg:hidden relative z-20 mx-4 rounded-2xl overflow-hidden"
             style={{
-              background: "linear-gradient(135deg, #9B7FD4, #5B4FE8)",
-              color: "#F5F0FF",
-              boxShadow: "0 0 0 1px rgba(155,127,212,0.3), 0 4px 20px rgba(91,79,232,0.4)",
+              background: "rgba(6,4,15,0.92)",
+              border: "1px solid rgba(155,127,212,0.15)",
+              backdropFilter: "blur(24px)",
+              WebkitBackdropFilter: "blur(24px)",
             }}
           >
-            Launch App
-          </a>
-        </header>
+            {([
+              { label: "Home", href: "/" },
+              { label: "Vesting", href: "/vesting" },
+              { label: "Token Lock", href: "/lock" },
+              { label: "DLMM", href: "/dlmm" },
+              { label: "Yield Farm", href: "/farm" },
+            ] as const).map((l, i) => (
+              <Link
+                key={l.label}
+                to={l.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center px-5 py-3.5 font-grotesk text-[12px] uppercase tracking-[0.12em] text-cream/60 hover:text-cream hover:bg-white/[0.04] transition-all"
+                style={{ borderBottom: i < 4 ? "1px solid rgba(155,127,212,0.08)" : "none" }}
+                activeProps={{ style: { color: "#F5F0FF" } }}
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
+        )}
 
         {/* ── HERO TEXT — bottom-left aligned ── */}
         <div className="relative z-10 flex-1 flex flex-col justify-end px-6 sm:px-10 lg:px-14 pb-14 sm:pb-18">
@@ -259,13 +307,16 @@ function Index() {
         >
           {UTILITIES.map((u, i) => {
             const Icon = u.icon;
+            // right border: on desktop skip last; on 2-col skip every 2nd
+            const borderRight = i % 2 === 0 ? "1px solid rgba(155,127,212,0.1)" : "none";
             return (
               <Link
                 key={u.title}
                 to={u.href as "/dlmm" | "/vesting" | "/lock" | "/farm"}
-                className="group flex flex-col gap-5 px-8 sm:px-10 py-10 transition-all duration-300 hover:bg-white/[0.025]"
+                className="group flex flex-col gap-5 px-5 sm:px-8 py-8 sm:py-10 transition-all duration-300 hover:bg-white/[0.025]"
                 style={{
-                  borderRight: i < 3 ? "1px solid rgba(155,127,212,0.1)" : "none",
+                  borderRight,
+                  borderBottom: i < 2 ? "1px solid rgba(155,127,212,0.1)" : "none",
                 }}
               >
                 {/* icon + number */}
