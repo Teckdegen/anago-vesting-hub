@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { LockKeyhole, Timer, Sprout, BarChart2, ArrowRight, Wallet, Eye, EyeOff, Copy } from "lucide-react";
+import { LockKeyhole, Timer, Sprout, BarChart2, ArrowRight, Eye, EyeOff, Copy } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 
 export const Route = createFileRoute("/dashboard")({
@@ -12,9 +12,6 @@ export const Route = createFileRoute("/dashboard")({
     ],
   }),
 });
-
-const ACCENT = "#5B4FE8";
-const ACCENT2 = "#9B7FD4";
 
 const walletConnected = false;
 const walletAddress = "0x1a2b...9f0e";
@@ -54,7 +51,7 @@ function DashboardPage() {
               {hidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
             </button>
 
-            {walletConnected ? (
+            {walletConnected && (
               <div
                 className="flex items-center gap-2 px-3.5 py-2 rounded-full"
                 style={{ background: "rgba(155,127,212,0.08)", border: "1px solid rgba(155,127,212,0.2)" }}
@@ -65,14 +62,6 @@ function DashboardPage() {
                   <Copy className="w-3 h-3" />
                 </button>
               </div>
-            ) : (
-              <button
-                className="flex items-center gap-1.5 px-4 py-2 rounded-full font-grotesk text-[10px] uppercase tracking-wider transition hover:opacity-85"
-                style={{ background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, color: "#F5F0FF" }}
-              >
-                <Wallet className="w-3 h-3" strokeWidth={1.5} />
-                Connect Wallet
-              </button>
             )}
           </div>
         </div>
