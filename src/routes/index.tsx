@@ -243,62 +243,17 @@ function Index() {
             </div>
           </div>
 
-<<<<<<< HEAD
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {FEATURES.map((f, i) => (
-              <div key={f.title} className="reveal" style={{ transitionDelay: `${i * 80}ms` }}>
-                <FeatureCard title={f.title} score={f.score} />
-              </div>
-=======
           {/* Top row — 3 cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {FEATURES.slice(0, 3).map((f) => (
               <FeatureCard key={f.title} title={f.title} score={f.score} icon={f.icon} from={f.from} via={f.via} to={f.to} glow={f.glow} />
->>>>>>> 9c48560 (heheh)
             ))}
           </div>
-        </div>
-      </section>
 
-<<<<<<< HEAD
-      {/* SECTION 3.5 — PROTOCOL STATS */}
-      <section className="relative w-full bg-background border-t border-white/5">
-        <div className="max-w-[1831px] mx-auto px-6 sm:px-10 lg:px-16 py-16 sm:py-20 lg:py-24">
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12">
-            <h2 className="font-grotesk uppercase text-cream text-[32px] sm:text-[44px] md:text-[52px] lg:text-[60px] leading-[1]">
-              Protocol <span className="font-condiment text-neon normal-case">stats</span>
-            </h2>
-            <p className="font-mono text-[12px] sm:text-[14px] uppercase text-cream/70 max-w-md">
-              Live on Monad — total value processed across every Dog House product.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {[
-              { label: "Token Locks", value: "$0", sub: "Total locked" },
-              { label: "Vesting", value: "$0", sub: "Under vesting" },
-              { label: "DLMM", value: "$0", sub: "Liquidity processed" },
-              { label: "Yield Farm", value: "$0", sub: "Staked TVL" },
-            ].map((s, i) => (
-              <div key={s.label} className="liquid-glass reveal rounded-[24px] p-6 sm:p-8 hover:-translate-y-1 transition-transform duration-300" style={{ transitionDelay: `${i * 80}ms` }}>
-                <div className="font-mono text-[11px] sm:text-[12px] uppercase text-cream/60 tracking-wider">
-                  {s.label}
-                </div>
-                <div className="font-grotesk uppercase text-neon text-[32px] sm:text-[44px] lg:text-[56px] leading-none mt-3 drop-shadow-[0_0_18px_rgba(111,255,0,0.4)]">
-                  {s.value}
-                </div>
-                <div className="font-mono text-[11px] uppercase text-cream/60 mt-2 tracking-wider">
-                  {s.sub}
-                </div>
-              </div>
-            ))}
-=======
           {/* Bottom row — mascot + Yield Farm */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-
             {/* Mascot card */}
             <div className="lg:col-start-1 liquid-glass rounded-[32px] p-[18px] flex flex-col items-center justify-between overflow-hidden relative">
-              {/* neon glow behind dog */}
               <div
                 className="absolute bottom-0 left-1/2 -translate-x-1/2 w-56 h-56 rounded-full blur-3xl opacity-30 pointer-events-none"
                 style={{ background: "radial-gradient(circle, #6FFF00 0%, transparent 70%)" }}
@@ -318,7 +273,6 @@ function Index() {
                     Powered by Monad
                   </p>
                 </div>
-                {/* Protocol stats */}
                 <div className="w-full grid grid-cols-2 gap-3 mt-2">
                   {[
                     { label: "Protocols", value: "4" },
@@ -326,16 +280,9 @@ function Index() {
                     { label: "Token", value: "$ANAGO" },
                     { label: "Status", value: "Live" },
                   ].map(({ label, value }) => (
-                    <div
-                      key={label}
-                      className="liquid-glass rounded-[14px] px-3 py-2 text-center"
-                    >
-                      <p className="font-grotesk uppercase text-neon text-[13px] font-bold leading-none">
-                        {value}
-                      </p>
-                      <p className="font-mono text-[10px] uppercase text-cream/50 mt-0.5">
-                        {label}
-                      </p>
+                    <div key={label} className="liquid-glass rounded-[14px] px-3 py-2 text-center">
+                      <p className="font-grotesk uppercase text-neon text-[13px] font-bold leading-none">{value}</p>
+                      <p className="font-mono text-[10px] uppercase text-cream/50 mt-0.5">{label}</p>
                     </div>
                   ))}
                 </div>
@@ -354,8 +301,6 @@ function Index() {
                 glow={FEATURES[3].glow}
               />
             </div>
-
->>>>>>> 9c48560 (heheh)
           </div>
         </div>
       </section>
@@ -370,21 +315,6 @@ function Index() {
             muted
             playsInline
             className="w-full h-auto block"
-          />
-          {/* Dog mascot overlay covering the TV screen in the video */}
-          <img
-            src="/cta-dog.png"
-            alt="Anago dog mascot"
-            className="absolute pointer-events-none select-none object-contain"
-            style={{
-              top: "-30%",
-              left: "-10%",
-              width: "55%",
-              height: "120%",
-              transform: "rotate(-8deg)",
-              transformOrigin: "center",
-              filter: "drop-shadow(0 0 40px rgba(111,255,0,0.5))",
-            }}
           />
         </div>
 
@@ -449,26 +379,6 @@ function Index() {
   );
 }
 
-<<<<<<< HEAD
-function FeatureCard({ title, score: _score }: { title: string; score: string }) {
-  return (
-    <div className="liquid-glass rounded-[28px] p-2 sm:p-3 hover:-translate-y-2 transition-all duration-500 group">
-      <div className="relative w-full pb-[120%] rounded-[20px] overflow-hidden bg-gradient-to-br from-[#0b1440] via-[#1a0f3a] to-[#010828]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(111,255,0,0.18),transparent_65%)] opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
-        <img
-          src={DOG_IMG}
-          alt={title}
-          className="absolute inset-0 w-full h-full object-contain p-2 sm:p-4 group-hover:scale-105 transition-transform duration-500"
-        />
-        <div className="absolute left-2 right-2 bottom-2 sm:left-3 sm:right-3 sm:bottom-3">
-          <div className="liquid-glass rounded-[14px] sm:rounded-[18px] px-3 py-2 sm:px-4 sm:py-3 flex items-center justify-between gap-2">
-            <div className="font-grotesk uppercase text-cream text-[11px] sm:text-[13px] tracking-wider truncate">
-              {title}
-            </div>
-            <button
-              type="button"
-              className="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-[#b724ff] to-[#7c3aed] flex items-center justify-center shadow-lg shadow-purple-500/50 group-hover:scale-110 group-hover:shadow-purple-500/80 transition-all duration-300"
-=======
 function FeatureCard({
   title,
   score,
@@ -492,13 +402,10 @@ function FeatureCard({
         className="relative w-full pb-[100%] rounded-[24px] overflow-hidden"
         style={{ background: `linear-gradient(135deg, ${from}, ${via}, ${to})` }}
       >
-        {/* Centered icon */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div
             className="rounded-full p-8"
-            style={{
-              background: `radial-gradient(circle, ${glow} 0%, transparent 70%)`,
-            }}
+            style={{ background: `radial-gradient(circle, ${glow} 0%, transparent 70%)` }}
           >
             <Icon
               className="w-20 h-20 sm:w-24 sm:h-24"
@@ -508,7 +415,6 @@ function FeatureCard({
           </div>
         </div>
 
-        {/* Bottom info bar */}
         <div className="absolute left-3 right-3 bottom-3">
           <div className="liquid-glass rounded-[20px] px-5 py-4 flex items-center justify-between">
             <div>
@@ -525,7 +431,6 @@ function FeatureCard({
                 background: `linear-gradient(135deg, ${from}, ${via})`,
                 boxShadow: `0 4px 20px ${glow}`,
               }}
->>>>>>> 9c48560 (heheh)
               aria-label={`Open ${title}`}
             >
               <svg
@@ -534,7 +439,7 @@ function FeatureCard({
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth={2.5}
-                className="w-4 h-4 text-cream group-hover:translate-x-0.5 transition-transform"
+                className="w-4 h-4 text-cream"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
