@@ -243,62 +243,17 @@ function Index() {
             </div>
           </div>
 
-<<<<<<< HEAD
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {FEATURES.map((f, i) => (
-              <div key={f.title} className="reveal" style={{ transitionDelay: `${i * 80}ms` }}>
-                <FeatureCard title={f.title} score={f.score} />
-              </div>
-=======
           {/* Top row — 3 cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {FEATURES.slice(0, 3).map((f) => (
               <FeatureCard key={f.title} title={f.title} score={f.score} icon={f.icon} from={f.from} via={f.via} to={f.to} glow={f.glow} />
->>>>>>> 9c48560 (heheh)
             ))}
           </div>
-        </div>
-      </section>
 
-<<<<<<< HEAD
-      {/* SECTION 3.5 — PROTOCOL STATS */}
-      <section className="relative w-full bg-background border-t border-white/5">
-        <div className="max-w-[1831px] mx-auto px-6 sm:px-10 lg:px-16 py-16 sm:py-20 lg:py-24">
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12">
-            <h2 className="font-grotesk uppercase text-cream text-[32px] sm:text-[44px] md:text-[52px] lg:text-[60px] leading-[1]">
-              Protocol <span className="font-condiment text-neon normal-case">stats</span>
-            </h2>
-            <p className="font-mono text-[12px] sm:text-[14px] uppercase text-cream/70 max-w-md">
-              Live on Monad — total value processed across every Dog House product.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {[
-              { label: "Token Locks", value: "$0", sub: "Total locked" },
-              { label: "Vesting", value: "$0", sub: "Under vesting" },
-              { label: "DLMM", value: "$0", sub: "Liquidity processed" },
-              { label: "Yield Farm", value: "$0", sub: "Staked TVL" },
-            ].map((s, i) => (
-              <div key={s.label} className="liquid-glass reveal rounded-[24px] p-6 sm:p-8 hover:-translate-y-1 transition-transform duration-300" style={{ transitionDelay: `${i * 80}ms` }}>
-                <div className="font-mono text-[11px] sm:text-[12px] uppercase text-cream/60 tracking-wider">
-                  {s.label}
-                </div>
-                <div className="font-grotesk uppercase text-neon text-[32px] sm:text-[44px] lg:text-[56px] leading-none mt-3 drop-shadow-[0_0_18px_rgba(111,255,0,0.4)]">
-                  {s.value}
-                </div>
-                <div className="font-mono text-[11px] uppercase text-cream/60 mt-2 tracking-wider">
-                  {s.sub}
-                </div>
-              </div>
-            ))}
-=======
           {/* Bottom row — mascot + Yield Farm */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-
             {/* Mascot card */}
             <div className="lg:col-start-1 liquid-glass rounded-[32px] p-[18px] flex flex-col items-center justify-between overflow-hidden relative">
-              {/* neon glow behind dog */}
               <div
                 className="absolute bottom-0 left-1/2 -translate-x-1/2 w-56 h-56 rounded-full blur-3xl opacity-30 pointer-events-none"
                 style={{ background: "radial-gradient(circle, #6FFF00 0%, transparent 70%)" }}
@@ -318,7 +273,6 @@ function Index() {
                     Powered by Monad
                   </p>
                 </div>
-                {/* Protocol stats */}
                 <div className="w-full grid grid-cols-2 gap-3 mt-2">
                   {[
                     { label: "Protocols", value: "4" },
@@ -326,16 +280,9 @@ function Index() {
                     { label: "Token", value: "$ANAGO" },
                     { label: "Status", value: "Live" },
                   ].map(({ label, value }) => (
-                    <div
-                      key={label}
-                      className="liquid-glass rounded-[14px] px-3 py-2 text-center"
-                    >
-                      <p className="font-grotesk uppercase text-neon text-[13px] font-bold leading-none">
-                        {value}
-                      </p>
-                      <p className="font-mono text-[10px] uppercase text-cream/50 mt-0.5">
-                        {label}
-                      </p>
+                    <div key={label} className="liquid-glass rounded-[14px] px-3 py-2 text-center">
+                      <p className="font-grotesk uppercase text-neon text-[13px] font-bold leading-none">{value}</p>
+                      <p className="font-mono text-[10px] uppercase text-cream/50 mt-0.5">{label}</p>
                     </div>
                   ))}
                 </div>
@@ -354,8 +301,6 @@ function Index() {
                 glow={FEATURES[3].glow}
               />
             </div>
-
->>>>>>> 9c48560 (heheh)
           </div>
         </div>
       </section>
