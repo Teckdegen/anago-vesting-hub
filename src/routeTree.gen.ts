@@ -9,8 +9,32 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VestingRouteImport } from './routes/vesting'
+import { Route as LockRouteImport } from './routes/lock'
+import { Route as FarmRouteImport } from './routes/farm'
+import { Route as DlmmRouteImport } from './routes/dlmm'
 import { Route as IndexRouteImport } from './routes/index'
 
+const VestingRoute = VestingRouteImport.update({
+  id: '/vesting',
+  path: '/vesting',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LockRoute = LockRouteImport.update({
+  id: '/lock',
+  path: '/lock',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FarmRoute = FarmRouteImport.update({
+  id: '/farm',
+  path: '/farm',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DlmmRoute = DlmmRouteImport.update({
+  id: '/dlmm',
+  path: '/dlmm',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +43,72 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dlmm': typeof DlmmRoute
+  '/farm': typeof FarmRoute
+  '/lock': typeof LockRoute
+  '/vesting': typeof VestingRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dlmm': typeof DlmmRoute
+  '/farm': typeof FarmRoute
+  '/lock': typeof LockRoute
+  '/vesting': typeof VestingRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dlmm': typeof DlmmRoute
+  '/farm': typeof FarmRoute
+  '/lock': typeof LockRoute
+  '/vesting': typeof VestingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/dlmm' | '/farm' | '/lock' | '/vesting'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/dlmm' | '/farm' | '/lock' | '/vesting'
+  id: '__root__' | '/' | '/dlmm' | '/farm' | '/lock' | '/vesting'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DlmmRoute: typeof DlmmRoute
+  FarmRoute: typeof FarmRoute
+  LockRoute: typeof LockRoute
+  VestingRoute: typeof VestingRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vesting': {
+      id: '/vesting'
+      path: '/vesting'
+      fullPath: '/vesting'
+      preLoaderRoute: typeof VestingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lock': {
+      id: '/lock'
+      path: '/lock'
+      fullPath: '/lock'
+      preLoaderRoute: typeof LockRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/farm': {
+      id: '/farm'
+      path: '/farm'
+      fullPath: '/farm'
+      preLoaderRoute: typeof FarmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dlmm': {
+      id: '/dlmm'
+      path: '/dlmm'
+      fullPath: '/dlmm'
+      preLoaderRoute: typeof DlmmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +121,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DlmmRoute: DlmmRoute,
+  FarmRoute: FarmRoute,
+  LockRoute: LockRoute,
+  VestingRoute: VestingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
