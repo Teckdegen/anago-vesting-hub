@@ -181,11 +181,11 @@ function Index() {
           </div>
         )}
 
-        {/* ── HERO CONTENT — upper-center on mobile, left-center on desktop ── */}
-        <div className="relative z-10 flex-1 flex flex-col justify-center px-5 sm:px-8 lg:px-14 pt-8 pb-20 sm:pb-28">
+        {/* ── HERO CONTENT — centered ── */}
+        <div className="relative z-10 flex-1 flex flex-col justify-center items-center text-center px-5 sm:px-8 lg:px-14 pt-8 pb-24 sm:pb-32">
 
           {/* tag */}
-          <p className="hero-tag font-mono text-[10px] uppercase tracking-[0.22em] mb-4 flex items-center gap-2" style={{ color: "#9B7FD4" }}>
+          <p className="hero-tag font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.22em] mb-5 flex items-center gap-2 justify-center" style={{ color: "#9B7FD4" }}>
             <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 animate-pulse" style={{ background: "#9B7FD4" }} />
             Powered by $ANAGO · Live on Monad
           </p>
@@ -193,49 +193,40 @@ function Index() {
           {/* headline */}
           <div className="overflow-hidden">
             <h1 className="font-grotesk uppercase leading-[0.9] tracking-tight hero-line-1"
-              style={{ fontSize: "clamp(28px, 4.5vw, 56px)" }}>
+              style={{ fontSize: "clamp(38px, 6.5vw, 80px)" }}>
               <span className="block shimmer-text">Every token</span>
               <span className="block shimmer-text">needs a home.</span>
             </h1>
           </div>
 
           {/* sub */}
-          <p className="hero-sub font-mono text-[10px] sm:text-[11px] text-cream/40 tracking-wide mt-4 max-w-[260px] sm:max-w-xs">
+          <p className="hero-sub font-mono text-[11px] sm:text-[13px] text-cream/50 tracking-wide mt-5 max-w-sm">
             Vesting · Token Lock · DLMM · Yield Farm — one protocol, one roof.
           </p>
 
-          {/* CTA */}
-          <div className="hero-cta mt-6 flex items-center gap-3 flex-wrap">
-            <a
-              href="#"
-              className="flex items-center gap-2 rounded-full px-5 py-2.5 font-grotesk text-[11px] uppercase tracking-wider transition hover:opacity-85"
-              style={{
-                background: "linear-gradient(135deg, #9B7FD4, #5B4FE8)",
-                color: "#F5F0FF",
-                boxShadow: "0 4px 20px rgba(91,79,232,0.45)",
-              }}
-            >
-              Launch App
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-3 h-3">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </a>
-            <a href="#tools" className="font-mono text-[10px] uppercase tracking-widest text-cream/30 hover:text-cream/60 transition flex items-center gap-1">
-              Explore
+          {/* single CTA — no second Launch App */}
+          <div className="hero-cta mt-7 flex items-center gap-3 justify-center">
+            <a href="#tools" className="font-mono text-[10px] uppercase tracking-widest text-cream/35 hover:text-cream/65 transition flex items-center gap-1.5">
+              Explore tools
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3 h-3">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
             </a>
           </div>
 
-          {/* TVL stat — small, bottom-right of hero, overlaid on video */}
+          {/* TVL — bold, bottom-right, overlaid on video */}
           <div
-            className="absolute bottom-8 right-5 sm:right-10 lg:right-14 flex flex-col items-end gap-1 pointer-events-none"
+            className="absolute bottom-6 right-5 sm:right-10 lg:right-14 flex flex-col items-end gap-0.5 pointer-events-none"
             aria-hidden="true"
           >
-            <span className="font-mono text-[8px] uppercase tracking-[0.25em] text-cream/20">Total Value Locked</span>
-            <span className="font-grotesk text-cream/15 text-[28px] sm:text-[36px] leading-none">$0</span>
-            <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-cream/15">across all products</span>
+            <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-cream/35">Total Value Locked</span>
+            <span
+              className="font-grotesk leading-none text-cream"
+              style={{ fontSize: "clamp(48px, 7vw, 96px)", opacity: 0.55, fontWeight: 900 }}
+            >
+              $0
+            </span>
+            <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-cream/25">across all products</span>
           </div>
         </div>
       </section>
