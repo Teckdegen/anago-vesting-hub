@@ -235,8 +235,7 @@ function Index() {
             <h2 className="font-grotesk uppercase text-cream font-black text-[40px] sm:text-[56px] md:text-[68px] lg:text-[80px] leading-[0.95] tracking-tight">
               A home for <br />
               <span className="inline-block ml-12 md:ml-24 lg:ml-32">
-                <span className="font-condiment text-neon normal-case font-normal drop-shadow-[0_0_24px_rgba(111,255,0,0.55)]">every</span>{" "}
-                token
+                every token
               </span>
             </h2>
             <div className="text-right">
