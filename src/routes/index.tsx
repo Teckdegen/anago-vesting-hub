@@ -142,7 +142,7 @@ function Index() {
 
           <div className="flex items-center gap-2 shrink-0 py-3">
             <a
-              href="#"
+              href="/dashboard"
               className="rounded-full px-4 py-2 font-grotesk text-[11px] uppercase tracking-wider transition hover:opacity-85 whitespace-nowrap"
               style={{
                 background: "linear-gradient(135deg, #9B7FD4, #5B4FE8)",
