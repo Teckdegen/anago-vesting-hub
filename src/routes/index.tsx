@@ -89,14 +89,34 @@ function Index() {
       <div className="texture-overlay" aria-hidden="true" />
 
       {/* ── HERO ── */}
-      <section className="relative w-full min-h-screen flex flex-col overflow-hidden">
-        {/* ambient glow */}
-        <div
-          className="pointer-events-none absolute top-[-10%] left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full opacity-40 blur-[140px]"
-          style={{ background: "radial-gradient(ellipse, #5B4FE8 0%, #9B7FD4 40%, transparent 70%)" }}
+      <section className="relative w-full min-h-screen flex flex-col overflow-hidden" style={{ background: "#0A061E" }}>
+
+        {/* fullscreen background video */}
+        <video
+          src="https://stream.mux.com/4IMYGcL01xjs7ek5ANO17JC4VQVUTsojZlnw4fXzwSxc/high.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover opacity-70"
+          aria-hidden="true"
         />
+
+        {/* vignette — darkens edges so text pops */}
+        <div className="video-vignette absolute inset-0 pointer-events-none" />
+
+        {/* bottom fade into page bg */}
+        <div className="video-fade-bottom absolute bottom-0 left-0 right-0 h-48 pointer-events-none" />
+
+        {/* subtle purple color grade over video */}
         <div
-          className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[2px] opacity-60"
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "linear-gradient(160deg, rgba(91,79,232,0.18) 0%, rgba(155,127,212,0.08) 50%, transparent 100%)", mixBlendMode: "screen" }}
+        />
+
+        {/* bottom shimmer line */}
+        <div
+          className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[1px] opacity-50"
           style={{ background: "linear-gradient(90deg, transparent, #9B7FD4, #5B4FE8, #9B7FD4, transparent)" }}
         />
 
@@ -111,17 +131,15 @@ function Index() {
           </div>
 
           {/* center pill nav */}
-          <nav
-            className="flex-1 flex justify-center"
-          >
+          <nav className="flex-1 flex justify-center">
             <ul
               className="flex items-center gap-1 px-6 py-3 rounded-full"
               style={{
-                background: "rgba(91,79,232,0.18)",
-                border: "1px solid rgba(155,127,212,0.25)",
-                backdropFilter: "blur(16px)",
-                WebkitBackdropFilter: "blur(16px)",
-                boxShadow: "inset 0 1px 1px rgba(245,240,255,0.08), 0 4px 24px rgba(42,31,107,0.4)",
+                background: "rgba(10,6,30,0.55)",
+                border: "1px solid rgba(155,127,212,0.22)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                boxShadow: "inset 0 1px 1px rgba(245,240,255,0.06), 0 4px 24px rgba(0,0,0,0.5)",
               }}
             >
               {[
@@ -134,7 +152,7 @@ function Index() {
                 <li key={l.label}>
                   <Link
                     to={l.href as "/" | "/vesting" | "/lock" | "/dlmm" | "/farm"}
-                    className="font-grotesk text-[11px] sm:text-[12px] uppercase tracking-[0.12em] text-cream/70 hover:text-cream px-3 sm:px-5 py-1.5 rounded-full transition-colors duration-200"
+                    className="font-grotesk text-[11px] sm:text-[12px] uppercase tracking-[0.12em] text-cream/60 hover:text-cream px-3 sm:px-5 py-1.5 rounded-full transition-colors duration-200"
                     activeProps={{ className: "font-grotesk text-[11px] sm:text-[12px] uppercase tracking-[0.12em] text-cream px-3 sm:px-5 py-1.5 rounded-full transition-colors duration-200" }}
                   >
                     {l.label}
@@ -147,7 +165,7 @@ function Index() {
           {/* launch app */}
           <a
             href="#"
-            className="shrink-0 flex items-center gap-2 rounded-full px-5 py-2.5 font-grotesk text-[12px] uppercase tracking-wider transition hover:opacity-90 hover:-translate-y-0.5"
+            className="cta-glow shrink-0 flex items-center gap-2 rounded-full px-5 py-2.5 font-grotesk text-[12px] uppercase tracking-wider transition hover:opacity-90 hover:-translate-y-0.5"
             style={{
               background: "linear-gradient(135deg, #9B7FD4, #5B4FE8)",
               color: "#F5F0FF",
@@ -158,38 +176,57 @@ function Index() {
           </a>
         </header>
 
-        {/* hero content */}
-        <div className="relative z-10 flex-1 flex flex-col items-start justify-center px-6 sm:px-10 lg:px-20 pb-24 fade-up">
-          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#9B7FD4] mb-5">
+        {/* hero content — left-aligned, vertically centered */}
+        <div className="relative z-10 flex-1 flex flex-col justify-center px-6 sm:px-10 lg:px-20 pb-28">
+
+          {/* tag line */}
+          <p className="hero-tag font-mono text-[11px] uppercase tracking-[0.2em] mb-6 flex items-center gap-2.5" style={{ color: "#9B7FD4" }}>
+            <span className="pulse-dot w-1.5 h-1.5 rounded-full inline-block" style={{ background: "#9B7FD4" }} />
             Powered by $ANAGO · Live on Monad
           </p>
-          <h1 className="font-grotesk uppercase text-cream text-[44px] sm:text-[64px] md:text-[80px] lg:text-[96px] leading-[1] tracking-tight max-w-3xl">
-            Every token<br />needs a home.
+
+          {/* headline */}
+          <h1 className="font-grotesk uppercase text-[48px] sm:text-[68px] md:text-[84px] lg:text-[104px] leading-[0.95] tracking-tight max-w-4xl overflow-hidden">
+            <span className="hero-line-1 shimmer-text">Every token</span>
+            <span className="hero-line-2 shimmer-text">needs a home.</span>
           </h1>
-          <p className="mt-6 font-mono text-[13px] text-cream/50 max-w-sm tracking-wide">
-            Vesting · Token Lock · DLMM · Yield Farm — one protocol, one roof.
+
+          {/* sub */}
+          <p className="hero-sub font-mono text-[12px] sm:text-[13px] text-cream/50 max-w-sm tracking-wide mt-7">
+            Vesting · Token Lock · DLMM · Yield Farm<br />— one protocol, one roof.
           </p>
-          <div className="mt-10 flex items-center gap-4">
+
+          {/* CTA row */}
+          <div className="hero-cta mt-10 flex items-center gap-4 flex-wrap">
             <a
               href="#"
-              className="flex items-center gap-2 rounded-full px-6 py-3 font-grotesk text-[13px] uppercase tracking-wider transition hover:opacity-90 hover:-translate-y-0.5"
-              style={{ background: "linear-gradient(135deg, #9B7FD4, #5B4FE8)", color: "#F5F0FF", boxShadow: "0 4px 28px rgba(91,79,232,0.45)" }}
+              className="cta-glow flex items-center gap-2 rounded-full px-7 py-3.5 font-grotesk text-[13px] uppercase tracking-wider transition hover:opacity-90 hover:-translate-y-0.5"
+              style={{
+                background: "linear-gradient(135deg, #9B7FD4, #5B4FE8)",
+                color: "#F5F0FF",
+                boxShadow: "0 4px 28px rgba(91,79,232,0.5)",
+              }}
             >
               Launch App
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-3.5 h-3.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
             </a>
-            <span className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-cream/50">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#9B7FD4] animate-pulse" />
-              Testnet live
-            </span>
+            <a
+              href="#utilities"
+              className="font-mono text-[11px] uppercase tracking-widest text-cream/40 hover:text-cream/70 transition flex items-center gap-1.5"
+            >
+              Explore tools
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3 h-3">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </a>
           </div>
         </div>
       </section>
 
       {/* ── UTILITIES ── */}
-      <section className="relative reveal px-6 sm:px-10 lg:px-20 py-24 sm:py-28">
+      <section id="utilities" className="relative reveal px-6 sm:px-10 lg:px-20 py-24 sm:py-28">
         <div
           className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full opacity-20 blur-[120px]"
           style={{ background: "radial-gradient(ellipse, #7C5CBF 0%, transparent 70%)" }}
