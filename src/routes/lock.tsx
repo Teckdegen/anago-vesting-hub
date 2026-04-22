@@ -15,7 +15,7 @@ export const Route = createFileRoute("/lock")({
 
 const ACCENT = "#5B4FE8";
 const ACCENT2 = "#9B7FD4";
-const TABS = ["All Locks", "My Locks", "Unlocking Soon"] as const;
+const TABS = ["All Locks", "My Locks", "Unlocking Soon", "Leaderboard"] as const;
 type Tab = typeof TABS[number];
 
 // Populated from on-chain data when available
@@ -63,20 +63,46 @@ function LockPage() {
           </p>
         </div>
 
-        {/* ── LEADERBOARD ── */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <Trophy className="w-3.5 h-3.5" style={{ color: ACCENT2 }} strokeWidth={1.5} />
-            <span className="font-grotesk uppercase text-cream/80 text-[12px] tracking-wider">
-              Most Locked Tokens
-            </span>
-            <span className="ml-auto font-mono text-[9px] uppercase tracking-widest text-cream/35">
-              By total value locked
-            </span>
+        {/* ── LOCKS TABLE ── */}
+        <div className="flex items-center justify-between flex-wrap gap-3 mb-5">
+          <div
+            className="flex items-center gap-0.5 p-1 rounded-full"
+            style={{ background: "rgba(91,79,232,0.12)", border: "1px solid rgba(91,79,232,0.3)" }}
+          >
+            {TABS.map((t) => (
+              <button
+                key={t}
+                onClick={() => setActiveTab(t)}
+                className="px-4 py-1.5 rounded-full font-grotesk text-[11px] uppercase tracking-wider transition whitespace-nowrap"
+                style={
+                  activeTab === t
+                    ? { background: ACCENT, color: "#F5F0FF", boxShadow: `0 0 12px ${ACCENT}55` }
+                    : { color: "rgba(245,240,255,0.65)" }
+                }
+              >
+                {t}
+              </button>
+            ))}
           </div>
+          {activeTab !== "Leaderboard" && (
+            <div
+              className="flex items-center gap-2 px-3 py-2 rounded-full"
+              style={{ background: "rgba(91,79,232,0.1)", border: "1px solid rgba(91,79,232,0.28)" }}
+            >
+              <Search className="w-3.5 h-3.5 text-cream/60" strokeWidth={1.5} />
+              <input
+                type="text"
+                placeholder="Search by token or address…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="bg-transparent font-mono text-[11px] text-cream/80 placeholder-cream/40 outline-none w-40 sm:w-56"
+              />
+            </div>
+          )}
+        </div>
 
+        {activeTab === "Leaderboard" ? (
           <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(91,79,232,0.28)" }}>
-            {/* thead */}
             <div
               className="hidden sm:grid px-5 py-3 text-[9px] font-mono uppercase tracking-[0.2em] text-cream/55"
               style={{
@@ -93,7 +119,7 @@ function LockPage() {
             </div>
 
             {LEADERBOARD.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
+              <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
                 <Trophy className="w-8 h-8 text-cream/20 mb-3" strokeWidth={1} />
                 <p className="font-grotesk uppercase text-cream/50 text-[12px] tracking-wider">No data yet</p>
                 <p className="font-mono text-[10px] text-cream/35 mt-1">
@@ -143,97 +169,63 @@ function LockPage() {
               ))
             )}
           </div>
-        </div>
-
-        {/* ── LOCKS TABLE ── */}
-        <div className="flex items-center justify-between flex-wrap gap-3 mb-5">
-          <div
-            className="flex items-center gap-0.5 p-1 rounded-full"
-            style={{ background: "rgba(91,79,232,0.12)", border: "1px solid rgba(91,79,232,0.3)" }}
-          >
-            {TABS.map((t) => (
-              <button
-                key={t}
-                onClick={() => setActiveTab(t)}
-                className="px-4 py-1.5 rounded-full font-grotesk text-[11px] uppercase tracking-wider transition whitespace-nowrap"
-                style={
-                  activeTab === t
-                    ? { background: ACCENT, color: "#F5F0FF", boxShadow: `0 0 12px ${ACCENT}55` }
-                    : { color: "rgba(245,240,255,0.65)" }
-                }
-              >
-                {t}
-              </button>
-            ))}
-          </div>
-          <div
-            className="flex items-center gap-2 px-3 py-2 rounded-full"
-            style={{ background: "rgba(91,79,232,0.1)", border: "1px solid rgba(91,79,232,0.28)" }}
-          >
-            <Search className="w-3.5 h-3.5 text-cream/60" strokeWidth={1.5} />
-            <input
-              type="text"
-              placeholder="Search by token or address…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="bg-transparent font-mono text-[11px] text-cream/80 placeholder-cream/40 outline-none w-40 sm:w-56"
-            />
-          </div>
-        </div>
-
-        <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(91,79,232,0.28)" }}>
-          <div
-            className="hidden sm:grid px-5 py-3 text-[9px] font-mono uppercase tracking-[0.2em] text-cream/55"
-            style={{
-              gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 80px",
-              borderBottom: "1px solid rgba(91,79,232,0.25)",
-              background: "rgba(91,79,232,0.12)",
-            }}
-          >
-            <div>Token</div>
-            <div className="text-right">Amount</div>
-            <div className="text-right">Value</div>
-            <div className="text-right">Lock Date</div>
-            <div className="text-right">Unlock Date</div>
-            <div />
-          </div>
-
-          <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
+        ) : (
+          <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(91,79,232,0.28)" }}>
             <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-              style={{ background: `${ACCENT}25`, border: `1px solid ${ACCENT}45` }}
+              className="hidden sm:grid px-5 py-3 text-[9px] font-mono uppercase tracking-[0.2em] text-cream/55"
+              style={{
+                gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 80px",
+                borderBottom: "1px solid rgba(91,79,232,0.25)",
+                background: "rgba(91,79,232,0.12)",
+              }}
             >
-              <LockKeyhole className="w-4 h-4 text-cream/60" strokeWidth={1.5} />
+              <div>Token</div>
+              <div className="text-right">Amount</div>
+              <div className="text-right">Value</div>
+              <div className="text-right">Lock Date</div>
+              <div className="text-right">Unlock Date</div>
+              <div />
             </div>
-            <p className="font-grotesk uppercase text-cream/75 text-[13px] tracking-wider">
-              {activeTab === "My Locks" ? "No locks found" : "No locks yet"}
-            </p>
-            <p className="font-mono text-[10px] text-cream/55 mt-1.5 max-w-[200px]">
-              {activeTab === "My Locks"
-                ? "Connect your wallet to see your locks."
-                : "Locks will appear once the protocol launches."}
-            </p>
+
+            <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+                style={{ background: `${ACCENT}25`, border: `1px solid ${ACCENT}45` }}
+              >
+                <LockKeyhole className="w-4 h-4 text-cream/60" strokeWidth={1.5} />
+              </div>
+              <p className="font-grotesk uppercase text-cream/75 text-[13px] tracking-wider">
+                {activeTab === "My Locks" ? "No locks found" : "No locks yet"}
+              </p>
+              <p className="font-mono text-[10px] text-cream/55 mt-1.5 max-w-[200px]">
+                {activeTab === "My Locks"
+                  ? "Connect your wallet to see your locks."
+                  : "Locks will appear once the protocol launches."}
+              </p>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* create lock CTA */}
-        <div
-          className="mt-6 flex items-center justify-between px-5 py-4 rounded-xl"
-          style={{ border: "1px solid rgba(91,79,232,0.25)", background: "rgba(91,79,232,0.1)" }}
-        >
-          <div>
-            <p className="font-grotesk uppercase text-cream/70 text-[12px] tracking-wider">Create a lock</p>
-            <p className="font-mono text-[10px] text-cream/65 mt-0.5">
-              Secure tokens with a time-based release schedule.
-            </p>
-          </div>
-          <button
-            className="rounded-full px-4 py-2 font-grotesk text-[10px] uppercase tracking-wider transition hover:opacity-85"
-            style={{ background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, color: "#F5F0FF" }}
+        {activeTab !== "Leaderboard" && (
+          <div
+            className="mt-6 flex items-center justify-between px-5 py-4 rounded-xl"
+            style={{ border: "1px solid rgba(91,79,232,0.25)", background: "rgba(91,79,232,0.1)" }}
           >
-            New Lock
-          </button>
-        </div>
+            <div>
+              <p className="font-grotesk uppercase text-cream/70 text-[12px] tracking-wider">Create a lock</p>
+              <p className="font-mono text-[10px] text-cream/65 mt-0.5">
+                Secure tokens with a time-based release schedule.
+              </p>
+            </div>
+            <button
+              className="rounded-full px-4 py-2 font-grotesk text-[10px] uppercase tracking-wider transition hover:opacity-85"
+              style={{ background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, color: "#F5F0FF" }}
+            >
+              New Lock
+            </button>
+          </div>
+        )}
       </div>
     </AppShell>
   );

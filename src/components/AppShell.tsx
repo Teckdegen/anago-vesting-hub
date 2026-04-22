@@ -5,6 +5,7 @@ import { Menu, X } from "lucide-react";
 
 const NAV = [
   { label: "Home", href: "/" },
+  { label: "Dashboard", href: "/dashboard" },
   { label: "Vesting", href: "/vesting" },
   { label: "Token Lock", href: "/lock" },
   { label: "DLMM", href: "/dlmm" },
