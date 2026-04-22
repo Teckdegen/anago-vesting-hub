@@ -316,21 +316,6 @@ function Index() {
             playsInline
             className="w-full h-auto block"
           />
-          {/* Dog mascot overlay covering the TV screen in the video */}
-          <img
-            src="/cta-dog.png"
-            alt="Anago dog mascot"
-            className="absolute pointer-events-none select-none object-contain"
-            style={{
-              top: "-30%",
-              left: "-10%",
-              width: "55%",
-              height: "120%",
-              transform: "rotate(-8deg)",
-              transformOrigin: "center",
-              filter: "drop-shadow(0 0 40px rgba(111,255,0,0.5))",
-            }}
-          />
         </div>
 
         <div className="absolute inset-0">
