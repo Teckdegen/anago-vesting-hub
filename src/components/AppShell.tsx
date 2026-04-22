@@ -25,7 +25,7 @@ export function AppShell({ children, accent = "#9B7FD4", accent2 = "#5B4FE8" }: 
   return (
     <div
       className="min-h-screen text-cream overflow-x-hidden"
-      style={{ background: "linear-gradient(160deg, #1A1245 0%, #2A1F6B 40%, #1E1650 100%)" }}
+      style={{ background: "linear-gradient(160deg, #06040F 0%, #0E0A24 40%, #0A0718 100%)" }}
     >
       <div className="texture-overlay" aria-hidden="true" />
 

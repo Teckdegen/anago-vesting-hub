@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { Send, Timer, LockKeyhole, BarChart2, Sprout } from "lucide-react";
+import { HlsVideo } from "@/components/HlsVideo";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -9,14 +10,14 @@ export const Route = createFileRoute("/")({
       { title: "The Dog House — Every token needs a home" },
       {
         name: "description",
-        content:
-          "The Dog House on Monad: Vesting, Token Lock, DLMM and Yield Farm. Powered by ANAGO.",
+        content: "The Dog House on Monad: Vesting, Token Lock, DLMM and Yield Farm. Powered by ANAGO.",
       },
     ],
   }),
 });
 
-// X (Twitter) icon
+const HLS_SRC = "https://stream.mux.com/4IMYGcL01xjs7ek5ANO17JC4VQVUTsojZlnw4fXzwSxc.m3u8";
+
 function XIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
@@ -29,28 +30,28 @@ const UTILITIES = [
   {
     icon: BarChart2,
     title: "DLMM",
-    desc: "Dynamic concentrated liquidity with custom bin strategies and real-time fee capture.",
+    desc: "Concentrated liquidity with custom bin strategies and real-time fee capture.",
     accent: "#9B7FD4",
     href: "/dlmm",
   },
   {
     icon: Timer,
     title: "Vesting",
-    desc: "Linear and cliff vesting schedules for teams, investors, and contributors.",
+    desc: "Linear and cliff vesting for teams, investors, and contributors.",
     accent: "#7C5CBF",
     href: "/vesting",
   },
   {
     icon: LockKeyhole,
     title: "Token Lock",
-    desc: "Time-based token locks with transparent on-chain unlock schedules.",
+    desc: "Time-based locks with transparent on-chain unlock schedules.",
     accent: "#5B4FE8",
     href: "/lock",
   },
   {
     icon: Sprout,
     title: "Yield Farm",
-    desc: "Stake LP tokens, earn boosted rewards, and harvest yield on Monad.",
+    desc: "Stake LP tokens, earn boosted rewards, harvest yield on Monad.",
     accent: "#E8A0B0",
     href: "/farm",
   },
@@ -75,85 +76,85 @@ function Index() {
           }
         });
       },
-      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" },
+      { threshold: 0.08 },
     );
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, []);
 
   return (
-    <main
-      className="text-cream min-h-screen overflow-x-hidden"
-      style={{ background: "linear-gradient(160deg, #1A1245 0%, #2A1F6B 40%, #1E1650 100%)" }}
-    >
+    <main className="text-cream min-h-screen overflow-x-hidden" style={{ background: "#06040F" }}>
       <div className="texture-overlay" aria-hidden="true" />
 
-      {/* ── HERO ── */}
-      <section className="relative w-full min-h-screen flex flex-col overflow-hidden" style={{ background: "#0A061E" }}>
+      {/* ─────────────────────────────────────────
+          HERO
+      ───────────────────────────────────────── */}
+      <section className="relative w-full h-screen min-h-[580px] max-h-[860px] flex flex-col overflow-hidden">
 
-        {/* fullscreen background video */}
-        <video
-          src="https://stream.mux.com/4IMYGcL01xjs7ek5ANO17JC4VQVUTsojZlnw4fXzwSxc/high.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover opacity-70"
-          aria-hidden="true"
-        />
+        {/* HLS video — fills the right ~60% of the frame, dark on left */}
+        <div className="absolute inset-0">
+          <HlsVideo
+            src={HLS_SRC}
+            className="absolute inset-0 w-full h-full object-cover object-center"
+          />
+          {/* heavy left-side dark fade so text is always readable */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(100deg, #06040F 0%, #06040F 30%, rgba(6,4,15,0.82) 50%, rgba(6,4,15,0.3) 70%, rgba(6,4,15,0.15) 100%)",
+            }}
+          />
+          {/* bottom fade into page */}
+          <div
+            className="absolute bottom-0 left-0 right-0 h-40"
+            style={{ background: "linear-gradient(to bottom, transparent, #06040F)" }}
+          />
+          {/* subtle purple tint over video */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: "linear-gradient(135deg, rgba(91,79,232,0.12) 0%, transparent 60%)",
+              mixBlendMode: "screen",
+            }}
+          />
+        </div>
 
-        {/* vignette — darkens edges so text pops */}
-        <div className="video-vignette absolute inset-0 pointer-events-none" />
-
-        {/* bottom fade into page bg */}
-        <div className="video-fade-bottom absolute bottom-0 left-0 right-0 h-48 pointer-events-none" />
-
-        {/* subtle purple color grade over video */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: "linear-gradient(160deg, rgba(91,79,232,0.18) 0%, rgba(155,127,212,0.08) 50%, transparent 100%)", mixBlendMode: "screen" }}
-        />
-
-        {/* bottom shimmer line */}
-        <div
-          className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[1px] opacity-50"
-          style={{ background: "linear-gradient(90deg, transparent, #9B7FD4, #5B4FE8, #9B7FD4, transparent)" }}
-        />
-
-        {/* nav */}
-        <header className="relative z-10 flex items-center justify-between px-6 sm:px-10 lg:px-16 pt-7 pb-4 gap-4">
-          {/* logo */}
+        {/* ── NAV ── */}
+        <header className="relative z-20 flex items-center justify-between px-6 sm:px-10 lg:px-14 pt-6 pb-4 gap-4">
           <div className="flex items-center gap-2.5 shrink-0">
-            <img src="/logo.png" alt="The Dog House" className="w-8 h-8 rounded-md" />
-            <span className="hidden sm:block font-grotesk text-[13px] uppercase tracking-wider text-cream/80">
+            <img src="/logo.png" alt="The Dog House" className="w-8 h-8 rounded-lg" />
+            <span className="hidden sm:block font-grotesk text-[13px] uppercase tracking-wider text-cream/75">
               The Dog House
             </span>
           </div>
 
-          {/* center pill nav */}
           <nav className="flex-1 flex justify-center">
             <ul
-              className="flex items-center gap-1 px-6 py-3 rounded-full"
+              className="flex items-center gap-0.5 px-4 py-2.5 rounded-full"
               style={{
-                background: "rgba(10,6,30,0.55)",
-                border: "1px solid rgba(155,127,212,0.22)",
-                backdropFilter: "blur(20px)",
-                WebkitBackdropFilter: "blur(20px)",
-                boxShadow: "inset 0 1px 1px rgba(245,240,255,0.06), 0 4px 24px rgba(0,0,0,0.5)",
+                background: "rgba(6,4,15,0.7)",
+                border: "1px solid rgba(155,127,212,0.18)",
+                backdropFilter: "blur(24px)",
+                WebkitBackdropFilter: "blur(24px)",
               }}
             >
-              {[
-                { label: "Home", href: "/" },
-                { label: "Vesting", href: "/vesting" },
-                { label: "Token Lock", href: "/lock" },
-                { label: "DLMM", href: "/dlmm" },
-                { label: "Yield Farm", href: "/farm" },
-              ].map((l) => (
+              {(
+                [
+                  { label: "Home", href: "/" },
+                  { label: "Vesting", href: "/vesting" },
+                  { label: "Token Lock", href: "/lock" },
+                  { label: "DLMM", href: "/dlmm" },
+                  { label: "Yield Farm", href: "/farm" },
+                ] as const
+              ).map((l) => (
                 <li key={l.label}>
                   <Link
-                    to={l.href as "/" | "/vesting" | "/lock" | "/dlmm" | "/farm"}
-                    className="font-grotesk text-[11px] sm:text-[12px] uppercase tracking-[0.12em] text-cream/60 hover:text-cream px-3 sm:px-5 py-1.5 rounded-full transition-colors duration-200"
-                    activeProps={{ className: "font-grotesk text-[11px] sm:text-[12px] uppercase tracking-[0.12em] text-cream px-3 sm:px-5 py-1.5 rounded-full transition-colors duration-200" }}
+                    to={l.href}
+                    className="font-grotesk text-[11px] sm:text-[12px] uppercase tracking-[0.1em] text-cream/50 hover:text-cream/90 px-3 sm:px-4 py-1.5 rounded-full transition-colors duration-200 block"
+                    activeProps={{
+                      style: { color: "#F5F0FF" },
+                    }}
                   >
                     {l.label}
                   </Link>
@@ -162,59 +163,60 @@ function Index() {
             </ul>
           </nav>
 
-          {/* launch app */}
           <a
             href="#"
-            className="cta-glow shrink-0 flex items-center gap-2 rounded-full px-5 py-2.5 font-grotesk text-[12px] uppercase tracking-wider transition hover:opacity-90 hover:-translate-y-0.5"
+            className="shrink-0 rounded-full px-5 py-2.5 font-grotesk text-[12px] uppercase tracking-wider transition-all duration-300 hover:opacity-85 hover:-translate-y-px"
             style={{
               background: "linear-gradient(135deg, #9B7FD4, #5B4FE8)",
               color: "#F5F0FF",
-              boxShadow: "0 4px 20px rgba(91,79,232,0.4)",
+              boxShadow: "0 0 0 1px rgba(155,127,212,0.3), 0 4px 20px rgba(91,79,232,0.4)",
             }}
           >
             Launch App
           </a>
         </header>
 
-        {/* hero content — left-aligned, vertically centered */}
-        <div className="relative z-10 flex-1 flex flex-col justify-center px-6 sm:px-10 lg:px-20 pb-28">
+        {/* ── HERO TEXT — bottom-left aligned ── */}
+        <div className="relative z-10 flex-1 flex flex-col justify-end px-6 sm:px-10 lg:px-14 pb-14 sm:pb-18">
 
-          {/* tag line */}
-          <p className="hero-tag font-mono text-[11px] uppercase tracking-[0.2em] mb-6 flex items-center gap-2.5" style={{ color: "#9B7FD4" }}>
-            <span className="pulse-dot w-1.5 h-1.5 rounded-full inline-block" style={{ background: "#9B7FD4" }} />
+          <p className="hero-tag font-mono text-[10px] uppercase tracking-[0.22em] mb-5 flex items-center gap-2.5" style={{ color: "#9B7FD4" }}>
+            <span className="pulse-dot w-1.5 h-1.5 rounded-full inline-block flex-shrink-0" style={{ background: "#9B7FD4" }} />
             Powered by $ANAGO · Live on Monad
           </p>
 
-          {/* headline */}
-          <h1 className="font-grotesk uppercase text-[48px] sm:text-[68px] md:text-[84px] lg:text-[104px] leading-[0.95] tracking-tight max-w-4xl overflow-hidden">
-            <span className="hero-line-1 shimmer-text">Every token</span>
-            <span className="hero-line-2 shimmer-text">needs a home.</span>
-          </h1>
+          {/* headline — controlled size, not full-bleed */}
+          <div className="overflow-hidden">
+            <h1
+              className="font-grotesk uppercase leading-[0.9] tracking-tight"
+              style={{ fontSize: "clamp(32px, 5.5vw, 64px)" }}
+            >
+              <span className="hero-line-1 block shimmer-text">Every token</span>
+              <span className="hero-line-2 block shimmer-text">needs a home.</span>
+            </h1>
+          </div>
 
-          {/* sub */}
-          <p className="hero-sub font-mono text-[12px] sm:text-[13px] text-cream/50 max-w-sm tracking-wide mt-7">
+          <p className="hero-sub font-mono text-[11px] text-cream/40 tracking-wide mt-5 max-w-xs">
             Vesting · Token Lock · DLMM · Yield Farm<br />— one protocol, one roof.
           </p>
 
-          {/* CTA row */}
-          <div className="hero-cta mt-10 flex items-center gap-4 flex-wrap">
+          <div className="hero-cta mt-7 flex items-center gap-4">
             <a
               href="#"
-              className="cta-glow flex items-center gap-2 rounded-full px-7 py-3.5 font-grotesk text-[13px] uppercase tracking-wider transition hover:opacity-90 hover:-translate-y-0.5"
+              className="flex items-center gap-2 rounded-full px-6 py-3 font-grotesk text-[12px] uppercase tracking-wider transition-all duration-300 hover:opacity-85 hover:-translate-y-px"
               style={{
                 background: "linear-gradient(135deg, #9B7FD4, #5B4FE8)",
                 color: "#F5F0FF",
-                boxShadow: "0 4px 28px rgba(91,79,232,0.5)",
+                boxShadow: "0 0 0 1px rgba(155,127,212,0.25), 0 4px 24px rgba(91,79,232,0.45)",
               }}
             >
               Launch App
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-3.5 h-3.5">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-3 h-3">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
             </a>
             <a
               href="#utilities"
-              className="font-mono text-[11px] uppercase tracking-widest text-cream/40 hover:text-cream/70 transition flex items-center gap-1.5"
+              className="font-mono text-[10px] uppercase tracking-widest text-cream/30 hover:text-cream/60 transition flex items-center gap-1.5"
             >
               Explore tools
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3 h-3">
@@ -225,54 +227,79 @@ function Index() {
         </div>
       </section>
 
-      {/* ── UTILITIES ── */}
-      <section id="utilities" className="relative reveal px-6 sm:px-10 lg:px-20 py-24 sm:py-28">
+      {/* ─────────────────────────────────────────
+          UTILITIES
+      ───────────────────────────────────────── */}
+      <section id="utilities" className="relative reveal" style={{ background: "#06040F" }}>
+        {/* faint glow */}
         <div
-          className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full opacity-20 blur-[120px]"
-          style={{ background: "radial-gradient(ellipse, #7C5CBF 0%, transparent 70%)" }}
+          className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[280px] rounded-full opacity-12 blur-[100px]"
+          style={{ background: "radial-gradient(ellipse, #5B4FE8 0%, transparent 70%)" }}
         />
 
-        <div className="relative z-10 text-center mb-16">
-          <h2 className="font-grotesk uppercase text-cream text-[28px] sm:text-[36px] lg:text-[44px] leading-tight tracking-tight">
-            One protocol. Four tools.
-          </h2>
-          <p className="mt-3 font-mono text-[12px] text-cream/40 uppercase tracking-widest">
-            Everything your token needs, on Monad.
-          </p>
+        <div className="relative z-10 max-w-[1280px] mx-auto px-6 sm:px-10 lg:px-14 pt-20 pb-0">
+          {/* section label */}
+          <div className="flex items-end justify-between mb-10">
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-cream/25 mb-2">What we build</p>
+              <h2 className="font-grotesk uppercase text-cream text-[20px] sm:text-[26px] leading-tight tracking-tight">
+                One protocol. Four tools.
+              </h2>
+            </div>
+            <span className="hidden sm:block font-mono text-[9px] uppercase tracking-widest text-cream/20">
+              On Monad
+            </span>
+          </div>
         </div>
 
-        {/* thin divider line */}
-        <div className="relative z-10 w-full h-px mb-12" style={{ background: "linear-gradient(90deg, transparent, rgba(155,127,212,0.3), transparent)" }} />
-
-        {/* 4 utilities in a row */}
-        <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px" style={{ background: "rgba(155,127,212,0.12)", borderRadius: "20px", overflow: "hidden" }}>
-          {UTILITIES.map((u) => {
+        {/* full-width grid — no max-width so lines go edge to edge */}
+        <div
+          className="relative z-10 grid grid-cols-2 lg:grid-cols-4"
+          style={{ borderTop: "1px solid rgba(155,127,212,0.1)", borderBottom: "1px solid rgba(155,127,212,0.1)" }}
+        >
+          {UTILITIES.map((u, i) => {
             const Icon = u.icon;
             return (
               <Link
                 key={u.title}
                 to={u.href as "/dlmm" | "/vesting" | "/lock" | "/farm"}
-                className="group flex flex-col gap-5 px-8 py-10 transition-all duration-300 hover:bg-white/[0.04]"
-                style={{ background: "rgba(26,18,69,0.6)" }}
+                className="group flex flex-col gap-5 px-8 sm:px-10 py-10 transition-all duration-300 hover:bg-white/[0.025]"
+                style={{
+                  borderRight: i < 3 ? "1px solid rgba(155,127,212,0.1)" : "none",
+                }}
               >
-                <Icon
-                  className="w-5 h-5 transition-transform duration-300 group-hover:-translate-y-0.5"
-                  style={{ color: u.accent }}
-                  strokeWidth={1.5}
-                />
+                {/* icon + number */}
+                <div className="flex items-center justify-between">
+                  <div
+                    className="w-8 h-8 rounded-lg flex items-center justify-center"
+                    style={{ background: `${u.accent}18`, border: `1px solid ${u.accent}30` }}
+                  >
+                    <Icon className="w-3.5 h-3.5" style={{ color: u.accent }} strokeWidth={1.5} />
+                  </div>
+                  <span className="font-mono text-[9px] text-cream/15 group-hover:text-cream/30 transition">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </div>
+
+                {/* text */}
                 <div>
-                  <h3 className="font-grotesk uppercase text-cream text-[15px] tracking-wider mb-2">
+                  <h3 className="font-grotesk uppercase text-cream text-[13px] tracking-wider mb-2">
                     {u.title}
                   </h3>
-                  <p className="font-mono text-[11px] text-cream/40 leading-relaxed tracking-wide">
+                  <p className="font-mono text-[10px] text-cream/30 leading-relaxed">
                     {u.desc}
                   </p>
                 </div>
+
+                {/* hover arrow */}
                 <span
-                  className="mt-auto font-mono text-[10px] uppercase tracking-widest transition-colors duration-300 group-hover:opacity-100 opacity-50"
+                  className="mt-auto font-mono text-[9px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1"
                   style={{ color: u.accent }}
                 >
-                  Open →
+                  Open
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-2.5 h-2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
                 </span>
               </Link>
             );
@@ -280,66 +307,67 @@ function Index() {
         </div>
       </section>
 
-      {/* ── PROTOCOL STATS + FOOTER ── */}
-      <section
-        className="relative reveal overflow-hidden"
-        style={{ background: "linear-gradient(180deg, transparent 0%, rgba(91,79,232,0.08) 100%)" }}
-      >
-        {/* top border line */}
-        <div className="w-full h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(155,127,212,0.4), transparent)" }} />
-
+      {/* ─────────────────────────────────────────
+          STATS + FOOTER
+      ───────────────────────────────────────── */}
+      <section className="relative reveal" style={{ background: "#06040F" }}>
         <div
-          className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full opacity-15 blur-[100px]"
-          style={{ background: "radial-gradient(ellipse, #5B4FE8 0%, transparent 70%)" }}
+          className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[250px] rounded-full opacity-10 blur-[80px]"
+          style={{ background: "radial-gradient(ellipse, #9B7FD4 0%, transparent 70%)" }}
         />
 
-        <div className="relative z-10 max-w-[1280px] mx-auto px-6 sm:px-10 lg:px-20 pt-20 pb-10">
+        <div className="relative z-10 max-w-[1280px] mx-auto px-6 sm:px-10 lg:px-14 pt-0 pb-10">
 
-          {/* stats row */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-px mb-20" style={{ background: "rgba(155,127,212,0.1)", borderRadius: "16px", overflow: "hidden" }}>
-            {STATS.map((s) => (
+          {/* stats grid */}
+          <div
+            className="grid grid-cols-2 lg:grid-cols-4"
+            style={{
+              borderTop: "1px solid rgba(155,127,212,0.08)",
+              borderBottom: "1px solid rgba(155,127,212,0.08)",
+            }}
+          >
+            {STATS.map((s, i) => (
               <div
                 key={s.label}
-                className="flex flex-col gap-2 px-8 py-8"
-                style={{ background: "rgba(26,18,69,0.5)" }}
+                className="flex flex-col gap-1.5 px-6 sm:px-8 py-8"
+                style={{ borderRight: i < 3 ? "1px solid rgba(155,127,212,0.08)" : "none" }}
               >
-                <span className="font-mono text-[10px] uppercase tracking-widest text-cream/40">{s.sub}</span>
-                <span className="font-grotesk text-cream text-[36px] sm:text-[44px] leading-none">{s.value}</span>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-cream/40">{s.label}</span>
+                <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-cream/20">{s.sub}</span>
+                <span className="font-grotesk text-cream text-[30px] sm:text-[38px] leading-none">{s.value}</span>
+                <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-cream/20">{s.label}</span>
               </div>
             ))}
           </div>
 
-          {/* footer row */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pt-8 border-t border-white/[0.06]">
-            {/* left — logo + name */}
+          {/* footer */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 pt-8">
             <div className="flex items-center gap-2.5">
-              <img src="/logo.png" alt="" className="w-7 h-7 rounded-md" />
-              <span className="font-grotesk uppercase text-[12px] tracking-wider text-cream/70">
+              <img src="/logo.png" alt="" className="w-6 h-6 rounded-md opacity-50" />
+              <span className="font-grotesk uppercase text-[11px] tracking-wider text-cream/30">
                 The Dog House
               </span>
             </div>
-
-            {/* right — socials */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5">
               <a
                 href="#"
                 aria-label="X (Twitter)"
-                className="liquid-glass w-9 h-9 rounded-full flex items-center justify-center text-cream/60 hover:text-cream transition"
+                className="w-8 h-8 rounded-full flex items-center justify-center text-cream/30 hover:text-cream/70 transition"
+                style={{ border: "1px solid rgba(155,127,212,0.15)", background: "rgba(155,127,212,0.05)" }}
               >
-                <XIcon className="w-3.5 h-3.5" />
+                <XIcon className="w-3 h-3" />
               </a>
               <a
                 href="#"
                 aria-label="Telegram"
-                className="liquid-glass w-9 h-9 rounded-full flex items-center justify-center text-cream/60 hover:text-cream transition"
+                className="w-8 h-8 rounded-full flex items-center justify-center text-cream/30 hover:text-cream/70 transition"
+                style={{ border: "1px solid rgba(155,127,212,0.15)", background: "rgba(155,127,212,0.05)" }}
               >
-                <Send className="w-3.5 h-3.5" />
+                <Send className="w-3 h-3" />
               </a>
             </div>
           </div>
 
-          <p className="mt-6 font-mono text-[10px] uppercase tracking-widest text-cream/25 text-center sm:text-left">
+          <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.2em] text-cream/15">
             © 2026 The Dog House · Powered by $ANAGO on Monad
           </p>
         </div>
