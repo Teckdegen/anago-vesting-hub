@@ -23,7 +23,7 @@ function DLMMPage() {
   const [search, setSearch] = useState("");
 
   return (
-    <AppShell accent={ACCENT} accent2={ACCENT2}>
+    <AppShell>
       <div className="max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-14 pt-8 pb-20">
 
         {/* header */}
