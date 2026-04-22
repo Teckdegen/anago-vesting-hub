@@ -18,18 +18,12 @@ function DLMMPage() {
     <PortfolioPage
       title="DLMM"
       subtitle="Dynamic Liquidity Market Maker on Monad"
-      theme={{
-        name: "dlmm",
-        accent: "#0ea5e9",
-        accent2: "#2563eb",
-        tag: "Liquidity Lab",
-      }}
       segments={[
-        { label: "Liquidity", pct: 0, color: "#0ea5e9" },
-        { label: "Fees earned", pct: 0, color: "#2563eb" },
-        { label: "Open orders", pct: 0, color: "#f59e0b" },
-        { label: "Range bins", pct: 0, color: "#06b6d4" },
-        { label: "Out of range", pct: 0, color: "#ef4444" },
+        { label: "Liquidity", pct: 0, color: "#6FFF00" },
+        { label: "Fees earned", pct: 0, color: "#16a34a" },
+        { label: "Open orders", pct: 0, color: "#84cc16" },
+        { label: "Range bins", pct: 0, color: "#22c55e" },
+        { label: "Out of range", pct: 0, color: "#10b981" },
       ]}
       tabs={["Positions", "Bins", "Open orders", "Fees", "History"]}
       emptyHeading="No liquidity positions"
