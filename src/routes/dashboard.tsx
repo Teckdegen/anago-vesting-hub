@@ -155,63 +155,60 @@ function DashboardPage() {
     <AppShell>
       <div className="max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-14 pt-8 pb-20">
 
-        {!walletConnected ? (
-          /* ── NOT CONNECTED ── */
-          <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-            <div
-              className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6"
-              style={{ background: `${ACCENT}20`, border: `1px solid ${ACCENT}45` }}
-            >
-              <Wallet className="w-7 h-7 text-cream/50" strokeWidth={1.5} />
-            </div>
-            <h1 className="font-grotesk uppercase text-cream text-[20px] sm:text-[26px] tracking-tight mb-2">
-              Your Portfolio
+        {/* ── top bar: address + portfolio total ── */}
+        <div className="flex items-start justify-between flex-wrap gap-4 mb-8">
+          <div>
+            <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-cream/45 mb-1.5">Portfolio</p>
+            <h1 className="font-grotesk uppercase text-cream text-[26px] sm:text-[34px] leading-none tracking-tight">
+              $0.00
             </h1>
-            <p className="font-mono text-[10px] text-cream/50 max-w-[260px] leading-relaxed">
-              Connect your wallet to see all your locks, vesting schedules, farm positions and DLMM liquidity in one place.
-            </p>
-            <button
-              className="mt-8 rounded-full px-6 py-2.5 font-grotesk text-[11px] uppercase tracking-wider transition hover:opacity-85"
-              style={{ background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, color: "#F5F0FF", boxShadow: `0 0 24px ${ACCENT}40` }}
+            <p className="font-mono text-[10px] text-cream/40 mt-1.5">Total value across all positions</p>
+          </div>
+
+          {walletConnected ? (
+            <div
+              className="flex items-center gap-2 px-3.5 py-2 rounded-full self-start mt-1"
+              style={{ background: "rgba(155,127,212,0.1)", border: "1px solid rgba(155,127,212,0.22)" }}
             >
+              <div className="w-2 h-2 rounded-full bg-emerald-400" style={{ boxShadow: "0 0 6px #34d399" }} />
+              <span className="font-mono text-[10px] text-cream/80">{walletAddress}</span>
+              <button className="text-cream/35 hover:text-cream/70 transition ml-0.5">
+                <Copy className="w-3 h-3" />
+              </button>
+            </div>
+          ) : (
+            <button
+              className="self-start mt-1 flex items-center gap-2 rounded-full px-4 py-2 font-grotesk text-[10px] uppercase tracking-wider transition hover:opacity-85"
+              style={{ background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, color: "#F5F0FF" }}
+            >
+              <Wallet className="w-3.5 h-3.5" strokeWidth={1.5} />
               Connect Wallet
             </button>
+          )}
+        </div>
+
+        {/* ── connect prompt banner (not connected) ── */}
+        {!walletConnected && (
+          <div
+            className="flex items-center gap-3 px-5 py-3.5 rounded-xl mb-8"
+            style={{ background: `${ACCENT}0e`, border: `1px solid ${ACCENT}30` }}
+          >
+            <Wallet className="w-4 h-4 shrink-0 text-cream/50" strokeWidth={1.5} />
+            <p className="font-mono text-[10px] text-cream/55 leading-relaxed">
+              Connect your wallet to load your real positions. Showing $0.00 across all sections until connected.
+            </p>
           </div>
-        ) : (
-          /* ── CONNECTED ── */
-          <>
-            {/* ── top bar: address + portfolio label ── */}
-            <div className="flex items-start justify-between flex-wrap gap-4 mb-8">
-              <div>
-                <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-cream/45 mb-1.5">Portfolio</p>
-                <h1 className="font-grotesk uppercase text-cream text-[26px] sm:text-[34px] leading-none tracking-tight">
-                  $0.00
-                </h1>
-                <p className="font-mono text-[10px] text-cream/40 mt-1.5">Total value across all positions</p>
-              </div>
-              <div
-                className="flex items-center gap-2 px-3.5 py-2 rounded-full self-start mt-1"
-                style={{ background: "rgba(155,127,212,0.1)", border: "1px solid rgba(155,127,212,0.22)" }}
-              >
-                <div className="w-2 h-2 rounded-full bg-emerald-400" style={{ boxShadow: "0 0 6px #34d399" }} />
-                <span className="font-mono text-[10px] text-cream/80">{walletAddress}</span>
-                <button className="text-cream/35 hover:text-cream/70 transition ml-0.5">
-                  <Copy className="w-3 h-3" />
-                </button>
-              </div>
-            </div>
-
-            {/* ── stat strip ── */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-              {STATS.map((s) => <StatCard key={s.label} {...s} />)}
-            </div>
-
-            {/* ── position tables ── */}
-            <div className="flex flex-col gap-5">
-              {SECTIONS.map((s) => <SectionTable key={s.id} {...s} />)}
-            </div>
-          </>
         )}
+
+        {/* ── stat strip ── */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {STATS.map((s) => <StatCard key={s.label} {...s} />)}
+        </div>
+
+        {/* ── position tables ── */}
+        <div className="flex flex-col gap-5">
+          {SECTIONS.map((s) => <SectionTable key={s.id} {...s} />)}
+        </div>
       </div>
     </AppShell>
   );
