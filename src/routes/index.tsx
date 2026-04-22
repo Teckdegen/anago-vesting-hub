@@ -193,10 +193,7 @@ function Index() {
         <div className="max-w-[1831px] mx-auto px-6 sm:px-10 lg:px-16 py-12 sm:py-16">
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 mb-10">
             <h2 className="font-grotesk uppercase text-cream font-black text-[44px] sm:text-[60px] lg:text-[80px] leading-none tracking-tight">
-              Protocol{" "}
-              <span className="font-condiment text-neon normal-case font-normal drop-shadow-[0_0_24px_rgba(111,255,0,0.55)]">
-                stats
-              </span>
+              Protocol stats
             </h2>
             <p className="font-mono text-[12px] sm:text-[13px] uppercase text-cream/70 max-w-[360px] tracking-wider lg:text-right">
               Live on Monad — total value processed across every Dog House product.
@@ -212,15 +209,12 @@ function Index() {
             ].map((s) => (
               <div
                 key={s.tag}
-                className="liquid-glass rounded-[24px] p-6 sm:p-8 border border-white/5 relative overflow-hidden"
+                className="rounded-[24px] p-6 sm:p-8 border border-white/10 bg-white/[0.02] relative overflow-hidden"
               >
-                <p className="font-mono text-[11px] uppercase tracking-widest text-cream/60">
+                <p className="font-mono text-[11px] uppercase tracking-widest text-cream/70">
                   {s.tag}
                 </p>
-                <p
-                  className="mt-6 font-grotesk font-black text-neon text-[48px] sm:text-[64px] leading-none"
-                  style={{ textShadow: "0 0 28px rgba(111,255,0,0.55)" }}
-                >
+                <p className="mt-6 font-grotesk font-black text-cream text-[48px] sm:text-[64px] leading-none">
                   {s.value}
                 </p>
                 <p className="mt-6 font-mono text-[11px] uppercase tracking-widest text-cream/70">
@@ -241,8 +235,7 @@ function Index() {
             <h2 className="font-grotesk uppercase text-cream font-black text-[40px] sm:text-[56px] md:text-[68px] lg:text-[80px] leading-[0.95] tracking-tight">
               A home for <br />
               <span className="inline-block ml-12 md:ml-24 lg:ml-32">
-                <span className="font-condiment text-neon normal-case font-normal drop-shadow-[0_0_24px_rgba(111,255,0,0.55)]">every</span>{" "}
-                token
+                every token
               </span>
             </h2>
             <div className="text-right">
