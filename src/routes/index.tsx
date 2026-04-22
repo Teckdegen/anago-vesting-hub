@@ -379,26 +379,6 @@ function Index() {
   );
 }
 
-<<<<<<< HEAD
-function FeatureCard({ title, score: _score }: { title: string; score: string }) {
-  return (
-    <div className="liquid-glass rounded-[28px] p-2 sm:p-3 hover:-translate-y-2 transition-all duration-500 group">
-      <div className="relative w-full pb-[120%] rounded-[20px] overflow-hidden bg-gradient-to-br from-[#0b1440] via-[#1a0f3a] to-[#010828]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(111,255,0,0.18),transparent_65%)] opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
-        <img
-          src={DOG_IMG}
-          alt={title}
-          className="absolute inset-0 w-full h-full object-contain p-2 sm:p-4 group-hover:scale-105 transition-transform duration-500"
-        />
-        <div className="absolute left-2 right-2 bottom-2 sm:left-3 sm:right-3 sm:bottom-3">
-          <div className="liquid-glass rounded-[14px] sm:rounded-[18px] px-3 py-2 sm:px-4 sm:py-3 flex items-center justify-between gap-2">
-            <div className="font-grotesk uppercase text-cream text-[11px] sm:text-[13px] tracking-wider truncate">
-              {title}
-            </div>
-            <button
-              type="button"
-              className="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-[#b724ff] to-[#7c3aed] flex items-center justify-center shadow-lg shadow-purple-500/50 group-hover:scale-110 group-hover:shadow-purple-500/80 transition-all duration-300"
-=======
 function FeatureCard({
   title,
   score,
@@ -422,13 +402,10 @@ function FeatureCard({
         className="relative w-full pb-[100%] rounded-[24px] overflow-hidden"
         style={{ background: `linear-gradient(135deg, ${from}, ${via}, ${to})` }}
       >
-        {/* Centered icon */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div
             className="rounded-full p-8"
-            style={{
-              background: `radial-gradient(circle, ${glow} 0%, transparent 70%)`,
-            }}
+            style={{ background: `radial-gradient(circle, ${glow} 0%, transparent 70%)` }}
           >
             <Icon
               className="w-20 h-20 sm:w-24 sm:h-24"
@@ -438,7 +415,6 @@ function FeatureCard({
           </div>
         </div>
 
-        {/* Bottom info bar */}
         <div className="absolute left-3 right-3 bottom-3">
           <div className="liquid-glass rounded-[20px] px-5 py-4 flex items-center justify-between">
             <div>
@@ -455,7 +431,6 @@ function FeatureCard({
                 background: `linear-gradient(135deg, ${from}, ${via})`,
                 boxShadow: `0 4px 20px ${glow}`,
               }}
->>>>>>> 9c48560 (heheh)
               aria-label={`Open ${title}`}
             >
               <svg
@@ -464,7 +439,7 @@ function FeatureCard({
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth={2.5}
-                className="w-4 h-4 text-cream group-hover:translate-x-0.5 transition-transform"
+                className="w-4 h-4 text-cream"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
