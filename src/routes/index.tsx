@@ -191,62 +191,53 @@ function Index() {
 
         {/* ── HERO CONTENT ── */}
         {/*
-          Mobile: left-aligned, starts near top (justify-start + pt)
-          Desktop: centered horizontally and vertically, smaller font
+          Mobile: centered vertically and horizontally
+          Desktop: centered, larger font
         */}
-        <div className="relative z-10 flex-1 flex flex-col justify-start lg:justify-center lg:items-center lg:text-center px-5 sm:px-8 lg:px-14 pt-10 lg:pt-0 pb-28">
+        <div className="relative z-10 flex-1 flex flex-col justify-center items-center text-center px-5 sm:px-8 lg:px-14 pb-28">
 
           {/* tag */}
           <p
-            className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.22em] mb-4 flex items-center gap-2 lg:justify-center"
+            className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.22em] mb-4 flex items-center gap-2 justify-center"
             style={{ color: "#9B7FD4" }}
           >
             <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 animate-pulse" style={{ background: "#9B7FD4" }} />
             Powered by $ANAGO · Live on Monad
           </p>
 
-          {/* headline
-              Mobile: big (44–56px)
-              Desktop: medium-large, centered (max 64px)
-          */}
+          {/* headline — bigger on desktop */}
           <h1
             className="font-grotesk uppercase leading-[0.9] tracking-tight"
-            style={{ fontSize: "clamp(40px, 5vw, 64px)" }}
+            style={{ fontSize: "clamp(38px, 6.5vw, 80px)" }}
           >
             <span className="block shimmer-text">Every token</span>
             <span className="block shimmer-text">needs a home.</span>
           </h1>
 
           {/* cycling utility word */}
-          <div className="mt-5 flex items-center gap-2 lg:justify-center">
+          <div className="mt-5 flex items-center gap-2 justify-center">
             <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.18em] text-cream/35">
               Built for
             </span>
-            <span
-              className="font-grotesk uppercase text-[14px] sm:text-[16px] tracking-wider"
-            >
+            <span className="font-grotesk uppercase text-[14px] sm:text-[16px] tracking-wider">
               <CyclingWord />
             </span>
           </div>
 
           {/* sub */}
-          <p className="font-mono text-[10px] sm:text-[11px] text-cream/35 tracking-wide mt-3 max-w-xs lg:max-w-sm">
+          <p className="font-mono text-[10px] sm:text-[11px] text-cream/35 tracking-wide mt-3 max-w-xs">
             One protocol, one roof — on Monad.
           </p>
 
-          {/* TVL — bottom-right on desktop, bottom-left on mobile */}
+          {/* TVL — bottom-right always */}
           <div
-            className="absolute bottom-6 left-5 sm:left-auto sm:right-8 lg:right-14 flex flex-col items-start sm:items-end gap-0.5 pointer-events-none"
+            className="absolute bottom-6 right-5 sm:right-8 lg:right-14 flex flex-col items-end gap-0.5 pointer-events-none"
             aria-hidden="true"
           >
             <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.25em] text-cream/35">Total Value Locked</span>
             <span
               className="font-grotesk leading-none text-cream"
-              style={{
-                fontSize: "clamp(40px, 5.5vw, 72px)",
-                opacity: 0.55,
-                fontWeight: 900,
-              }}
+              style={{ fontSize: "clamp(40px, 5.5vw, 72px)", opacity: 0.55, fontWeight: 900 }}
             >
               $0
             </span>
