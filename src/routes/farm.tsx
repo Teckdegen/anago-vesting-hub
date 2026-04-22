@@ -19,11 +19,11 @@ function FarmPage() {
       title="Yield Farm"
       subtitle="Stake, farm, and harvest rewards on Monad"
       segments={[
-        { label: "Staked", pct: 0, color: "#6FFF00" },
-        { label: "Pending rewards", pct: 0, color: "#16a34a" },
-        { label: "Harvested", pct: 0, color: "#84cc16" },
-        { label: "Boosts", pct: 0, color: "#22c55e" },
-        { label: "Locked", pct: 0, color: "#10b981" },
+        { label: "Staked", pct: 0, color: "#9B7FD4" },
+        { label: "Pending rewards", pct: 0, color: "#7C5CBF" },
+        { label: "Harvested", pct: 0, color: "#5B4FE8" },
+        { label: "Boosts", pct: 0, color: "#E8A0B0" },
+        { label: "Locked", pct: 0, color: "#8B5E3C" },
       ]}
       tabs={["Pools", "Staked", "Rewards", "Boosts", "History"]}
       emptyHeading="No active farms"

@@ -19,11 +19,11 @@ function LockPage() {
       title="Token Lock"
       subtitle="Secure your tokens with time-based locks on Monad"
       segments={[
-        { label: "Active locks", pct: 0, color: "#6FFF00" },
-        { label: "Pending unlock", pct: 0, color: "#16a34a" },
-        { label: "Released", pct: 0, color: "#84cc16" },
-        { label: "Scheduled", pct: 0, color: "#22c55e" },
-        { label: "Claimed", pct: 0, color: "#10b981" },
+        { label: "Active locks", pct: 0, color: "#9B7FD4" },
+        { label: "Pending unlock", pct: 0, color: "#7C5CBF" },
+        { label: "Released", pct: 0, color: "#5B4FE8" },
+        { label: "Scheduled", pct: 0, color: "#E8A0B0" },
+        { label: "Claimed", pct: 0, color: "#8B5E3C" },
       ]}
       tabs={["Locks", "Unlocks", "Schedules", "Released", "History"]}
       emptyHeading="No locked tokens yet"

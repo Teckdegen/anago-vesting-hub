@@ -4,49 +4,59 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-background: #010828;
-  --color-foreground: #EFF4FF;
-  --color-cream: #EFF4FF;
-  --color-neon: #6FFF00;
+  --color-background: #2A1F6B;
+  --color-foreground: #F5F0FF;
+  --color-cream: #F5F0FF;
+  --color-neon: #9B7FD4;
+  --color-purple-vivid: #5B4FE8;
+  --color-purple-deep: #3D2E8C;
+  --color-purple-mid: #7C5CBF;
+  --color-warm-brown: #8B5E3C;
+  --color-pink-ear: #E8A0B0;
   --font-grotesk: "Anton", sans-serif;
   --font-condiment: "Condiment", cursive;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
 }
 
 :root {
-  --background: #010828;
-  --foreground: #EFF4FF;
-  --cream: #EFF4FF;
-  --neon: #6FFF00;
+  --background: #2A1F6B;
+  --foreground: #F5F0FF;
+  --cream: #F5F0FF;
+  --neon: #9B7FD4;
+  --purple-vivid: #5B4FE8;
+  --purple-deep: #3D2E8C;
+  --purple-mid: #7C5CBF;
+  --warm-brown: #8B5E3C;
+  --pink-ear: #E8A0B0;
 }
 
 html, body {
-  background-color: #010828;
-  color: #EFF4FF;
+  background-color: #2A1F6B;
+  color: #F5F0FF;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
   -webkit-font-smoothing: antialiased;
   scroll-behavior: smooth;
 }
 
 ::selection {
-  background: #6FFF00;
-  color: #010828;
+  background: #9B7FD4;
+  color: #2A1F6B;
 }
 
 .liquid-glass {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(91, 79, 232, 0.08);
   background-blend-mode: luminosity;
   backdrop-filter: blur(12px) saturate(140%);
   -webkit-backdrop-filter: blur(12px) saturate(140%);
   border: none;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.12), 0 8px 32px rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 1px 1px rgba(245, 240, 255, 0.12), 0 8px 32px rgba(0, 0, 0, 0.35);
   position: relative;
   overflow: hidden;
   transition: box-shadow 0.4s ease, transform 0.4s ease;
 }
 
 .liquid-glass:hover {
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 12px 40px rgba(111, 255, 0, 0.08);
+  box-shadow: inset 0 1px 1px rgba(245, 240, 255, 0.2), 0 12px 40px rgba(155, 127, 212, 0.18);
 }
 
 @keyframes float-soft {
@@ -86,9 +96,9 @@ html, body {
   border-radius: inherit;
   padding: 1.4px;
   background: linear-gradient(180deg,
-    rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%,
-    rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
-    rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+    rgba(245,240,255,0.35) 0%, rgba(155,127,212,0.2) 20%,
+    rgba(245,240,255,0) 40%, rgba(245,240,255,0) 60%,
+    rgba(155,127,212,0.2) 80%, rgba(245,240,255,0.35) 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
           mask-composite: exclude;
@@ -103,5 +113,5 @@ html, body {
   background-image: url('/texture.png');
   background-size: cover;
   mix-blend-mode: overlay;
-  opacity: 0.12;
+  opacity: 0.08;
 }

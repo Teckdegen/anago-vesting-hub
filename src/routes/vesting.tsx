@@ -19,11 +19,11 @@ function VestingPage() {
       title="Vesting"
       subtitle="Linear and cliff vesting schedules on Monad"
       segments={[
-        { label: "Allocated", pct: 0, color: "#6FFF00" },
-        { label: "Vested", pct: 0, color: "#16a34a" },
-        { label: "Claimable", pct: 0, color: "#84cc16" },
-        { label: "Cliff", pct: 0, color: "#22c55e" },
-        { label: "Revoked", pct: 0, color: "#10b981" },
+        { label: "Allocated", pct: 0, color: "#9B7FD4" },
+        { label: "Vested", pct: 0, color: "#7C5CBF" },
+        { label: "Claimable", pct: 0, color: "#5B4FE8" },
+        { label: "Cliff", pct: 0, color: "#E8A0B0" },
+        { label: "Revoked", pct: 0, color: "#8B5E3C" },
       ]}
       tabs={["Schedules", "Claimable", "Cliffs", "Revoked", "History"]}
       emptyHeading="No vesting schedules"

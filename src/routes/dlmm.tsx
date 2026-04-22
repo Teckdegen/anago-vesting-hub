@@ -19,11 +19,11 @@ function DLMMPage() {
       title="DLMM"
       subtitle="Dynamic Liquidity Market Maker on Monad"
       segments={[
-        { label: "Liquidity", pct: 0, color: "#6FFF00" },
-        { label: "Fees earned", pct: 0, color: "#16a34a" },
-        { label: "Open orders", pct: 0, color: "#84cc16" },
-        { label: "Range bins", pct: 0, color: "#22c55e" },
-        { label: "Out of range", pct: 0, color: "#10b981" },
+        { label: "Liquidity", pct: 0, color: "#9B7FD4" },
+        { label: "Fees earned", pct: 0, color: "#7C5CBF" },
+        { label: "Open orders", pct: 0, color: "#5B4FE8" },
+        { label: "Range bins", pct: 0, color: "#E8A0B0" },
+        { label: "Out of range", pct: 0, color: "#8B5E3C" },
       ]}
       tabs={["Positions", "Bins", "Open orders", "Fees", "History"]}
       emptyHeading="No liquidity positions"

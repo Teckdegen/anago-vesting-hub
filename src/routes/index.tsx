@@ -1,7 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { Send, Timer, LockKeyhole, BarChart2, Sprout } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -17,54 +16,6 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-const HERO_VIDEO =
-  "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260331_045634_e1c98c76-1265-4f5c-882a-4276f2080894.mp4";
-const ABOUT_VIDEO =
-  "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260331_151551_992053d1-3d3e-4b8c-abac-45f22158f411.mp4";
-const CTA_VIDEO =
-  "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260331_055729_72d66327-b59e-4ae9-bb70-de6ccb5ecdb0.mp4";
-
-const FEATURES: { title: string; score: string; icon: LucideIcon; from: string; via: string; to: string; glow: string }[] = [
-  {
-    title: "Vesting",
-    score: "8.7/10",
-    icon: Timer,
-    from: "#7c3aed",
-    via: "#4f46e5",
-    to: "#010828",
-    glow: "rgba(124,58,237,0.55)",
-  },
-  {
-    title: "Token Lock",
-    score: "9/10",
-    icon: LockKeyhole,
-    from: "#b724ff",
-    via: "#7c3aed",
-    to: "#010828",
-    glow: "rgba(183,36,255,0.55)",
-  },
-  {
-    title: "DLMM",
-    score: "8.9/10",
-    icon: BarChart2,
-    from: "#0ea5e9",
-    via: "#2563eb",
-    to: "#010828",
-    glow: "rgba(14,165,233,0.55)",
-  },
-  {
-    title: "Yield Farm",
-    score: "8.2/10",
-    icon: Sprout,
-    from: "#6FFF00",
-    via: "#16a34a",
-    to: "#010828",
-    glow: "rgba(111,255,0,0.55)",
-  },
-];
-
-const NAV_LINKS = ["Home", "Vesting", "Token Lock", "DLMM", "Yield Farm"];
-
 // X (Twitter) icon
 function XIcon({ className }: { className?: string }) {
   return (
@@ -73,6 +24,44 @@ function XIcon({ className }: { className?: string }) {
     </svg>
   );
 }
+
+const UTILITIES = [
+  {
+    icon: BarChart2,
+    title: "DLMM",
+    desc: "Dynamic concentrated liquidity with custom bin strategies and real-time fee capture.",
+    accent: "#9B7FD4",
+    href: "/dlmm",
+  },
+  {
+    icon: Timer,
+    title: "Vesting",
+    desc: "Linear and cliff vesting schedules for teams, investors, and contributors.",
+    accent: "#7C5CBF",
+    href: "/vesting",
+  },
+  {
+    icon: LockKeyhole,
+    title: "Token Lock",
+    desc: "Time-based token locks with transparent on-chain unlock schedules.",
+    accent: "#5B4FE8",
+    href: "/lock",
+  },
+  {
+    icon: Sprout,
+    title: "Yield Farm",
+    desc: "Stake LP tokens, earn boosted rewards, and harvest yield on Monad.",
+    accent: "#E8A0B0",
+    href: "/farm",
+  },
+];
+
+const STATS = [
+  { label: "Total Locked", value: "$0", sub: "Token Locks" },
+  { label: "Under Vesting", value: "$0", sub: "Vesting" },
+  { label: "Liquidity", value: "$0", sub: "DLMM" },
+  { label: "Staked TVL", value: "$0", sub: "Yield Farm" },
+];
 
 function Index() {
   useEffect(() => {
@@ -86,323 +75,210 @@ function Index() {
           }
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -60px 0px" },
+      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" },
     );
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, []);
 
   return (
-    <main className="bg-background text-cream min-h-screen overflow-x-hidden">
+    <main
+      className="text-cream min-h-screen overflow-x-hidden"
+      style={{ background: "linear-gradient(160deg, #1A1245 0%, #2A1F6B 40%, #1E1650 100%)" }}
+    >
       <div className="texture-overlay" aria-hidden="true" />
 
-      {/* SECTION 1 — HERO */}
-      <section className="relative w-full h-screen min-h-[700px] overflow-hidden rounded-b-[32px]">
-        <img
-          src="/hero.jpg"
-          alt="The Dog House astronaut"
-          className="absolute inset-0 w-full h-full object-cover"
+      {/* ── HERO ── */}
+      <section className="relative w-full min-h-screen flex flex-col overflow-hidden">
+        {/* ambient glow */}
+        <div
+          className="pointer-events-none absolute top-[-10%] left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full opacity-40 blur-[140px]"
+          style={{ background: "radial-gradient(ellipse, #5B4FE8 0%, #9B7FD4 40%, transparent 70%)" }}
         />
-        <div className="absolute inset-0 bg-background/30" />
+        <div
+          className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[2px] opacity-60"
+          style={{ background: "linear-gradient(90deg, transparent, #9B7FD4, #5B4FE8, #9B7FD4, transparent)" }}
+        />
 
-        <div className="relative z-10 max-w-[1831px] mx-auto px-6 sm:px-10 lg:px-16 h-full flex flex-col">
-          {/* Header */}
-          <header className="flex items-center justify-between pt-8">
-            <div className="flex items-center gap-3">
-              <img src="/logo.png" alt="The Dog House" className="w-10 h-10 rounded-md" />
-              <span className="font-grotesk text-[16px] uppercase tracking-wider">
+        {/* nav */}
+        <header className="relative z-10 flex items-center justify-between px-6 sm:px-10 lg:px-16 pt-7 pb-4">
+          <div className="flex items-center gap-2.5">
+            <img src="/logo.png" alt="The Dog House" className="w-8 h-8 rounded-md" />
+            <span className="font-grotesk text-[14px] uppercase tracking-wider text-cream/90">
+              The Dog House
+            </span>
+          </div>
+          <a
+            href="#"
+            className="flex items-center gap-2 liquid-glass rounded-full px-5 py-2 font-grotesk text-[12px] uppercase tracking-wider text-cream hover:text-[#9B7FD4] transition-all duration-300"
+          >
+            Launch App
+            <span className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: "#9B7FD4" }}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-3 h-3 text-[#1A1245]">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </span>
+          </a>
+        </header>
+
+        {/* hero content */}
+        <div className="relative z-10 flex-1 flex flex-col items-start justify-center px-6 sm:px-10 lg:px-20 pb-24 fade-up">
+          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#9B7FD4] mb-5">
+            Powered by $ANAGO · Live on Monad
+          </p>
+          <h1 className="font-grotesk uppercase text-cream text-[44px] sm:text-[64px] md:text-[80px] lg:text-[96px] leading-[1] tracking-tight max-w-3xl">
+            Every token<br />needs a home.
+          </h1>
+          <p className="mt-6 font-mono text-[13px] text-cream/50 max-w-sm tracking-wide">
+            Vesting · Token Lock · DLMM · Yield Farm — one protocol, one roof.
+          </p>
+          <div className="mt-10 flex items-center gap-4">
+            <a
+              href="#"
+              className="flex items-center gap-2 rounded-full px-6 py-3 font-grotesk text-[13px] uppercase tracking-wider transition hover:opacity-90 hover:-translate-y-0.5"
+              style={{ background: "linear-gradient(135deg, #9B7FD4, #5B4FE8)", color: "#F5F0FF", boxShadow: "0 4px 28px rgba(91,79,232,0.45)" }}
+            >
+              Launch App
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-3.5 h-3.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+            <span className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-cream/50">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#9B7FD4] animate-pulse" />
+              Testnet live
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* ── UTILITIES ── */}
+      <section className="relative reveal px-6 sm:px-10 lg:px-20 py-24 sm:py-28">
+        <div
+          className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full opacity-20 blur-[120px]"
+          style={{ background: "radial-gradient(ellipse, #7C5CBF 0%, transparent 70%)" }}
+        />
+
+        <div className="relative z-10 text-center mb-16">
+          <h2 className="font-grotesk uppercase text-cream text-[28px] sm:text-[36px] lg:text-[44px] leading-tight tracking-tight">
+            One protocol. Four tools.
+          </h2>
+          <p className="mt-3 font-mono text-[12px] text-cream/40 uppercase tracking-widest">
+            Everything your token needs, on Monad.
+          </p>
+        </div>
+
+        {/* thin divider line */}
+        <div className="relative z-10 w-full h-px mb-12" style={{ background: "linear-gradient(90deg, transparent, rgba(155,127,212,0.3), transparent)" }} />
+
+        {/* 4 utilities in a row */}
+        <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px" style={{ background: "rgba(155,127,212,0.12)", borderRadius: "20px", overflow: "hidden" }}>
+          {UTILITIES.map((u) => {
+            const Icon = u.icon;
+            return (
+              <Link
+                key={u.title}
+                to={u.href as "/dlmm" | "/vesting" | "/lock" | "/farm"}
+                className="group flex flex-col gap-5 px-8 py-10 transition-all duration-300 hover:bg-white/[0.04]"
+                style={{ background: "rgba(26,18,69,0.6)" }}
+              >
+                <Icon
+                  className="w-5 h-5 transition-transform duration-300 group-hover:-translate-y-0.5"
+                  style={{ color: u.accent }}
+                  strokeWidth={1.5}
+                />
+                <div>
+                  <h3 className="font-grotesk uppercase text-cream text-[15px] tracking-wider mb-2">
+                    {u.title}
+                  </h3>
+                  <p className="font-mono text-[11px] text-cream/40 leading-relaxed tracking-wide">
+                    {u.desc}
+                  </p>
+                </div>
+                <span
+                  className="mt-auto font-mono text-[10px] uppercase tracking-widest transition-colors duration-300 group-hover:opacity-100 opacity-50"
+                  style={{ color: u.accent }}
+                >
+                  Open →
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ── PROTOCOL STATS + FOOTER ── */}
+      <section
+        className="relative reveal overflow-hidden"
+        style={{ background: "linear-gradient(180deg, transparent 0%, rgba(91,79,232,0.08) 100%)" }}
+      >
+        {/* top border line */}
+        <div className="w-full h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(155,127,212,0.4), transparent)" }} />
+
+        <div
+          className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full opacity-15 blur-[100px]"
+          style={{ background: "radial-gradient(ellipse, #5B4FE8 0%, transparent 70%)" }}
+        />
+
+        <div className="relative z-10 max-w-[1280px] mx-auto px-6 sm:px-10 lg:px-20 pt-20 pb-10">
+
+          {/* stats row */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-px mb-20" style={{ background: "rgba(155,127,212,0.1)", borderRadius: "16px", overflow: "hidden" }}>
+            {STATS.map((s) => (
+              <div
+                key={s.label}
+                className="flex flex-col gap-2 px-8 py-8"
+                style={{ background: "rgba(26,18,69,0.5)" }}
+              >
+                <span className="font-mono text-[10px] uppercase tracking-widest text-cream/40">{s.sub}</span>
+                <span className="font-grotesk text-cream text-[36px] sm:text-[44px] leading-none">{s.value}</span>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-cream/40">{s.label}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* footer row */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pt-8 border-t border-white/[0.06]">
+            {/* left — logo + name */}
+            <div className="flex items-center gap-2.5">
+              <img src="/logo.png" alt="" className="w-7 h-7 rounded-md" />
+              <span className="font-grotesk uppercase text-[12px] tracking-wider text-cream/70">
                 The Dog House
               </span>
             </div>
 
-            <nav className="hidden lg:block liquid-glass rounded-[28px] px-[52px] py-[24px]">
-              <ul className="flex items-center gap-8">
-                {NAV_LINKS.map((l) => (
-                  <li key={l}>
-                    <a
-                      href="#"
-                      className="font-grotesk text-[13px] uppercase tracking-wider text-cream hover:text-neon transition-colors"
-                    >
-                      {l}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-
+            {/* center — launch app */}
             <a
               href="#"
-              className="liquid-glass rounded-[20px] px-6 py-3 font-grotesk text-[13px] uppercase tracking-wider text-cream hover:text-neon hover:-translate-y-0.5 transition-all duration-300"
+              className="flex items-center gap-2 rounded-full px-5 py-2.5 font-grotesk text-[12px] uppercase tracking-wider transition hover:opacity-90"
+              style={{ background: "linear-gradient(135deg, #9B7FD4, #5B4FE8)", color: "#F5F0FF", boxShadow: "0 4px 20px rgba(91,79,232,0.35)" }}
             >
               Launch App
             </a>
-          </header>
 
-          {/* Hero content */}
-          <div className="flex-1 flex items-center relative">
-            <div className="relative max-w-[780px] lg:ml-32 fade-up">
-              <span
-                className="font-condiment text-neon block text-[32px] sm:text-[48px] md:text-[60px] lg:text-[72px] -rotate-[4deg] drop-shadow-[0_0_24px_rgba(111,255,0,0.55)] leading-none mb-4 lg:mb-6 ml-2"
-              >
-                The Dog House
-              </span>
-              <h1 className="font-grotesk uppercase text-cream text-[40px] sm:text-[60px] md:text-[75px] lg:text-[90px] leading-[1.05] sm:leading-[1] tracking-tight">
-                Every token <br />
-                needs a <span className="text-neon">(</span> home <span className="text-neon">)</span>
-              </h1>
-              <p className="mt-6 font-mono text-[12px] sm:text-[14px] uppercase text-cream/70 max-w-md tracking-wider">
-                Vesting · Token Lock · DLMM · Yield Farm — on Monad. Powered by $ANAGO.
-              </p>
-              <div className="mt-8 flex items-center gap-3">
-                <span className="inline-flex items-center gap-2 liquid-glass rounded-full px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-cream/80">
-                  <span className="w-2 h-2 rounded-full bg-neon animate-pulse" />
-                  Live on Monad
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 2 — ABOUT (plain background) */}
-      <section className="relative w-full bg-background reveal">
-        <div className="max-w-[1831px] mx-auto px-6 sm:px-10 lg:px-16 py-20 sm:py-24 lg:py-28">
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10">
-            <div className="relative">
-              <span
-                className="font-condiment text-neon block text-[28px] sm:text-[40px] lg:text-[56px] -rotate-2 mb-3 drop-shadow-[0_0_24px_rgba(111,255,0,0.55)] leading-none"
-              >
-                Anago
-              </span>
-              <h2 className="font-grotesk uppercase text-cream font-black text-[36px] sm:text-[52px] md:text-[64px] lg:text-[76px] leading-[1] tracking-tight">
-                Hello! <br />
-                We're The Dog House
-              </h2>
-            </div>
-
-            <p className="font-mono text-[14px] sm:text-[16px] uppercase text-cream/80 max-w-[320px]">
-              A home for every token on Monad. Vesting, locks, dynamic liquidity & yield —
-              one roof, no leaks.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 2.5 — PROTOCOL STATS */}
-      <section className="relative w-full bg-background reveal">
-        <div className="max-w-[1831px] mx-auto px-6 sm:px-10 lg:px-16 py-12 sm:py-16">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 mb-10">
-            <h2 className="font-grotesk uppercase text-cream font-black text-[44px] sm:text-[60px] lg:text-[80px] leading-none tracking-tight">
-              Protocol stats
-            </h2>
-            <p className="font-mono text-[12px] sm:text-[13px] uppercase text-cream/70 max-w-[360px] tracking-wider lg:text-right">
-              Live on Monad — total value processed across every Dog House product.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {[
-              { tag: "Token Locks", value: "$0", label: "Total locked" },
-              { tag: "Vesting", value: "$0", label: "Under vesting" },
-              { tag: "DLMM", value: "$0", label: "Liquidity processed" },
-              { tag: "Yield Farm", value: "$0", label: "Staked TVL" },
-            ].map((s) => (
-              <div
-                key={s.tag}
-                className="rounded-[24px] p-6 sm:p-8 border border-white/10 bg-white/[0.02] relative overflow-hidden"
-              >
-                <p className="font-mono text-[11px] uppercase tracking-widest text-cream/70">
-                  {s.tag}
-                </p>
-                <p className="mt-6 font-grotesk font-black text-cream text-[48px] sm:text-[64px] leading-none">
-                  {s.value}
-                </p>
-                <p className="mt-6 font-mono text-[11px] uppercase tracking-widest text-cream/70">
-                  {s.label}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 3 — FEATURES GRID */}
-      <section className="relative w-full bg-background">
-        <div className="max-w-[1831px] mx-auto px-6 sm:px-10 lg:px-16 py-16 sm:py-20 lg:py-24">
-
-          {/* Section header */}
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 mb-12">
-            <h2 className="font-grotesk uppercase text-cream font-black text-[40px] sm:text-[56px] md:text-[68px] lg:text-[80px] leading-[0.95] tracking-tight">
-              A home for <br />
-              <span className="inline-block ml-12 md:ml-24 lg:ml-32">
-                every token
-              </span>
-            </h2>
-            <div className="text-right">
-              <div className="flex items-end justify-end gap-3">
-                <span className="font-grotesk uppercase text-cream font-black text-[40px] sm:text-[60px] lg:text-[76px] leading-none tracking-tight">
-                  Launch
-                </span>
-                <div className="flex flex-col font-grotesk uppercase text-cream font-black text-[24px] sm:text-[34px] lg:text-[44px] leading-none tracking-tight">
-                  <span>App</span>
-                  <span>Now</span>
-                </div>
-              </div>
-              <div className="bg-neon h-[6px] sm:h-[8px] lg:h-[10px] w-full mt-3" />
-            </div>
-          </div>
-
-          {/* All 4 utility cards on one line */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {FEATURES.map((f) => (
-              <FeatureCard key={f.title} title={f.title} score={f.score} icon={f.icon} from={f.from} via={f.via} to={f.to} glow={f.glow} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 4 — CTA */}
-      <section className="relative w-full bg-background">
-        <div className="relative w-full">
-          <video
-            src={CTA_VIDEO}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-auto block"
-          />
-        </div>
-
-        <div className="absolute inset-0">
-          <div className="max-w-[1831px] mx-auto h-full px-6 sm:px-10 lg:px-16 py-10 sm:py-16 lg:py-24 relative">
-            <div className="lg:pr-[20%] lg:pl-[15%] text-right ml-auto relative inline-block float-right">
-              <span
-                className="font-condiment text-neon absolute -top-6 left-0 lg:-left-8 text-[17px] sm:text-[28px] md:text-[44px] lg:text-[68px] -rotate-2"
-                style={{ mixBlendMode: "exclusion" }}
-              >
-                Go beyond
-              </span>
-              <h2 className="font-grotesk uppercase text-cream text-[16px] sm:text-[28px] md:text-[44px] lg:text-[60px] leading-[1]">
-                <span className="block mb-4 sm:mb-8 lg:mb-12">Launch on Monad.</span>
-                Lock with confidence. <br />
-                Vest with control. <br />
-                Farm the future.
-              </h2>
+            {/* right — socials */}
+            <div className="flex items-center gap-3">
               <a
                 href="#"
-                className="inline-block mt-8 liquid-glass rounded-[20px] px-8 py-4 font-grotesk uppercase text-[14px] tracking-wider text-cream hover:text-neon transition"
+                aria-label="X (Twitter)"
+                className="liquid-glass w-9 h-9 rounded-full flex items-center justify-center text-cream/60 hover:text-cream transition"
               >
-                Launch App
+                <XIcon className="w-3.5 h-3.5" />
+              </a>
+              <a
+                href="#"
+                aria-label="Telegram"
+                className="liquid-glass w-9 h-9 rounded-full flex items-center justify-center text-cream/60 hover:text-cream transition"
+              >
+                <Send className="w-3.5 h-3.5" />
               </a>
             </div>
-
-            {/* Bottom-left socials: X + Telegram only */}
-            <div className="absolute left-[5%] sm:left-[6%] lg:left-[8%] bottom-[10%] sm:bottom-[14%] lg:bottom-[18%]">
-              <div className="liquid-glass rounded-[0.75rem] sm:rounded-[1rem] lg:rounded-[1.25rem] flex flex-col overflow-hidden">
-                <a
-                  href="#"
-                  aria-label="X (Twitter)"
-                  className="w-[14vw] sm:w-[10rem] lg:w-[14rem] h-[14vw] sm:h-[3.5rem] lg:h-[4.5rem] flex items-center justify-center text-cream hover:bg-white/10 transition border-b border-white/10"
-                >
-                  <XIcon className="w-5 h-5" />
-                </a>
-                <a
-                  href="#"
-                  aria-label="Telegram"
-                  className="w-[14vw] sm:w-[10rem] lg:w-[14rem] h-[14vw] sm:h-[3.5rem] lg:h-[4.5rem] flex items-center justify-center text-cream hover:bg-white/10 transition"
-                >
-                  <Send className="w-5 h-5" />
-                </a>
-              </div>
-            </div>
           </div>
+
+          <p className="mt-6 font-mono text-[10px] uppercase tracking-widest text-cream/25 text-center sm:text-left">
+            © 2026 The Dog House · Powered by $ANAGO on Monad
+          </p>
         </div>
-
-        <footer className="relative z-10 max-w-[1831px] mx-auto px-6 sm:px-10 lg:px-16 py-8 flex items-center justify-between border-t border-white/10">
-          <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="" className="w-8 h-8 rounded-md" />
-            <span className="font-grotesk uppercase text-[13px] tracking-wider">
-              The Dog House · Powered by $ANAGO on Monad
-            </span>
-          </div>
-          <span className="font-mono text-[11px] uppercase text-cream/60">
-            © 2026 The Dog House
-          </span>
-        </footer>
       </section>
     </main>
-  );
-}
-
-function FeatureCard({
-  title,
-  score,
-  icon: Icon,
-  from,
-  via,
-  to,
-  glow,
-}: {
-  title: string;
-  score: string;
-  icon: LucideIcon;
-  from: string;
-  via: string;
-  to: string;
-  glow: string;
-}) {
-  return (
-    <div className="liquid-glass rounded-[32px] p-[18px] hover:bg-white/10 transition">
-      <div
-        className="relative w-full pb-[100%] rounded-[24px] overflow-hidden"
-        style={{ background: `linear-gradient(135deg, ${from}, ${via}, ${to})` }}
-      >
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div
-            className="rounded-full p-8"
-            style={{ background: `radial-gradient(circle, ${glow} 0%, transparent 70%)` }}
-          >
-            <Icon
-              className="w-20 h-20 sm:w-24 sm:h-24"
-              style={{ color: from, filter: `drop-shadow(0 0 18px ${glow})` }}
-              strokeWidth={1.5}
-            />
-          </div>
-        </div>
-
-        <div className="absolute left-3 right-3 bottom-3">
-          <div className="liquid-glass rounded-[20px] px-5 py-4 flex items-center justify-between">
-            <div>
-              <div className="font-grotesk uppercase text-cream text-[14px] tracking-wider">
-                {title}
-              </div>
-              <div className="text-[11px] text-cream/70 uppercase mt-0.5">Trust score:</div>
-              <div className="text-[16px] text-cream font-grotesk">{score}</div>
-            </div>
-            <button
-              type="button"
-              className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition"
-              style={{
-                background: `linear-gradient(135deg, ${from}, ${via})`,
-                boxShadow: `0 4px 20px ${glow}`,
-              }}
-              aria-label={`Open ${title}`}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2.5}
-                className="w-4 h-4 text-cream"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   );
 }

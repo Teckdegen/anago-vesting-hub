@@ -17,8 +17,8 @@ type Segment = { label: string; pct: number; color: string };
 // Single shared theme used across Lock / Vesting / Farm / DLMM pages.
 export const SHARED_THEME: Theme = {
   name: "doghouse",
-  accent: "#6FFF00",
-  accent2: "#16a34a",
+  accent: "#9B7FD4",
+  accent2: "#5B4FE8",
   tag: "Dog House",
 };
 
@@ -47,11 +47,11 @@ export function PortfolioPage({
   const [unit, setUnit] = useState<"MON" | "USD">("USD");
 
   return (
-    <main className="min-h-screen bg-[#0a0a0c] text-cream relative overflow-x-hidden">
+    <main className="min-h-screen text-cream relative overflow-x-hidden" style={{ background: "linear-gradient(160deg, #2A1F6B 0%, #1E1650 60%, #150F3A 100%)" }}>
       {/* ambient glow */}
       <div
-        className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] rounded-full opacity-25 blur-[160px]"
-        style={{ background: `radial-gradient(circle, ${theme.accent} 0%, transparent 70%)` }}
+        className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] rounded-full opacity-30 blur-[160px]"
+        style={{ background: `radial-gradient(circle, ${theme.accent} 0%, #5B4FE8 50%, transparent 70%)` }}
       />
 
       {/* top nav */}
@@ -72,6 +72,7 @@ export function PortfolioPage({
           style={{
             background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent2})`,
             boxShadow: `0 4px 24px ${theme.accent}55`,
+            color: "#F5F0FF",
           }}
         >
           Connect
@@ -220,7 +221,7 @@ export function PortfolioPage({
               className="mt-6 px-5 py-2 rounded-full text-[12px] font-grotesk uppercase tracking-wider transition hover:scale-105"
               style={{
                 background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent2})`,
-                color: "#0a0a0c",
+                color: "#F5F0FF",
                 boxShadow: `0 4px 24px ${theme.accent}55`,
               }}
             >
