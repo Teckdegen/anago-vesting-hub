@@ -109,8 +109,8 @@ export function AppShell({ children }: { children: ReactNode }) {
       <nav
         className="lg:hidden fixed bottom-0 left-0 right-0 z-30 flex items-stretch"
         style={{
-          background: "rgba(6,4,15,0.92)",
-          borderTop: "1px solid rgba(155,127,212,0.12)",
+          background: "rgba(6,4,15,0.95)",
+          borderTop: "1px solid rgba(155,127,212,0.3)",
           backdropFilter: "blur(24px)",
           WebkitBackdropFilter: "blur(24px)",
         }}
@@ -120,8 +120,8 @@ export function AppShell({ children }: { children: ReactNode }) {
             key={label}
             to={href}
             className="flex flex-1 flex-col items-center justify-center gap-1 py-3 transition-colors"
-            style={{ color: "rgba(245,240,255,0.4)" }}
-            activeProps={{ style: { color: "#9B7FD4" } }}
+            style={{ color: "rgba(245,240,255,0.45)" }}
+            activeProps={{ style: { color: "#C4A8F0" } }}
           >
             <Icon className="w-5 h-5" strokeWidth={1.5} />
             <span className="font-grotesk text-[9px] uppercase tracking-wider">{label}</span>

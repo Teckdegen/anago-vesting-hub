@@ -80,15 +80,15 @@ function DashboardPage() {
         {/* ── VALUE ROWS ── */}
         <div
           className="rounded-xl overflow-hidden mb-4"
-          style={{ border: "1px solid rgba(155,127,212,0.14)" }}
+          style={{ border: "1px solid rgba(155,127,212,0.35)" }}
         >
           {POSITIONS.map((p, i) => {
             const Icon = p.icon;
             return (
               <div
                 key={p.label}
-                className="flex items-center justify-between px-6 py-5 hover:bg-white/[0.02] transition-colors"
-                style={{ borderBottom: i < POSITIONS.length - 1 ? "1px solid rgba(155,127,212,0.08)" : "none" }}
+                className="flex items-center justify-between px-6 py-5 hover:bg-white/[0.03] transition-colors"
+                style={{ borderBottom: i < POSITIONS.length - 1 ? "1px solid rgba(155,127,212,0.18)" : "none" }}
               >
                 {/* left: color dot + label */}
                 <div className="flex items-center gap-3">
@@ -97,8 +97,8 @@ function DashboardPage() {
                     style={{ background: p.color, opacity: walletConnected ? 1 : 0.4 }}
                   />
                   <div>
-                    <p className="font-grotesk uppercase text-cream/80 text-[12px] tracking-wider">{p.label}</p>
-                    <p className="font-mono text-[9px] text-cream/35 mt-0.5">{p.sub}</p>
+                    <p className="font-grotesk uppercase text-cream/90 text-[12px] tracking-wider">{p.label}</p>
+                    <p className="font-mono text-[9px] text-cream/55 mt-0.5">{p.sub}</p>
                   </div>
                 </div>
 
@@ -126,9 +126,9 @@ function DashboardPage() {
         {/* ── TOTAL ROW ── */}
         <div
           className="flex items-center justify-between px-6 py-4 rounded-xl"
-          style={{ background: "rgba(124,92,191,0.08)", border: "1px solid rgba(124,92,191,0.2)" }}
+          style={{ background: "rgba(155,127,212,0.12)", border: "1px solid rgba(155,127,212,0.4)" }}
         >
-          <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-cream/45">Total Portfolio</p>
+          <p className="font-mono text-[9px] uppercase tracking-[0.2em]" style={{ color: "rgba(212,184,255,0.7)" }}>Total Portfolio</p>
           <p className="font-grotesk text-cream text-[20px] leading-none tabular-nums">
             {hidden ? "••••••" : "$0.00"}
           </p>
