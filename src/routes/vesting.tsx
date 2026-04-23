@@ -13,8 +13,8 @@ export const Route = createFileRoute("/vesting")({
   }),
 });
 
-const ACCENT = "#9B7FD4";
-const ACCENT2 = "#7C5CBF";
+const ACCENT = "#7C5CBF";
+const ACCENT2 = "#5A3F8F";
 const TABS = ["All Schedules", "My Schedules", "Claimable"] as const;
 type Tab = typeof TABS[number];
 
@@ -42,7 +42,7 @@ function VestingPage() {
             {TABS.map((t) => (
               <button key={t} onClick={() => setActiveTab(t)}
                 className="px-4 py-1.5 rounded-full font-grotesk text-[11px] uppercase tracking-wider transition whitespace-nowrap"
-                style={activeTab === t ? { background: ACCENT, color: "#F5F0FF", boxShadow: `0 0 12px ${ACCENT}55` } : { color: "rgba(245,240,255,0.65)" }}
+                style={activeTab === t ? { background: "rgba(124,92,191,0.35)", color: "#F5F0FF", border: "1px solid rgba(124,92,191,0.6)" } : { color: "rgba(245,240,255,0.5)" }}
               >{t}</button>
             ))}
           </div>
@@ -88,8 +88,8 @@ function VestingPage() {
             <p className="font-grotesk uppercase text-cream/70 text-[12px] tracking-wider">Create a schedule</p>
             <p className="font-mono text-[10px] text-cream/65 mt-0.5">Set up linear or cliff vesting for any recipient.</p>
           </div>
-          <button className="rounded-full px-4 py-2 font-grotesk text-[10px] uppercase tracking-wider transition hover:opacity-85"
-            style={{ background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, color: "#F5F0FF" }}>
+          <button className="rounded-md px-5 py-2 font-grotesk text-[10px] uppercase tracking-wider transition hover:bg-[rgba(124,92,191,0.35)] active:scale-[0.98]"
+            style={{ background: "rgba(90,63,143,0.25)", color: "#C4A8F0", border: "1px solid rgba(124,92,191,0.45)" }}>
             New Schedule
           </button>
         </div>

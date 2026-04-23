@@ -17,10 +17,10 @@ const walletConnected = false;
 const walletAddress = "0x1a2b...9f0e";
 
 const POSITIONS = [
-  { label: "Token Locks",  value: "$0.00", sub: "0 active locks",       color: "#5B4FE8", icon: LockKeyhole, href: "/lock"    },
+  { label: "Token Locks",  value: "$0.00", sub: "0 active locks",       color: "#7C5CBF", icon: LockKeyhole, href: "/lock"    },
   { label: "Vesting",      value: "$0.00", sub: "0 schedules",          color: "#9B7FD4", icon: Timer,       href: "/vesting" },
   { label: "Yield Farms",  value: "$0.00", sub: "$0.00 claimable",      color: "#CD7F32", icon: Sprout,      href: "/farm"    },
-  { label: "DLMM",         value: "$0.00", sub: "0 open positions",     color: "#2DD4BF", icon: BarChart2,   href: "/dlmm"   },
+  { label: "DLMM",         value: "$0.00", sub: "0 open positions",     color: "#5A3F8F", icon: BarChart2,   href: "/dlmm"   },
 ] as const;
 
 function DashboardPage() {
@@ -126,7 +126,7 @@ function DashboardPage() {
         {/* ── TOTAL ROW ── */}
         <div
           className="flex items-center justify-between px-6 py-4 rounded-xl"
-          style={{ background: "rgba(91,79,232,0.08)", border: "1px solid rgba(91,79,232,0.2)" }}
+          style={{ background: "rgba(124,92,191,0.08)", border: "1px solid rgba(124,92,191,0.2)" }}
         >
           <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-cream/45">Total Portfolio</p>
           <p className="font-grotesk text-cream text-[20px] leading-none tabular-nums">

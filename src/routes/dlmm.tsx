@@ -13,8 +13,8 @@ export const Route = createFileRoute("/dlmm")({
   }),
 });
 
-const ACCENT = "#9B7FD4";
-const ACCENT2 = "#5B4FE8";
+const ACCENT = "#7C5CBF";
+const ACCENT2 = "#5A3F8F";
 const TABS = ["All Pools", "My Positions"] as const;
 type Tab = typeof TABS[number];
 
@@ -42,7 +42,7 @@ function DLMMPage() {
             {TABS.map((t) => (
               <button key={t} onClick={() => setActiveTab(t)}
                 className="px-4 py-1.5 rounded-full font-grotesk text-[11px] uppercase tracking-wider transition whitespace-nowrap"
-                style={activeTab === t ? { background: ACCENT, color: "#F5F0FF", boxShadow: `0 0 12px ${ACCENT}55` } : { color: "rgba(245,240,255,0.65)" }}
+                style={activeTab === t ? { background: "rgba(124,92,191,0.35)", color: "#F5F0FF", border: "1px solid rgba(124,92,191,0.6)" } : { color: "rgba(245,240,255,0.5)" }}
               >{t}</button>
             ))}
           </div>

@@ -13,8 +13,8 @@ export const Route = createFileRoute("/lock")({
   }),
 });
 
-const ACCENT = "#5B4FE8";
-const ACCENT2 = "#9B7FD4";
+const ACCENT = "#7C5CBF";
+const ACCENT2 = "#5A3F8F";
 const TABS = ["All Locks", "My Locks", "Unlocking Soon", "Leaderboard"] as const;
 type Tab = typeof TABS[number];
 
@@ -34,7 +34,7 @@ function RankBadge({ rank }: { rank: number }) {
     2: { bg: "rgba(192,192,192,0.15)", color: "#C0C0C0" },
     3: { bg: "rgba(205,127,50,0.15)", color: "#CD7F32" },
   };
-  const s = styles[rank] ?? { bg: "rgba(155,127,212,0.1)", color: "rgba(245,240,255,0.4)" };
+  const s = styles[rank] ?? { bg: "rgba(124,92,191,0.1)", color: "rgba(245,240,255,0.4)" };
   return (
     <span
       className="inline-flex items-center justify-center w-6 h-6 rounded-full font-grotesk text-[10px]"
@@ -67,7 +67,7 @@ function LockPage() {
         <div className="flex items-center justify-between flex-wrap gap-3 mb-5">
           <div
             className="flex items-center gap-0.5 p-1 rounded-full"
-            style={{ background: "rgba(91,79,232,0.12)", border: "1px solid rgba(91,79,232,0.3)" }}
+            style={{ background: "rgba(124,92,191,0.12)", border: "1px solid rgba(124,92,191,0.28)" }}
           >
             {TABS.map((t) => (
               <button
@@ -76,8 +76,8 @@ function LockPage() {
                 className="px-4 py-1.5 rounded-full font-grotesk text-[11px] uppercase tracking-wider transition whitespace-nowrap"
                 style={
                   activeTab === t
-                    ? { background: ACCENT, color: "#F5F0FF", boxShadow: `0 0 12px ${ACCENT}55` }
-                    : { color: "rgba(245,240,255,0.65)" }
+                    ? { background: "rgba(124,92,191,0.35)", color: "#F5F0FF", border: "1px solid rgba(124,92,191,0.6)" }
+                    : { color: "rgba(245,240,255,0.5)" }
                 }
               >
                 {t}
@@ -87,7 +87,7 @@ function LockPage() {
           {activeTab !== "Leaderboard" && (
             <div
               className="flex items-center gap-2 px-3 py-2 rounded-full"
-              style={{ background: "rgba(91,79,232,0.1)", border: "1px solid rgba(91,79,232,0.28)" }}
+              style={{ background: "rgba(124,92,191,0.1)", border: "1px solid rgba(124,92,191,0.25)" }}
             >
               <Search className="w-3.5 h-3.5 text-cream/60" strokeWidth={1.5} />
               <input
@@ -102,13 +102,13 @@ function LockPage() {
         </div>
 
         {activeTab === "Leaderboard" ? (
-          <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(91,79,232,0.28)" }}>
+          <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(124,92,191,0.25)" }}>
             <div
               className="hidden sm:grid px-5 py-3 text-[9px] font-mono uppercase tracking-[0.2em] text-cream/55"
               style={{
                 gridTemplateColumns: "40px 2fr 1fr 1fr 1fr",
-                borderBottom: "1px solid rgba(91,79,232,0.2)",
-                background: "rgba(91,79,232,0.12)",
+                borderBottom: "1px solid rgba(124,92,191,0.15)",
+                background: "rgba(124,92,191,0.1)",
               }}
             >
               <div>#</div>
@@ -133,14 +133,14 @@ function LockPage() {
                   className="grid px-5 py-3.5 items-center hover:bg-white/[0.03] transition-colors"
                   style={{
                     gridTemplateColumns: "40px 2fr 1fr 1fr 1fr",
-                    borderBottom: i < LEADERBOARD.length - 1 ? "1px solid rgba(91,79,232,0.12)" : "none",
+                    borderBottom: i < LEADERBOARD.length - 1 ? "1px solid rgba(124,92,191,0.1)" : "none",
                   }}
                 >
                   <RankBadge rank={row.rank} />
                   <div className="flex items-center gap-2.5">
                     <div
                       className="w-7 h-7 rounded-full flex items-center justify-center font-grotesk text-[10px] text-cream/70"
-                      style={{ background: "rgba(91,79,232,0.2)", border: "1px solid rgba(91,79,232,0.3)" }}
+                      style={{ background: "rgba(124,92,191,0.18)", border: "1px solid rgba(124,92,191,0.3)" }}
                     >
                       {row.symbol[0]}
                     </div>
@@ -155,14 +155,14 @@ function LockPage() {
                     <div className="flex items-center justify-end gap-2">
                       <div
                         className="hidden sm:block w-16 h-1 rounded-full overflow-hidden"
-                        style={{ background: "rgba(91,79,232,0.2)" }}
+                        style={{ background: "rgba(124,92,191,0.18)" }}
                       >
                         <div
                           className="h-full rounded-full"
-                          style={{ width: `${row.pct}%`, background: `linear-gradient(90deg, ${ACCENT}, ${ACCENT2})` }}
+                          style={{ width: `${row.pct}%`, background: ACCENT }}
                         />
                       </div>
-                      <span className="font-mono text-[10px]" style={{ color: ACCENT2 }}>{row.pct}%</span>
+                      <span className="font-mono text-[10px] text-cream/55">{row.pct}%</span>
                     </div>
                   </div>
                 </div>
@@ -170,13 +170,13 @@ function LockPage() {
             )}
           </div>
         ) : (
-          <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(91,79,232,0.28)" }}>
+          <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(124,92,191,0.25)" }}>
             <div
               className="hidden sm:grid px-5 py-3 text-[9px] font-mono uppercase tracking-[0.2em] text-cream/55"
               style={{
                 gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 80px",
-                borderBottom: "1px solid rgba(91,79,232,0.25)",
-                background: "rgba(91,79,232,0.12)",
+                borderBottom: "1px solid rgba(124,92,191,0.15)",
+                background: "rgba(124,92,191,0.1)",
               }}
             >
               <div>Token</div>
@@ -190,7 +190,7 @@ function LockPage() {
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                style={{ background: `${ACCENT}25`, border: `1px solid ${ACCENT}45` }}
+                style={{ background: "rgba(124,92,191,0.15)", border: "1px solid rgba(124,92,191,0.3)" }}
               >
                 <LockKeyhole className="w-4 h-4 text-cream/60" strokeWidth={1.5} />
               </div>
@@ -210,7 +210,7 @@ function LockPage() {
         {activeTab !== "Leaderboard" && (
           <div
             className="mt-6 flex items-center justify-between px-5 py-4 rounded-xl"
-            style={{ border: "1px solid rgba(91,79,232,0.25)", background: "rgba(91,79,232,0.1)" }}
+            style={{ border: "1px solid rgba(124,92,191,0.25)", background: "rgba(124,92,191,0.08)" }}
           >
             <div>
               <p className="font-grotesk uppercase text-cream/70 text-[12px] tracking-wider">Create a lock</p>
@@ -219,8 +219,8 @@ function LockPage() {
               </p>
             </div>
             <button
-              className="rounded-full px-4 py-2 font-grotesk text-[10px] uppercase tracking-wider transition hover:opacity-85"
-              style={{ background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, color: "#F5F0FF" }}
+              className="rounded-md px-5 py-2 font-grotesk text-[10px] uppercase tracking-wider transition hover:bg-[rgba(124,92,191,0.35)] active:scale-[0.98]"
+              style={{ background: "rgba(90,63,143,0.25)", color: "#C4A8F0", border: "1px solid rgba(124,92,191,0.45)" }}
             >
               New Lock
             </button>
