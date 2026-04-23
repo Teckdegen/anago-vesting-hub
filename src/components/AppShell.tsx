@@ -56,7 +56,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       >
         {/* logo */}
         <Link to="/" className="flex items-center gap-2.5 shrink-0">
-          <img src="/logo.png" alt="The Dog House" className="w-8 h-8 rounded-md" />
+          <img src="/logo.png" alt="The Dog House" className="w-10 h-10 rounded-md" />
           <span className="hidden sm:block font-grotesk text-[12px] uppercase tracking-wider text-cream/85">
             The Dog House
           </span>

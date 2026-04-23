@@ -19,11 +19,12 @@ export const Route = createFileRoute("/")({
 const HLS_SRC = "https://stream.mux.com/4IMYGcL01xjs7ek5ANO17JC4VQVUTsojZlnw4fXzwSxc.m3u8";
 
 const NAV = [
-  { label: "Home", href: "/" },
-  { label: "Vesting", href: "/vesting" },
-  { label: "Token Lock", href: "/lock" },
-  { label: "CLMM", href: "/clmm" },
-  { label: "Yield Farm", href: "/farm" },
+  { label: "Home",       href: "/"          },
+  { label: "Dashboard",  href: "/dashboard" },
+  { label: "Vesting",    href: "/vesting"   },
+  { label: "Token Lock", href: "/lock"      },
+  { label: "CLMM",       href: "/clmm"      },
+  { label: "Yield Farm", href: "/farm"      },
 ] as const;
 
 // Cycling words with their accent colors
@@ -112,7 +113,7 @@ function Index() {
         {/* ── NAV ── */}
         <header className="relative z-20 flex items-center justify-between px-5 sm:px-8 lg:px-14 pt-5 gap-3">
           <Link to="/" className="flex items-center gap-2.5 shrink-0 py-3">
-            <img src="/logo.png" alt="The Dog House" className="w-8 h-8 rounded-lg" />
+            <img src="/logo.png" alt="The Dog House" className="w-10 h-10 rounded-lg" />
             <span className="font-grotesk text-[12px] uppercase tracking-wider text-cream/70">
               The Dog House
             </span>
