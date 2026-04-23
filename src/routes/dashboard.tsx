@@ -17,10 +17,10 @@ const walletConnected = false;
 const walletAddress = "0x1a2b...9f0e";
 
 const POSITIONS = [
-  { label: "Token Locks",  value: "$0.00", sub: "0 active locks",       color: "#9B7FD4", icon: LockKeyhole, href: "/lock"    },
-  { label: "Vesting",      value: "$0.00", sub: "0 schedules",          color: "#B89FE0", icon: Timer,       href: "/vesting" },
-  { label: "Yield Farms",  value: "$0.00", sub: "$0.00 claimable",      color: "#CD7F32", icon: Sprout,      href: "/farm"    },
-  { label: "CLMM",         value: "$0.00", sub: "0 open positions",     color: "#7C5CBF", icon: BarChart2,   href: "/clmm"   },
+  { label: "Token Locks",  value: "$0.00", sub: "0 active locks",       color: "#C4A8F0", icon: LockKeyhole, href: "/lock"    },
+  { label: "Vesting",      value: "$0.00", sub: "0 schedules",          color: "#9B7FD4", icon: Timer,       href: "/vesting" },
+  { label: "Yield Farms",  value: "$0.00", sub: "$0.00 claimable",      color: "#6B4FA8", icon: Sprout,      href: "/farm"    },
+  { label: "CLMM",         value: "$0.00", sub: "0 open positions",     color: "#4A2D7A", icon: BarChart2,   href: "/clmm"   },
 ] as const;
 
 function DashboardPage() {
