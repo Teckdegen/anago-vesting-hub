@@ -29,7 +29,7 @@ function FarmPage() {
           <h1 className="font-grotesk uppercase text-cream text-[22px] sm:text-[28px] leading-none tracking-tight">
             Yield Farms
           </h1>
-          <p className="font-mono text-[10px] text-cream/60 mt-1 tracking-wide">
+          <p className="font-mono text-[10px] mt-1 tracking-wide" style={{ color: "rgba(196,168,240,0.7)" }}>
             Stake LP tokens · earn $ANAGO rewards
           </p>
         </div>
@@ -75,10 +75,10 @@ function FarmPage() {
               style={{ background: "rgba(155,127,212,0.2)", border: "1px solid rgba(155,127,212,0.5)" }}>
               <Sprout className="w-4 h-4" style={{ color: "#C4A8F0" }} strokeWidth={1.5} />
             </div>
-            <p className="font-grotesk uppercase text-cream/90 text-[13px] tracking-wider">
+            <p className="font-grotesk uppercase text-cream text-[13px] tracking-wider">
               {activeTab === "My Farms" ? "No active farms" : activeTab === "Boosted" ? "No boosted farms" : "No farms yet"}
             </p>
-            <p className="font-mono text-[10px] text-cream/60 mt-1.5 max-w-[200px]">
+            <p className="font-mono text-[10px] mt-1.5 max-w-[200px]" style={{ color: "rgba(196,168,240,0.7)" }}>
               {activeTab === "My Farms" ? "Connect your wallet to see your farms." : "Farms will appear once the protocol launches."}
             </p>
           </div>

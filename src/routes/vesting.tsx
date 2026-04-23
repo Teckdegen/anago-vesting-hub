@@ -25,13 +25,21 @@ function VestingPage() {
       <div className="max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-14 pt-8 pb-20">
 
         {/* header */}
-        <div className="mb-7">
-          <h1 className="font-grotesk uppercase text-cream text-[22px] sm:text-[28px] leading-none tracking-tight">
-            Vesting
-          </h1>
-          <p className="font-mono text-[10px] text-cream/60 mt-1 tracking-wide">
-            Linear &amp; cliff vesting · teams, investors, contributors
-          </p>
+        <div className="flex items-center justify-between gap-3 mb-7">
+          <div>
+            <h1 className="font-grotesk uppercase text-cream text-[22px] sm:text-[28px] leading-none tracking-tight">
+              Vesting
+            </h1>
+            <p className="font-mono text-[10px] mt-1 tracking-wide" style={{ color: "rgba(196,168,240,0.7)" }}>
+              Linear &amp; cliff vesting · teams, investors, contributors
+            </p>
+          </div>
+          <button
+            className="shrink-0 rounded-full px-3 py-1 font-grotesk text-[10px] uppercase tracking-wider transition active:scale-[0.97]"
+            style={{ background: "rgba(155,127,212,0.15)", color: "#C4A8F0", border: "1px solid rgba(155,127,212,0.45)" }}
+          >
+            + New
+          </button>
         </div>
 
         {/* tabs + search */}
@@ -53,11 +61,6 @@ function VestingPage() {
             <input type="text" placeholder="Search by token or recipient…" value={search} onChange={(e) => setSearch(e.target.value)}
               className="bg-transparent font-mono text-[11px] placeholder-cream/40 outline-none w-40 sm:w-56"
               style={{ color: "#EDE0FF" }} />
-            <button
-              className="w-5 h-5 rounded flex items-center justify-center transition hover:bg-[rgba(155,127,212,0.3)]"
-              style={{ color: "#C4A8F0", border: "1px solid rgba(155,127,212,0.5)", fontSize: "14px", lineHeight: 1 }}
-              title="New Schedule"
-            >+</button>
           </div>
         </div>
 
@@ -81,10 +84,10 @@ function VestingPage() {
               style={{ background: "rgba(155,127,212,0.2)", border: "1px solid rgba(155,127,212,0.5)" }}>
               <Timer className="w-4 h-4" style={{ color: "#C4A8F0" }} strokeWidth={1.5} />
             </div>
-            <p className="font-grotesk uppercase text-cream/90 text-[13px] tracking-wider">
+            <p className="font-grotesk uppercase text-cream text-[13px] tracking-wider">
               {activeTab === "My Schedules" ? "No schedules found" : activeTab === "Claimable" ? "Nothing to claim" : "No schedules yet"}
             </p>
-            <p className="font-mono text-[10px] text-cream/60 mt-1.5 max-w-[200px]">
+            <p className="font-mono text-[10px] mt-1.5 max-w-[200px]" style={{ color: "rgba(196,168,240,0.7)" }}>
               {activeTab === "My Schedules" ? "Connect your wallet to see your schedules." : "Vesting schedules will appear once the protocol launches."}
             </p>
           </div>

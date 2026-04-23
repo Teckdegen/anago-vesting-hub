@@ -29,7 +29,7 @@ function CLMMPage() {
           <h1 className="font-grotesk uppercase text-cream text-[22px] sm:text-[28px] leading-none tracking-tight">
             CLMM
           </h1>
-          <p className="font-mono text-[10px] text-cream/60 mt-1 tracking-wide">
+          <p className="font-mono text-[10px] mt-1 tracking-wide" style={{ color: "rgba(196,168,240,0.7)" }}>
             Concentrated liquidity market maker · earn fees on every swap
           </p>
         </div>
@@ -70,10 +70,10 @@ function CLMMPage() {
 
           {/* empty */}
           <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
-            <p className="font-grotesk uppercase text-cream/90 text-[13px] tracking-wider">
+            <p className="font-grotesk uppercase text-cream text-[13px] tracking-wider">
               {activeTab === "My Positions" ? "No open positions" : "No pools yet"}
             </p>
-            <p className="font-mono text-[10px] text-cream/60 mt-1.5 max-w-[200px]">
+            <p className="font-mono text-[10px] mt-1.5 max-w-[200px]" style={{ color: "rgba(196,168,240,0.7)" }}>
               {activeTab === "My Positions" ? "Add liquidity to open a position." : "Pools will appear once the protocol launches."}
             </p>
           </div>
