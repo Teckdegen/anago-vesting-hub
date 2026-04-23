@@ -14,7 +14,7 @@ export type Theme = {
 
 type Segment = { label: string; pct: number; color: string };
 
-// Single shared theme used across Lock / Vesting / Farm / DLMM pages.
+// Single shared theme used across Lock / Vesting / Farm / CLMM pages.
 export const SHARED_THEME: Theme = {
   name: "doghouse",
   accent: "#9B7FD4",
@@ -65,7 +65,7 @@ export function PortfolioPage({
           <Link to="/lock" className="hover:text-cream transition" activeProps={{ className: "text-cream" }}>Lock</Link>
           <Link to="/vesting" className="hover:text-cream transition" activeProps={{ className: "text-cream" }}>Vesting</Link>
           <Link to="/farm" className="hover:text-cream transition" activeProps={{ className: "text-cream" }}>Farm</Link>
-          <Link to="/dlmm" className="hover:text-cream transition" activeProps={{ className: "text-cream" }}>DLMM</Link>
+          <Link to="/clmm" className="hover:text-cream transition" activeProps={{ className: "text-cream" }}>CLMM</Link>
         </nav>
         <button
           className="px-4 py-2 rounded-full text-[12px] font-grotesk uppercase tracking-wider text-[#0a0a0c]"

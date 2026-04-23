@@ -20,7 +20,7 @@ const POSITIONS = [
   { label: "Token Locks",  value: "$0.00", sub: "0 active locks",       color: "#7C5CBF", icon: LockKeyhole, href: "/lock"    },
   { label: "Vesting",      value: "$0.00", sub: "0 schedules",          color: "#9B7FD4", icon: Timer,       href: "/vesting" },
   { label: "Yield Farms",  value: "$0.00", sub: "$0.00 claimable",      color: "#CD7F32", icon: Sprout,      href: "/farm"    },
-  { label: "DLMM",         value: "$0.00", sub: "0 open positions",     color: "#5A3F8F", icon: BarChart2,   href: "/dlmm"   },
+  { label: "CLMM",         value: "$0.00", sub: "0 open positions",     color: "#5A3F8F", icon: BarChart2,   href: "/clmm"   },
 ] as const;
 
 function DashboardPage() {

@@ -10,7 +10,7 @@ export const Route = createFileRoute("/")({
       { title: "The Dog House — Every token needs a home" },
       {
         name: "description",
-        content: "The Dog House on Monad: Vesting, Token Lock, DLMM and Yield Farm. Powered by ANAGO.",
+        content: "The Dog House on Monad: Vesting, Token Lock, CLMM and Yield Farm. Powered by ANAGO.",
       },
     ],
   }),
@@ -22,7 +22,7 @@ const NAV = [
   { label: "Home", href: "/" },
   { label: "Vesting", href: "/vesting" },
   { label: "Token Lock", href: "/lock" },
-  { label: "DLMM", href: "/dlmm" },
+  { label: "CLMM", href: "/clmm" },
   { label: "Yield Farm", href: "/farm" },
 ] as const;
 
@@ -30,7 +30,7 @@ const NAV = [
 const CYCLE_WORDS = [
   { word: "Vesting", color: "#9B7FD4", href: "/vesting" },
   { word: "Token Lock", color: "#7C5CBF", href: "/lock" },
-  { word: "DLMM", color: "#5B4FE8", href: "/dlmm" },
+  { word: "CLMM", color: "#5B4FE8", href: "/clmm" },
   { word: "Yield Farm", color: "#E8A0B0", href: "/farm" },
 ] as const;
 
