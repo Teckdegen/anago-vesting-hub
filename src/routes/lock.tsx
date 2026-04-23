@@ -54,13 +54,23 @@ function LockPage() {
       <div className="max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-14 pt-8 pb-20">
 
         {/* page title */}
-        <div className="mb-7">
-          <h1 className="font-grotesk uppercase text-cream text-[22px] sm:text-[28px] leading-none tracking-tight">
-            Token Lock
-          </h1>
-          <p className="font-mono text-[10px] text-cream/65 mt-1 tracking-wide">
-            Time-based locks · transparent on-chain unlock schedules
-          </p>
+        <div className="flex items-end justify-between flex-wrap gap-4 mb-7">
+          <div>
+            <h1 className="font-grotesk uppercase text-cream text-[22px] sm:text-[28px] leading-none tracking-tight">
+              Token Lock
+            </h1>
+            <p className="font-mono text-[10px] text-cream/65 mt-1 tracking-wide">
+              Time-based locks · transparent on-chain unlock schedules
+            </p>
+          </div>
+          {activeTab !== "Leaderboard" && (
+            <button
+              className="rounded-md px-5 py-2 font-grotesk text-[10px] uppercase tracking-wider transition hover:bg-[rgba(124,92,191,0.35)] active:scale-[0.98]"
+              style={{ background: "rgba(90,63,143,0.25)", color: "#C4A8F0", border: "1px solid rgba(124,92,191,0.45)" }}
+            >
+              New Lock
+            </button>
+          )}
         </div>
 
         {/* ── LOCKS TABLE ── */}
@@ -206,26 +216,6 @@ function LockPage() {
           </div>
         )}
 
-        {/* create lock CTA */}
-        {activeTab !== "Leaderboard" && (
-          <div
-            className="mt-6 flex items-center justify-between px-5 py-4 rounded-xl"
-            style={{ border: "1px solid rgba(124,92,191,0.25)", background: "rgba(124,92,191,0.08)" }}
-          >
-            <div>
-              <p className="font-grotesk uppercase text-cream/70 text-[12px] tracking-wider">Create a lock</p>
-              <p className="font-mono text-[10px] text-cream/65 mt-0.5">
-                Secure tokens with a time-based release schedule.
-              </p>
-            </div>
-            <button
-              className="rounded-md px-5 py-2 font-grotesk text-[10px] uppercase tracking-wider transition hover:bg-[rgba(124,92,191,0.35)] active:scale-[0.98]"
-              style={{ background: "rgba(90,63,143,0.25)", color: "#C4A8F0", border: "1px solid rgba(124,92,191,0.45)" }}
-            >
-              New Lock
-            </button>
-          </div>
-        )}
       </div>
     </AppShell>
   );

@@ -81,14 +81,7 @@ function FarmPage() {
           </div>
         </div>
 
-        {/* boost info bar */}
-        <div className="mt-6 flex items-center gap-3 px-5 py-4 rounded-xl"
-          style={{ border: "1px solid rgba(124,92,191,0.25)", background: "rgba(124,92,191,0.08)" }}>
-          <div>
-            <p className="font-grotesk uppercase text-cream/70 text-[11px] tracking-wider">Boost your APR</p>
-            <p className="font-mono text-[10px] text-cream/65 mt-0.5">Hold $ANAGO to earn boosted rewards on all farms.</p>
-          </div>
-        </div>
+
       </div>
     </AppShell>
   );
