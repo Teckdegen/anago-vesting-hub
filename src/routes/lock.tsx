@@ -52,37 +52,37 @@ function LockPage() {
       <div className="max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-14 pt-8 pb-20">
 
         {/* page title */}
-        <div className="flex items-end justify-between flex-wrap gap-4 mb-7">
-          <div>
-            <h1 className="font-grotesk uppercase text-cream text-[22px] sm:text-[28px] leading-none tracking-tight">
-              Token Lock
-            </h1>
-            <p className="font-mono text-[10px] text-cream/60 mt-1 tracking-wide">
-              Time-based locks · transparent on-chain unlock schedules
-            </p>
-          </div>
-          {activeTab !== "Leaderboard" && (
-            <button
-              className="rounded-md px-5 py-2 font-grotesk text-[11px] uppercase tracking-wider transition active:scale-[0.98]"
-              style={{ background: "rgba(155,127,212,0.2)", color: "#D4B8FF", border: "1px solid rgba(155,127,212,0.55)" }}
-            >
-              New Lock
-            </button>
-          )}
+        <div className="mb-7">
+          <h1 className="font-grotesk uppercase text-cream text-[22px] sm:text-[28px] leading-none tracking-tight">
+            Token Lock
+          </h1>
+          <p className="font-mono text-[10px] text-cream/60 mt-1 tracking-wide">
+            Time-based locks · transparent on-chain unlock schedules
+          </p>
         </div>
 
-        {/* tabs + search */}
+        {/* tabs + search + action */}
         <div className="flex items-center justify-between flex-wrap gap-3 mb-5">
-          <div className="flex items-center gap-0.5 p-1 rounded-full"
-            style={{ background: "rgba(155,127,212,0.1)", border: "1px solid rgba(155,127,212,0.35)" }}>
-            {TABS.map((t) => (
-              <button key={t} onClick={() => setActiveTab(t)}
-                className="px-4 py-1.5 rounded-full font-grotesk text-[11px] uppercase tracking-wider transition whitespace-nowrap"
-                style={activeTab === t
-                  ? { background: "rgba(155,127,212,0.3)", color: "#EDE0FF", border: "1px solid rgba(155,127,212,0.65)" }
-                  : { color: "rgba(245,240,255,0.6)" }}
-              >{t}</button>
-            ))}
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-0.5 p-1 rounded-full"
+              style={{ background: "rgba(155,127,212,0.1)", border: "1px solid rgba(155,127,212,0.35)" }}>
+              {TABS.map((t) => (
+                <button key={t} onClick={() => setActiveTab(t)}
+                  className="px-4 py-1.5 rounded-full font-grotesk text-[11px] uppercase tracking-wider transition whitespace-nowrap"
+                  style={activeTab === t
+                    ? { background: "rgba(155,127,212,0.3)", color: "#EDE0FF", border: "1px solid rgba(155,127,212,0.65)" }
+                    : { color: "rgba(245,240,255,0.6)" }}
+                >{t}</button>
+              ))}
+            </div>
+            {activeTab !== "Leaderboard" && (
+              <button
+                className="rounded-full px-4 py-1.5 font-grotesk text-[11px] uppercase tracking-wider transition active:scale-[0.98]"
+                style={{ background: "rgba(155,127,212,0.2)", color: "#D4B8FF", border: "1px solid rgba(155,127,212,0.55)" }}
+              >
+                + New Lock
+              </button>
+            )}
           </div>
           {activeTab !== "Leaderboard" && (
             <div className="flex items-center gap-2 px-3 py-2 rounded-full"
