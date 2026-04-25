@@ -62,9 +62,26 @@ function useTokenMeta() {
     list.find((t) => t.address.toLowerCase() === addr.toLowerCase());
 }
 
+// Reads symbol + decimals on-chain for a token address (fallback when not in static list)
+function useOnChainTokenInfo(address: `0x${string}` | undefined) {
+  const reads = useReadContracts({
+    allowFailure: true,
+    contracts: address ? [
+      { address, abi: ERC20_ABI, functionName: "symbol" as const },
+      { address, abi: ERC20_ABI, functionName: "decimals" as const },
+    ] : [],
+    query: { enabled: !!address },
+  });
+  return {
+    symbol: (reads.data?.[0]?.result as string | undefined),
+    decimals: (reads.data?.[1]?.result as number | undefined),
+  };
+}
+
 function LockRow({
   lockId,
   token,
+  owner,
   amount,
   unlockAt,
   withdrawn,
@@ -72,6 +89,7 @@ function LockRow({
 }: {
   lockId: bigint;
   token: `0x${string}`;
+  owner: `0x${string}`;
   amount: bigint;
   unlockAt: bigint;
   withdrawn: boolean;
@@ -79,9 +97,11 @@ function LockRow({
 }) {
   const tokenMeta = useTokenMeta()(token);
   const { tokenLock } = useContractAddresses();
+  const { address } = useAccount();
   const symbol = tokenMeta?.symbol ?? `${token.slice(0, 6)}…`;
   const decimals = tokenMeta?.decimals ?? 18;
   const unlocked = Number(unlockAt) <= Math.floor(Date.now() / 1000);
+  const isOwner = !!address && address.toLowerCase() === owner.toLowerCase();
 
   const tx = useWriteContract();
   const rcpt = useWaitForTransactionReceipt({ hash: tx.data });
@@ -109,7 +129,9 @@ function LockRow({
         </div>
         <div className="min-w-0">
           <p className="font-grotesk uppercase text-[12px] tracking-wider truncate" style={{ color: "#fff" }}>{symbol}</p>
-          <p className="font-mono text-[9px] truncate" style={{ color: "rgba(255,255,255,0.4)" }}>#{lockId.toString()}</p>
+          <p className="font-mono text-[9px] truncate" style={{ color: "rgba(255,255,255,0.4)" }}>
+            #{lockId.toString()} · {shortAddr(owner)}{isOwner ? " (you)" : ""}
+          </p>
         </div>
       </div>
       <div className="text-right font-grotesk text-[12px] tabular-nums" style={{ color: "rgba(255,255,255,0.9)" }}>
@@ -125,21 +147,19 @@ function LockRow({
       <div className="text-right">
         {withdrawn ? (
           <span className="font-mono text-[9px] uppercase" style={{ color: "rgba(255,255,255,0.35)" }}>Withdrawn</span>
-        ) : unlocked ? (
+        ) : unlocked && isOwner ? (
           <button
             onClick={onWithdraw}
             disabled={tx.isPending || rcpt.isLoading}
             className="px-3 py-1 rounded-full font-grotesk text-[10px] uppercase tracking-wider disabled:opacity-50"
-            style={{
-              background: "rgba(155,127,212,0.25)",
-              color: "#EDE0FF",
-              border: "1px solid rgba(155,127,212,0.6)",
-            }}
+            style={{ background: "rgba(155,127,212,0.25)", color: "#EDE0FF", border: "1px solid rgba(155,127,212,0.6)" }}
           >
             {tx.isPending || rcpt.isLoading ? "…" : "Withdraw"}
           </button>
         ) : (
-          <span className="font-mono text-[9px] uppercase" style={{ color: "rgba(255,255,255,0.35)" }}>Locked</span>
+          <span className="font-mono text-[9px] uppercase" style={{ color: unlocked ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.35)" }}>
+            {unlocked ? "Unlocked" : "Locked"}
+          </span>
         )}
       </div>
     </div>
@@ -303,7 +323,7 @@ function LockPage() {
             <div
               className="hidden sm:grid px-5 py-3 text-[9px] font-mono uppercase tracking-[0.2em]"
               style={{
-                gridTemplateColumns: "40px 2fr 1fr",
+                gridTemplateColumns: "40px 2fr 1fr 1fr",
                 borderBottom: "1px solid rgba(255,255,255,0.08)",
                 background: "rgba(255,255,255,0.04)",
                 color: "rgba(255,255,255,0.45)",
@@ -311,29 +331,51 @@ function LockPage() {
             >
               <div>#</div>
               <div>Locker</div>
+              <div className="text-right">Locks</div>
               <div className="text-right">Total Locked</div>
             </div>
             {userLb.length === 0 ? (
               <EmptyLeaderboard label="No lockers yet" />
             ) : (
-              userLb.map((row, i) => (
-                <div
-                  key={row.address}
-                  className="grid sm:grid-cols-[40px_2fr_1fr] grid-cols-[40px_1fr_1fr] px-5 py-3.5 items-center hover:bg-white/[0.03] transition-colors"
-                  style={{ borderBottom: i < userLb.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none" }}
-                >
-                  <RankBadge rank={i + 1} />
-                  <div className="min-w-0">
-                    <p className="font-mono text-[11px] truncate" style={{ color: "#fff" }}>{shortAddr(row.address)}</p>
-                    {address?.toLowerCase() === row.address.toLowerCase() && (
-                      <p className="font-mono text-[9px]" style={{ color: "rgba(255,255,255,0.45)" }}>you</p>
-                    )}
+              userLb.map((row, i) => {
+                // Count how many locks this user has from allLocks
+                const userLockCount = allLocks.filter(
+                  (l) => l.owner.toLowerCase() === row.address.toLowerCase()
+                ).length;
+                const isMe = address?.toLowerCase() === row.address.toLowerCase();
+                return (
+                  <div
+                    key={row.address}
+                    className="grid sm:grid-cols-[40px_2fr_1fr_1fr] grid-cols-[40px_1fr_1fr] px-5 py-3.5 items-center hover:bg-white/[0.03] transition-colors"
+                    style={{ borderBottom: i < userLb.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none" }}
+                  >
+                    <RankBadge rank={i + 1} />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="font-mono text-[11px] truncate" style={{ color: "#fff" }}>{shortAddr(row.address)}</p>
+                        {isMe && (
+                          <span className="font-mono text-[9px] px-1.5 py-0.5 rounded"
+                            style={{ background: "rgba(155,127,212,0.2)", color: "#C4A8F0", border: "1px solid rgba(155,127,212,0.4)" }}>
+                            you
+                          </span>
+                        )}
+                      </div>
+                      <p className="font-mono text-[9px] mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
+                        {row.address}
+                      </p>
+                    </div>
+                    <div className="hidden sm:block text-right font-mono text-[11px]" style={{ color: "rgba(255,255,255,0.6)" }}>
+                      {userLockCount > 0 ? userLockCount : "—"}
+                    </div>
+                    <div className="text-right">
+                      <p className="font-grotesk text-[12px] tabular-nums" style={{ color: "rgba(255,255,255,0.9)" }}>
+                        {row.amount.toString()}
+                      </p>
+                      <p className="font-mono text-[8px]" style={{ color: "rgba(255,255,255,0.3)" }}>raw units</p>
+                    </div>
                   </div>
-                  <div className="text-right font-grotesk text-[12px] tabular-nums" style={{ color: "rgba(255,255,255,0.9)" }}>
-                    {formatAmount(row.amount, 18)}
-                  </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         )}
@@ -404,6 +446,7 @@ function LockPage() {
                   key={l.id.toString()}
                   lockId={l.id}
                   token={l.token}
+                  owner={l.owner}
                   amount={l.amount}
                   unlockAt={l.unlockAt}
                   withdrawn={l.withdrawn}
