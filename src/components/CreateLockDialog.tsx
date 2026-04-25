@@ -30,15 +30,24 @@ export function CreateLockDialog({ open, onClose }: Props) {
     abi: ERC20_ABI,
     functionName: "allowance",
     args: address && token ? [address, tokenLock] : undefined,
-    query: { enabled: !!address && !!token && token.address !== ZERO },
+    query: {
+      enabled: !!address && !!token && token.address !== ZERO,
+      // refetch every block so the button switches immediately after approve confirms
+      refetchInterval: 2000,
+    },
   });
   const allowance = (allowanceQ.data as bigint | undefined) ?? 0n;
-  const needsApproval = parsedAmount > allowance;
+  const needsApproval = parsedAmount > 0n && parsedAmount > allowance;
 
   const approveTx = useWriteContract();
   const lockTx = useWriteContract();
   const approveRcpt = useWaitForTransactionReceipt({ hash: approveTx.data });
   const lockRcpt = useWaitForTransactionReceipt({ hash: lockTx.data });
+
+  // Refetch allowance as soon as approve tx is confirmed
+  if (approveRcpt.isSuccess) {
+    allowanceQ.refetch();
+  }
 
   const handleApprove = () => {
     if (!token) return;

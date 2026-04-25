@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   LockKeyhole,
   Timer,
@@ -10,7 +10,7 @@ import {
   EyeOff,
   Copy,
 } from "lucide-react";
-import { useAccount } from "wagmi";
+import { useAccount, useBalance } from "wagmi";
 import { AppShell } from "@/components/AppShell";
 import { useUserLocks, useUserVestings } from "@/lib/web3/hooks";
 import { shortAddr } from "@/lib/web3/format";
@@ -30,6 +30,22 @@ function DashboardPage() {
   const { address, isConnected } = useAccount();
   const { locks } = useUserLocks();
   const { wallets: vestingWallets } = useUserVestings();
+
+  // MON balance + CoinGecko price for USD value
+  const monBal = useBalance({ address, query: { enabled: !!address } });
+  const [monPrice, setMonPrice] = useState<number>(0);
+  useEffect(() => {
+    fetch("https://api.coingecko.com/api/v3/simple/price?ids=monad&vs_currencies=usd")
+      .then((r) => r.json())
+      .then((d) => { if (d?.monad?.usd) setMonPrice(d.monad.usd); })
+      .catch(() => {});
+  }, []);
+
+  const monUsd = useMemo(() => {
+    if (!monBal.data || monPrice === 0) return null;
+    const mon = Number(monBal.data.value) / 1e18;
+    return (mon * monPrice).toFixed(2);
+  }, [monBal.data, monPrice]);
 
   const activeLocks = locks.filter((l) => !l.withdrawn);
   const totalLocked = activeLocks.reduce((acc, l) => acc + l.amount, 0n);
@@ -89,11 +105,13 @@ function DashboardPage() {
               Net Worth
             </p>
             <p className="font-grotesk text-cream leading-none tracking-tight text-[42px] sm:text-[54px]">
-              {hidden ? "••••••" : "$0.00"}
+              {hidden ? "••••••" : monUsd ? `$${monUsd}` : "$0.00"}
             </p>
             <p className="font-mono text-[9px] mt-2" style={{ color: "rgba(196,168,240,0.65)" }}>
               {isConnected
-                ? "across all your positions"
+                ? monBal.data
+                  ? `${(Number(monBal.data.value) / 1e18).toFixed(4)} MON${monPrice ? ` · $${monPrice} / MON` : ""}`
+                  : "loading…"
                 : "connect wallet to load balances"}
             </p>
           </div>
@@ -221,7 +239,7 @@ function DashboardPage() {
             Total Portfolio
           </p>
           <p className="font-grotesk text-cream text-[20px] leading-none tabular-nums">
-            {hidden ? "••••••" : "$0.00"}
+            {hidden ? "••••••" : monUsd ? `$${monUsd}` : "$0.00"}
           </p>
         </div>
 
