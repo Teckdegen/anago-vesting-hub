@@ -6,10 +6,10 @@ export const CONTRACTS: Record<
   number,
   { vestingFactory: `0x${string}`; tokenLock: `0x${string}` }
 > = {
-  // Monad testnet
+  // Monad testnet (chainId 10143)
   10143: {
-    vestingFactory: "0x0000000000000000000000000000000000000000",
-    tokenLock: "0x0000000000000000000000000000000000000000",
+    vestingFactory: "0x12563124736400C9d6E2CBE8d8114545f4A8923f",
+    tokenLock:      "0x2167d1c0713bcDD77f6932c355EF7A7b983B0299",
   },
 };
 
