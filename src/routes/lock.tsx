@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Search, LockKeyhole, Trophy } from "lucide-react";
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount, useReadContracts, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { AppShell } from "@/components/AppShell";
 import { CreateLockDialog } from "@/components/CreateLockDialog";
 import { NewActionCTA } from "@/components/NewActionCTA";
@@ -12,7 +12,7 @@ import {
   useContractAddresses,
 } from "@/lib/web3/hooks";
 import { TOKEN_LOCK_ABI } from "@/lib/web3/contracts";
-import { getTokenList } from "@/lib/web3/tokens";
+import { ERC20_ABI, getTokenList } from "@/lib/web3/tokens";
 import { formatAmount, formatDate, shortAddr, timeUntil } from "@/lib/web3/format";
 import { useChainId } from "wagmi";
 
@@ -95,16 +95,29 @@ function LockRow({
   withdrawn: boolean;
   isLast: boolean;
 }) {
-  const tokenMeta = useTokenMeta()(token);
+  const staticMeta = useTokenMeta()(token);
   const { tokenLock } = useContractAddresses();
   const { address } = useAccount();
-  const symbol = tokenMeta?.symbol ?? `${token.slice(0, 6)}…`;
-  const decimals = tokenMeta?.decimals ?? 18;
   const unlocked = Number(unlockAt) <= Math.floor(Date.now() / 1000);
   const isOwner = !!address && address.toLowerCase() === owner.toLowerCase();
 
+  // Read on-chain symbol+decimals when not in static list
+  const onChain = useReadContracts({
+    allowFailure: true,
+    contracts: !staticMeta ? [
+      { address: token, abi: ERC20_ABI, functionName: "symbol" as const },
+      { address: token, abi: ERC20_ABI, functionName: "decimals" as const },
+    ] : [],
+    query: { enabled: !staticMeta },
+  });
+  const symbol = staticMeta?.symbol ?? (onChain.data?.[0]?.result as string | undefined) ?? `${token.slice(0, 6)}…`;
+  const decimals = staticMeta?.decimals ?? (onChain.data?.[1]?.result as number | undefined) ?? 18;
+
   const tx = useWriteContract();
   const rcpt = useWaitForTransactionReceipt({ hash: tx.data });
+  // Local withdrawn state — flips immediately after confirm so UI updates without refetch
+  const [localWithdrawn, setLocalWithdrawn] = useState(withdrawn);
+  if (rcpt.isSuccess && !localWithdrawn) setLocalWithdrawn(true);
 
   const onWithdraw = () => {
     tx.writeContract({
@@ -145,7 +158,7 @@ function LockRow({
         {timeUntil(unlockAt)}
       </div>
       <div className="text-right">
-        {withdrawn ? (
+        {localWithdrawn ? (
           <span className="font-mono text-[9px] uppercase" style={{ color: "rgba(255,255,255,0.35)" }}>Withdrawn</span>
         ) : unlocked && isOwner ? (
           <button
@@ -157,11 +170,197 @@ function LockRow({
             {tx.isPending || rcpt.isLoading ? "…" : "Withdraw"}
           </button>
         ) : (
-          <span className="font-mono text-[9px] uppercase" style={{ color: unlocked ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.35)" }}>
+          <span className="font-mono text-[9px] uppercase" style={{ color: "rgba(255,255,255,0.35)" }}>
             {unlocked ? "Unlocked" : "Locked"}
           </span>
         )}
       </div>
+    </div>
+  );
+}
+
+// ── Token leaderboard with on-chain decimals + % of total supply ──────────
+function TokenLeaderboard({
+  tokenLb,
+  tokenMeta,
+}: {
+  tokenLb: { address: `0x${string}`; amount: bigint }[];
+  tokenMeta: (addr: string) => { symbol?: string; decimals?: number } | undefined;
+}) {
+  // Multicall: symbol, decimals, totalSupply for each token
+  const reads = useReadContracts({
+    allowFailure: true,
+    contracts: tokenLb.flatMap((row) => [
+      { address: row.address, abi: ERC20_ABI, functionName: "symbol" as const },
+      { address: row.address, abi: ERC20_ABI, functionName: "decimals" as const },
+      { address: row.address, abi: [...ERC20_ABI, { type: "function", name: "totalSupply", stateMutability: "view", inputs: [], outputs: [{ type: "uint256" }] }] as const, functionName: "totalSupply" as const },
+    ]),
+    query: { enabled: tokenLb.length > 0 },
+  });
+
+  return (
+    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
+      <div className="hidden sm:grid px-5 py-3 text-[9px] font-mono uppercase tracking-[0.2em]"
+        style={{ gridTemplateColumns: "40px 2fr 1fr 1fr", borderBottom: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.45)" }}>
+        <div>#</div>
+        <div>Token</div>
+        <div className="text-right">Total Locked</div>
+        <div className="text-right">% of Supply</div>
+      </div>
+      {tokenLb.length === 0 ? (
+        <EmptyLeaderboard label="No tokens locked yet" />
+      ) : (
+        tokenLb.map((row, i) => {
+          const o = i * 3;
+          const staticMeta = tokenMeta(row.address);
+          const sym = staticMeta?.symbol ?? (reads.data?.[o]?.result as string | undefined) ?? `${row.address.slice(0, 6)}…`;
+          const dec = staticMeta?.decimals ?? (reads.data?.[o + 1]?.result as number | undefined) ?? 18;
+          const supply = reads.data?.[o + 2]?.result as bigint | undefined;
+          const pct = supply && supply > 0n
+            ? Number((row.amount * 100_000n) / supply) / 1000
+            : null;
+
+          return (
+            <div key={row.address}
+              className="grid sm:grid-cols-[40px_2fr_1fr_1fr] grid-cols-[40px_1fr_1fr] px-5 py-3.5 items-center hover:bg-white/[0.03] transition-colors"
+              style={{ borderBottom: i < tokenLb.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none" }}>
+              <RankBadge rank={i + 1} />
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-7 h-7 rounded-full flex items-center justify-center font-grotesk text-[10px] shrink-0"
+                  style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.7)" }}>
+                  {sym[0]}
+                </div>
+                <div className="min-w-0">
+                  <p className="font-grotesk uppercase text-[12px] tracking-wider" style={{ color: "#fff" }}>{sym}</p>
+                  <p className="font-mono text-[9px] truncate" style={{ color: "rgba(255,255,255,0.4)" }}>{row.address}</p>
+                </div>
+              </div>
+              <div className="text-right font-grotesk text-[12px] tabular-nums" style={{ color: "rgba(255,255,255,0.9)" }}>
+                {formatAmount(row.amount, dec)} <span className="font-mono text-[9px]" style={{ color: "rgba(255,255,255,0.4)" }}>{sym}</span>
+              </div>
+              <div className="hidden sm:flex items-center justify-end gap-2">
+                {pct !== null ? (
+                  <>
+                    <div className="w-16 h-1 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.1)" }}>
+                      <div className="h-full rounded-full" style={{ width: `${Math.min(pct, 100)}%`, background: ACCENT }} />
+                    </div>
+                    <span className="font-mono text-[10px]" style={{ color: "rgba(255,255,255,0.55)" }}>
+                      {pct.toFixed(2)}%
+                    </span>
+                  </>
+                ) : (
+                  <span className="font-mono text-[10px]" style={{ color: "rgba(255,255,255,0.3)" }}>—</span>
+                )}
+              </div>
+            </div>
+          );
+        })
+      )}
+    </div>
+  );
+}
+
+// ── User leaderboard — reads decimals per token, shows real amounts ────────
+function UserLeaderboard({
+  userLb,
+  allLocks,
+  address,
+  tokenMeta,
+}: {
+  userLb: { address: `0x${string}`; amount: bigint }[];
+  allLocks: import("@/lib/web3/hooks").LockView[];
+  address: `0x${string}` | undefined;
+  tokenMeta: (addr: string) => { symbol?: string; decimals?: number } | undefined;
+}) {
+  // Collect unique token addresses across all locks
+  const uniqueTokens = useMemo(() => {
+    const set = new Set<`0x${string}`>();
+    allLocks.forEach((l) => set.add(l.token));
+    return Array.from(set);
+  }, [allLocks]);
+
+  // Read symbol + decimals for every unique token in one multicall
+  const tokenReads = useReadContracts({
+    allowFailure: true,
+    contracts: uniqueTokens.flatMap((t) => [
+      { address: t, abi: ERC20_ABI, functionName: "symbol" as const },
+      { address: t, abi: ERC20_ABI, functionName: "decimals" as const },
+    ]),
+    query: { enabled: uniqueTokens.length > 0 },
+  });
+
+  const tokenInfo = useMemo(() => {
+    const map: Record<string, { symbol: string; decimals: number }> = {};
+    uniqueTokens.forEach((t, i) => {
+      const staticMeta = tokenMeta(t);
+      const sym = staticMeta?.symbol ?? (tokenReads.data?.[i * 2]?.result as string | undefined) ?? t.slice(0, 6);
+      const dec = staticMeta?.decimals ?? (tokenReads.data?.[i * 2 + 1]?.result as number | undefined) ?? 18;
+      map[t.toLowerCase()] = { symbol: sym, decimals: dec };
+    });
+    return map;
+  }, [uniqueTokens, tokenReads.data, tokenMeta]);
+
+  return (
+    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
+      <div className="hidden sm:grid px-5 py-3 text-[9px] font-mono uppercase tracking-[0.2em]"
+        style={{ gridTemplateColumns: "40px 2fr 1fr 1fr", borderBottom: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.45)" }}>
+        <div>#</div>
+        <div>Locker</div>
+        <div className="text-right">Locks</div>
+        <div className="text-right">Holdings</div>
+      </div>
+      {userLb.length === 0 ? (
+        <EmptyLeaderboard label="No lockers yet" />
+      ) : (
+        userLb.map((row, i) => {
+          const isMe = address?.toLowerCase() === row.address.toLowerCase();
+          const userLocks = allLocks.filter((l) => l.owner.toLowerCase() === row.address.toLowerCase() && !l.withdrawn);
+
+          // Sum per token
+          const byToken: Record<string, bigint> = {};
+          userLocks.forEach((l) => {
+            const key = l.token.toLowerCase();
+            byToken[key] = (byToken[key] ?? 0n) + l.amount;
+          });
+          const tokenEntries = Object.entries(byToken);
+
+          return (
+            <div key={row.address}
+              className="grid sm:grid-cols-[40px_2fr_1fr_1fr] grid-cols-[40px_1fr_1fr] px-5 py-3.5 items-start hover:bg-white/[0.03] transition-colors"
+              style={{ borderBottom: i < userLb.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none" }}>
+              <RankBadge rank={i + 1} />
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <p className="font-mono text-[11px] truncate" style={{ color: "#fff" }}>{shortAddr(row.address)}</p>
+                  {isMe && (
+                    <span className="font-mono text-[9px] px-1.5 py-0.5 rounded"
+                      style={{ background: "rgba(155,127,212,0.2)", color: "#C4A8F0", border: "1px solid rgba(155,127,212,0.4)" }}>
+                      you
+                    </span>
+                  )}
+                </div>
+                <p className="font-mono text-[9px] mt-0.5 truncate" style={{ color: "rgba(255,255,255,0.35)" }}>{row.address}</p>
+              </div>
+              <div className="text-right font-mono text-[11px]" style={{ color: "rgba(255,255,255,0.6)" }}>
+                {userLocks.length}
+              </div>
+              <div className="text-right space-y-0.5">
+                {tokenEntries.length === 0 ? (
+                  <p className="font-mono text-[10px]" style={{ color: "rgba(255,255,255,0.35)" }}>—</p>
+                ) : tokenEntries.map(([tok, amt]) => {
+                  const info = tokenInfo[tok] ?? { symbol: tok.slice(0, 6), decimals: 18 };
+                  return (
+                    <p key={tok} className="font-grotesk text-[12px] tabular-nums" style={{ color: "rgba(255,255,255,0.9)" }}>
+                      {formatAmount(amt, info.decimals)}{" "}
+                      <span className="font-mono text-[9px]" style={{ color: "rgba(255,255,255,0.45)" }}>{info.symbol}</span>
+                    </p>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })
+      )}
     </div>
   );
 }
@@ -257,127 +456,12 @@ function LockPage() {
 
         {/* TOKEN LEADERBOARD */}
         {activeTab === "Token Leaderboard" && (
-          <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
-            <div
-              className="hidden sm:grid px-5 py-3 text-[9px] font-mono uppercase tracking-[0.2em]"
-              style={{
-                gridTemplateColumns: "40px 2fr 1fr 1fr",
-                borderBottom: "1px solid rgba(255,255,255,0.08)",
-                background: "rgba(255,255,255,0.04)",
-                color: "rgba(255,255,255,0.45)",
-              }}
-            >
-              <div>#</div>
-              <div>Token</div>
-              <div className="text-right">Total Locked</div>
-              <div className="text-right">Share</div>
-            </div>
-            {tokenLb.length === 0 ? (
-              <EmptyLeaderboard label="No tokens locked yet" />
-            ) : (
-              tokenLb.map((row, i) => {
-                const meta = tokenMeta(row.address);
-                const sym = meta?.symbol ?? `${row.address.slice(0, 6)}…`;
-                const dec = meta?.decimals ?? 18;
-                const pct = Number((row.amount * 10000n) / totalLockedAcrossTokens) / 100;
-                return (
-                  <div
-                    key={row.address}
-                    className="grid sm:grid-cols-[40px_2fr_1fr_1fr] grid-cols-[40px_1fr_1fr] px-5 py-3.5 items-center hover:bg-white/[0.03] transition-colors"
-                    style={{ borderBottom: i < tokenLb.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none" }}
-                  >
-                    <RankBadge rank={i + 1} />
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div
-                        className="w-7 h-7 rounded-full flex items-center justify-center font-grotesk text-[10px] shrink-0"
-                        style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.7)" }}
-                      >
-                        {sym[0]}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="font-grotesk uppercase text-[12px] tracking-wider" style={{ color: "#fff" }}>{sym}</p>
-                        <p className="font-mono text-[9px] truncate" style={{ color: "rgba(255,255,255,0.4)" }}>{row.address}</p>
-                      </div>
-                    </div>
-                    <div className="text-right font-grotesk text-[12px] tabular-nums" style={{ color: "rgba(255,255,255,0.9)" }}>
-                      {formatAmount(row.amount, dec)}
-                    </div>
-                    <div className="hidden sm:flex items-center justify-end gap-2">
-                      <div className="w-16 h-1 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.1)" }}>
-                        <div className="h-full rounded-full" style={{ width: `${pct}%`, background: ACCENT }} />
-                      </div>
-                      <span className="font-mono text-[10px]" style={{ color: "rgba(255,255,255,0.55)" }}>
-                        {pct.toFixed(1)}%
-                      </span>
-                    </div>
-                  </div>
-                );
-              })
-            )}
-          </div>
+          <TokenLeaderboard tokenLb={tokenLb} tokenMeta={tokenMeta} />
         )}
 
         {/* USER LEADERBOARD */}
         {activeTab === "User Leaderboard" && (
-          <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
-            <div
-              className="hidden sm:grid px-5 py-3 text-[9px] font-mono uppercase tracking-[0.2em]"
-              style={{
-                gridTemplateColumns: "40px 2fr 1fr 1fr",
-                borderBottom: "1px solid rgba(255,255,255,0.08)",
-                background: "rgba(255,255,255,0.04)",
-                color: "rgba(255,255,255,0.45)",
-              }}
-            >
-              <div>#</div>
-              <div>Locker</div>
-              <div className="text-right">Locks</div>
-              <div className="text-right">Total Locked</div>
-            </div>
-            {userLb.length === 0 ? (
-              <EmptyLeaderboard label="No lockers yet" />
-            ) : (
-              userLb.map((row, i) => {
-                // Count how many locks this user has from allLocks
-                const userLockCount = allLocks.filter(
-                  (l) => l.owner.toLowerCase() === row.address.toLowerCase()
-                ).length;
-                const isMe = address?.toLowerCase() === row.address.toLowerCase();
-                return (
-                  <div
-                    key={row.address}
-                    className="grid sm:grid-cols-[40px_2fr_1fr_1fr] grid-cols-[40px_1fr_1fr] px-5 py-3.5 items-center hover:bg-white/[0.03] transition-colors"
-                    style={{ borderBottom: i < userLb.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none" }}
-                  >
-                    <RankBadge rank={i + 1} />
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <p className="font-mono text-[11px] truncate" style={{ color: "#fff" }}>{shortAddr(row.address)}</p>
-                        {isMe && (
-                          <span className="font-mono text-[9px] px-1.5 py-0.5 rounded"
-                            style={{ background: "rgba(155,127,212,0.2)", color: "#C4A8F0", border: "1px solid rgba(155,127,212,0.4)" }}>
-                            you
-                          </span>
-                        )}
-                      </div>
-                      <p className="font-mono text-[9px] mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
-                        {row.address}
-                      </p>
-                    </div>
-                    <div className="hidden sm:block text-right font-mono text-[11px]" style={{ color: "rgba(255,255,255,0.6)" }}>
-                      {userLockCount > 0 ? userLockCount : "—"}
-                    </div>
-                    <div className="text-right">
-                      <p className="font-grotesk text-[12px] tabular-nums" style={{ color: "rgba(255,255,255,0.9)" }}>
-                        {row.amount.toString()}
-                      </p>
-                      <p className="font-mono text-[8px]" style={{ color: "rgba(255,255,255,0.3)" }}>raw units</p>
-                    </div>
-                  </div>
-                );
-              })
-            )}
-          </div>
+          <UserLeaderboard userLb={userLb} allLocks={allLocks} address={address} tokenMeta={tokenMeta} />
         )}
 
         {/* MY LOCKS / UNLOCKING SOON / ALL */}

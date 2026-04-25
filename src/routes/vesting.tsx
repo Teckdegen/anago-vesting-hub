@@ -34,10 +34,14 @@ type WalletDetail = {
   releasable: bigint;
 };
 
-function VestingRow({ wallet, isLast }: { wallet: WalletDetail; isLast: boolean }) {
+function VestingRow({ wallet, isLast, onClaimed }: { wallet: WalletDetail; isLast: boolean; onClaimed: () => void }) {
   const tx = useWriteContract();
   const rcpt = useWaitForTransactionReceipt({ hash: tx.data });
   const isErc20 = wallet.token !== ZERO;
+
+  if (rcpt.isSuccess) {
+    onClaimed();
+  }
 
   const release = () => {
     if (isErc20) {
@@ -202,7 +206,7 @@ function VestingPage() {
               title={activeTab === "Claimable" ? "Nothing to claim" : "No schedules yet"}
               sub={activeTab === "Claimable" ? "Nothing is releasable right now." : "Create a vesting schedule with + New."} />
           ) : (
-            filtered.map((w, i) => <VestingRow key={w.address} wallet={w} isLast={i === filtered.length - 1} />)
+            filtered.map((w, i) => <VestingRow key={w.address} wallet={w} isLast={i === filtered.length - 1} onClaimed={() => reads.refetch()} />)
           )}
         </div>
 
