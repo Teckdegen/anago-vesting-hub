@@ -197,7 +197,60 @@ export function useUserLocks(): { locks: LockView[]; isLoading: boolean } {
 }
 
 // ──────────────────────────────────────────────────────────────────────────
-//                                LEADERBOARDS
+//  All locks ever created on-chain (paginated, newest first)
+// ──────────────────────────────────────────────────────────────────────────
+export function useAllLocks(limit = 100): { locks: LockView[]; isLoading: boolean } {
+  const { tokenLock } = useContractAddresses();
+
+  const lengthQ = useReadContract({
+    address: tokenLock,
+    abi: TOKEN_LOCK_ABI,
+    functionName: "locksLength",
+    query: { enabled: tokenLock !== ZERO },
+  });
+
+  const total = Number((lengthQ.data as bigint | undefined) ?? 0n);
+
+  // Take the last `limit` ids (newest first)
+  const ids = useMemo<bigint[]>(() => {
+    if (total === 0) return [];
+    const start = Math.max(0, total - limit);
+    const result: bigint[] = [];
+    for (let i = total - 1; i >= start; i--) result.push(BigInt(i));
+    return result;
+  }, [total, limit]);
+
+  const detailsQ = useReadContracts({
+    allowFailure: true,
+    contracts: ids.map((id) => ({
+      address: tokenLock,
+      abi: TOKEN_LOCK_ABI,
+      functionName: "getLock" as const,
+      args: [id] as const,
+    })),
+    query: { enabled: ids.length > 0 },
+  });
+
+  const locks = useMemo<LockView[]>(() => {
+    if (!detailsQ.data) return [];
+    return detailsQ.data
+      .map((d, i) => {
+        if (d?.status !== "success") return null;
+        const r = d.result as {
+          token: `0x${string}`;
+          owner: `0x${string}`;
+          amount: bigint;
+          unlockAt: bigint;
+          createdAt: bigint;
+          withdrawn: boolean;
+        };
+        return { id: ids[i], ...r };
+      })
+      .filter(Boolean) as LockView[];
+  }, [detailsQ.data, ids]);
+
+  return { locks, isLoading: lengthQ.isLoading || detailsQ.isLoading };
+}
 // ──────────────────────────────────────────────────────────────────────────
 
 export function useLockLeaderboards(limit = 50) {

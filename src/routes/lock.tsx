@@ -7,6 +7,7 @@ import { CreateLockDialog } from "@/components/CreateLockDialog";
 import { NewActionCTA } from "@/components/NewActionCTA";
 import {
   useUserLocks,
+  useAllLocks,
   useLockLeaderboards,
   useContractAddresses,
 } from "@/lib/web3/hooks";
@@ -151,6 +152,7 @@ function LockPage() {
   const [showCreate, setShowCreate] = useState(false);
   const { address } = useAccount();
   const { locks } = useUserLocks();
+  const { locks: allLocks } = useAllLocks();
   const { tokens: tokenLb, users: userLb } = useLockLeaderboards();
   const tokenMeta = useTokenMeta();
 
@@ -364,8 +366,16 @@ function LockPage() {
                   ? unlockingSoon
                   : activeTab === "My Locks"
                     ? filteredMyLocks
-                    : filteredMyLocks; // "All Locks" — without indexer we only know our own
-              if (!address) {
+                    : allLocks.filter((l) => {
+                        if (!search) return true;
+                        const s = search.toLowerCase();
+                        return (
+                          l.token.toLowerCase().includes(s) ||
+                          l.owner.toLowerCase().includes(s) ||
+                          (tokenMeta(l.token)?.symbol.toLowerCase() ?? "").includes(s)
+                        );
+                      });
+              if (activeTab !== "All Locks" && !address) {
                 return (
                   <Empty
                     title="Wallet not connected"
