@@ -261,7 +261,7 @@ export function useLockLeaderboards(limit = 50) {
     abi: TOKEN_LOCK_ABI,
     functionName: "tokenLeaderboard",
     args: [0n, BigInt(limit)],
-    query: { enabled: tokenLock !== ZERO },
+    query: { enabled: tokenLock !== ZERO, refetchInterval: 10_000 },
   });
 
   const usersQ = useReadContract({
@@ -269,7 +269,7 @@ export function useLockLeaderboards(limit = 50) {
     abi: TOKEN_LOCK_ABI,
     functionName: "userLeaderboard",
     args: [0n, BigInt(limit)],
-    query: { enabled: tokenLock !== ZERO },
+    query: { enabled: tokenLock !== ZERO, refetchInterval: 10_000 },
   });
 
   const tokens = useMemo(() => {
