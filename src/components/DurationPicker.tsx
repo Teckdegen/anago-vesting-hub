@@ -1,17 +1,28 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
+const SEC = 1;
+const MIN = 60;
+const HOUR = 60 * 60;
 const DAY = 86400;
+
 const PRESETS = [
-  // Short presets are intentional — useful for testnet smoke-testing the
-  // unlock + leaderboard flow without waiting days.
-  { label: "5m",  seconds: 5 * 60 },
-  { label: "1h",  seconds: 60 * 60 },
-  { label: "1d",  seconds: DAY },
+  { label: "30s", seconds: 30 },
+  { label: "5m",  seconds: 5 * MIN },
+  { label: "1h",  seconds: 1 * HOUR },
+  { label: "1d",  seconds: 1 * DAY },
   { label: "7d",  seconds: 7 * DAY },
   { label: "30d", seconds: 30 * DAY },
   { label: "90d", seconds: 90 * DAY },
   { label: "1y",  seconds: 365 * DAY },
 ];
+
+const UNITS = [
+  { label: "sec",  factor: SEC },
+  { label: "min",  factor: MIN },
+  { label: "hr",   factor: HOUR },
+  { label: "days", factor: DAY },
+] as const;
+type Unit = (typeof UNITS)[number];
 
 type Props = {
   value: number; // seconds
@@ -19,8 +30,17 @@ type Props = {
 };
 
 export function DurationPicker({ value, onChange }: Props) {
-  const [customDays, setCustomDays] = useState<string>("");
+  const [unit, setUnit] = useState<Unit>(UNITS[3]); // default days
+  const [custom, setCustom] = useState<string>("");
   const isCustom = !PRESETS.some((p) => p.seconds === value);
+
+  // What to display in the input when isCustom is true
+  const customDisplay = useMemo(() => {
+    if (custom !== "") return custom;
+    if (!isCustom) return "";
+    const v = value / unit.factor;
+    return Number.isInteger(v) ? String(v) : v.toFixed(2);
+  }, [custom, isCustom, value, unit.factor]);
 
   const unlockDate = new Date(Date.now() + value * 1000);
 
@@ -34,7 +54,7 @@ export function DurationPicker({ value, onChange }: Props) {
               key={p.label}
               onClick={() => {
                 onChange(p.seconds);
-                setCustomDays("");
+                setCustom("");
               }}
               className="px-3 py-1.5 rounded-full font-grotesk text-[11px] uppercase tracking-wider transition active:scale-[0.97]"
               style={{
@@ -50,7 +70,7 @@ export function DurationPicker({ value, onChange }: Props) {
       </div>
 
       <div
-        className="flex items-center gap-2 rounded-xl px-3 py-2.5"
+        className="flex items-stretch rounded-xl overflow-hidden"
         style={{
           background: "rgba(255,255,255,0.04)",
           border: "1px solid rgba(255,255,255,0.1)",
@@ -60,21 +80,38 @@ export function DurationPicker({ value, onChange }: Props) {
           type="number"
           min={1}
           placeholder="Custom"
-          value={customDays || (isCustom ? Math.round(value / DAY) : "")}
+          value={customDisplay}
           onChange={(e) => {
-            setCustomDays(e.target.value);
-            const days = Number(e.target.value);
-            if (Number.isFinite(days) && days > 0) onChange(days * DAY);
+            setCustom(e.target.value);
+            const n = Number(e.target.value);
+            if (Number.isFinite(n) && n > 0) onChange(Math.round(n * unit.factor));
           }}
-          className="bg-transparent font-mono text-[12px] outline-none w-full"
+          className="bg-transparent font-mono text-[12px] outline-none w-full px-3 py-2.5"
           style={{ color: "#fff" }}
         />
-        <span
-          className="font-mono text-[10px] uppercase tracking-wider shrink-0"
-          style={{ color: "rgba(255,255,255,0.4)" }}
-        >
-          days
-        </span>
+        <div className="flex" style={{ borderLeft: "1px solid rgba(255,255,255,0.08)" }}>
+          {UNITS.map((u) => {
+            const active = u.label === unit.label;
+            return (
+              <button
+                key={u.label}
+                onClick={() => {
+                  setUnit(u);
+                  // re-interpret current custom value in the new unit if any
+                  const n = Number(custom);
+                  if (Number.isFinite(n) && n > 0) onChange(Math.round(n * u.factor));
+                }}
+                className="px-2.5 font-mono text-[10px] uppercase tracking-wider transition"
+                style={{
+                  background: active ? "rgba(255,255,255,0.08)" : "transparent",
+                  color: active ? "#fff" : "rgba(255,255,255,0.45)",
+                }}
+              >
+                {u.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <div
@@ -100,6 +137,7 @@ export function DurationPicker({ value, onChange }: Props) {
           {unlockDate.toLocaleTimeString(undefined, {
             hour: "2-digit",
             minute: "2-digit",
+            second: value < 5 * MIN ? "2-digit" : undefined,
           })}
         </span>
       </div>

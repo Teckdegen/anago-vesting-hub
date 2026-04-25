@@ -4,6 +4,7 @@ import { Search, LockKeyhole, Trophy } from "lucide-react";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { AppShell } from "@/components/AppShell";
 import { CreateLockDialog } from "@/components/CreateLockDialog";
+import { NewActionCTA } from "@/components/NewActionCTA";
 import {
   useUserLocks,
   useLockLeaderboards,
@@ -191,15 +192,7 @@ function LockPage() {
               Time-based locks · transparent on-chain unlock schedules
             </p>
           </div>
-          {showSearch && (
-            <button
-              onClick={() => setShowCreate(true)}
-              className="shrink-0 rounded-full px-3 py-1 font-grotesk text-[10px] uppercase tracking-wider transition active:scale-[0.97]"
-              style={{ background: "rgba(255,255,255,0.08)", color: "#fff", border: "1px solid rgba(255,255,255,0.2)" }}
-            >
-              + New
-            </button>
-          )}
+          {showSearch && <NewActionCTA label="New Lock" onClick={() => setShowCreate(true)} />}
         </div>
 
         <div className="flex items-center justify-between flex-wrap gap-3 mb-5">

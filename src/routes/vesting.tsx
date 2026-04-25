@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Search, Timer } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { CreateVestingDialog } from "@/components/CreateVestingDialog";
+import { NewActionCTA } from "@/components/NewActionCTA";
 
 export const Route = createFileRoute("/vesting")({
   component: VestingPage,
@@ -36,13 +37,7 @@ function VestingPage() {
               Linear &amp; cliff vesting · teams, investors, contributors
             </p>
           </div>
-          <button
-            onClick={() => setShowCreate(true)}
-            className="shrink-0 rounded-full px-3 py-1 font-grotesk text-[10px] uppercase tracking-wider transition active:scale-[0.97]"
-            style={{ background: "rgba(255,255,255,0.08)", color: "#fff", border: "1px solid rgba(255,255,255,0.2)" }}
-          >
-            + New
-          </button>
+          <NewActionCTA label="New Schedule" onClick={() => setShowCreate(true)} />
         </div>
 
         {/* tabs + search */}
