@@ -1,128 +1,169 @@
-import { useUserTokens } from "@/lib/web3/hooks";
+import { useState } from "react";
+import { useAccount, useReadContracts, useBalance } from "wagmi";
 import { formatAmount } from "@/lib/web3/format";
-import type { TokenInfo } from "@/lib/web3/tokens";
-import { Check } from "lucide-react";
+import { ERC20_ABI, type TokenInfo } from "@/lib/web3/tokens";
+import { Check, Search, Loader2 } from "lucide-react";
 
 type Props = {
   selected?: TokenInfo;
   onSelect: (t: TokenInfo & { balance: bigint }) => void;
-  /** if true, hide the native token (locks need ERC-20 approval flow) */
   excludeNative?: boolean;
 };
 
-const ZERO = "0x0000000000000000000000000000000000000000";
+const ZERO = "0x0000000000000000000000000000000000000000" as `0x${string}`;
+const isAddr = (s: string): s is `0x${string}` => /^0x[a-fA-F0-9]{40}$/.test(s);
 
 export function TokenPicker({ selected, onSelect, excludeNative }: Props) {
-  const { tokens, isLoading } = useUserTokens();
-  const filtered = excludeNative ? tokens.filter((t) => t.address !== ZERO) : tokens;
+  const { address: wallet } = useAccount();
+  const [input, setInput] = useState("");
 
-  if (isLoading) {
-    return (
-      <div className="grid grid-cols-2 gap-2">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div
-            key={i}
-            className="h-[68px] rounded-xl animate-pulse"
-            style={{
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.06)",
-            }}
-          />
-        ))}
-      </div>
-    );
-  }
+  const addr = isAddr(input.trim()) ? (input.trim() as `0x${string}`) : null;
 
-  if (filtered.length === 0) {
-    return (
-      <div
-        className="rounded-xl px-4 py-5 text-center"
-        style={{
-          background: "rgba(255,255,255,0.03)",
-          border: "1px dashed rgba(255,255,255,0.14)",
-        }}
-      >
-        <p className="font-mono text-[10px]" style={{ color: "rgba(255,255,255,0.6)" }}>
-          No tokens found in your wallet
-        </p>
-        <p className="font-mono text-[9px] mt-1" style={{ color: "rgba(255,255,255,0.35)" }}>
-          Make sure your wallet is connected and has token balances on Monad testnet.
-        </p>
-      </div>
-    );
-  }
+  // Read symbol, name, decimals, balance in one multicall
+  const reads = useReadContracts({
+    allowFailure: true,
+    contracts: addr
+      ? [
+          { address: addr, abi: ERC20_ABI, functionName: "symbol" as const },
+          { address: addr, abi: ERC20_ABI, functionName: "name" as const },
+          { address: addr, abi: ERC20_ABI, functionName: "decimals" as const },
+          {
+            address: addr,
+            abi: ERC20_ABI,
+            functionName: "balanceOf" as const,
+            args: wallet ? [wallet] : undefined,
+          },
+        ]
+      : [],
+    query: { enabled: !!addr && !!wallet },
+  });
+
+  const loading = reads.isLoading;
+  const [symR, nameR, decR, balR] = reads.data ?? [];
+
+  const resolved: (TokenInfo & { balance: bigint }) | null =
+    addr && symR?.status === "success"
+      ? {
+          address: addr,
+          symbol: symR.result as string,
+          name: (nameR?.result as string) ?? "",
+          decimals: (decR?.result as number) ?? 18,
+          balance: balR?.status === "success" ? (balR.result as bigint) : 0n,
+        }
+      : null;
+
+  const isSel = selected?.address?.toLowerCase() === addr?.toLowerCase();
 
   return (
-    <div className="grid grid-cols-2 gap-2">
-      {filtered.map((t) => {
-        const isSel = selected?.address === t.address;
-        return (
+    <div className="space-y-3">
+      {/* Search / paste input */}
+      <div
+        className="flex items-center gap-2 px-3 py-2.5 rounded-xl"
+        style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}
+      >
+        {loading ? (
+          <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" style={{ color: "rgba(255,255,255,0.4)" }} />
+        ) : (
+          <Search className="w-3.5 h-3.5 shrink-0" style={{ color: "rgba(255,255,255,0.4)" }} strokeWidth={1.5} />
+        )}
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value.trim())}
+          placeholder="Paste token contract address (0x…)"
+          className="flex-1 bg-transparent font-mono text-[11px] outline-none"
+          style={{ color: "#fff" }}
+          spellCheck={false}
+        />
+        {input && (
           <button
-            key={t.address}
-            onClick={() => onSelect(t)}
-            className="text-left rounded-xl p-3 relative transition active:scale-[0.985]"
-            style={{
-              background: isSel ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.03)",
-              border: `1px solid ${isSel ? "rgba(255,255,255,0.28)" : "rgba(255,255,255,0.08)"}`,
-              boxShadow: isSel
-                ? "inset 0 0 0 1px rgba(255,255,255,0.06)"
-                : "none",
-            }}
+            onClick={() => setInput("")}
+            className="font-mono text-[10px] transition hover:opacity-80"
+            style={{ color: "rgba(255,255,255,0.35)" }}
           >
-            {isSel && (
-              <span
-                className="absolute top-2 right-2 w-4 h-4 rounded-full flex items-center justify-center"
-                style={{ background: "rgba(255,255,255,0.95)", color: "#0D0B14" }}
-              >
-                <Check className="w-2.5 h-2.5" strokeWidth={3} />
-              </span>
-            )}
-
-            <div className="flex items-center gap-2 mb-2">
-              {t.logoURI ? (
-                <img
-                  src={t.logoURI}
-                  alt={t.symbol}
-                  className="w-7 h-7 rounded-full"
-                  style={{ border: "1px solid rgba(255,255,255,0.1)" }}
-                />
-              ) : (
-                <div
-                  className="w-7 h-7 rounded-full flex items-center justify-center font-grotesk text-[11px]"
-                  style={{
-                    background: "rgba(255,255,255,0.08)",
-                    color: "rgba(255,255,255,0.85)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                  }}
-                >
-                  {t.symbol[0]}
-                </div>
-              )}
-              <div className="min-w-0">
-                <p
-                  className="font-grotesk text-[12px] uppercase tracking-wider truncate"
-                  style={{ color: "#fff" }}
-                >
-                  {t.symbol}
-                </p>
-                <p
-                  className="font-mono text-[9px] truncate"
-                  style={{ color: "rgba(255,255,255,0.4)" }}
-                >
-                  {t.name}
-                </p>
-              </div>
-            </div>
-            <p
-              className="font-mono text-[10px] tabular-nums"
-              style={{ color: "rgba(255,255,255,0.65)" }}
-            >
-              {formatAmount(t.balance, t.decimals)}{" "}
-              <span style={{ color: "rgba(255,255,255,0.4)" }}>{t.symbol}</span>
-            </p>
+            ✕
           </button>
-        );
-      })}
+        )}
+      </div>
+
+      {/* Hint */}
+      {!input && (
+        <p className="font-mono text-[9px]" style={{ color: "rgba(255,255,255,0.3)" }}>
+          Paste any ERC-20 contract address — symbol, name and balance will load automatically.
+        </p>
+      )}
+
+      {/* Invalid address warning */}
+      {input && !addr && (
+        <p className="font-mono text-[9px]" style={{ color: "rgba(255,120,120,0.8)" }}>
+          Not a valid address — must be 0x followed by 40 hex characters.
+        </p>
+      )}
+
+      {/* Resolved token card */}
+      {resolved && (
+        <button
+          onClick={() => onSelect(resolved)}
+          className="w-full text-left rounded-xl p-3 relative transition active:scale-[0.99]"
+          style={{
+            background: isSel ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.03)",
+            border: `1px solid ${isSel ? "rgba(255,255,255,0.28)" : "rgba(255,255,255,0.1)"}`,
+          }}
+        >
+          {isSel && (
+            <span
+              className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full flex items-center justify-center"
+              style={{ background: "#fff", color: "#0D0B14" }}
+            >
+              <Check className="w-2.5 h-2.5" strokeWidth={3} />
+            </span>
+          )}
+          <div className="flex items-center gap-2.5">
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center font-grotesk text-[12px] shrink-0"
+              style={{ background: "rgba(255,255,255,0.08)", color: "#fff", border: "1px solid rgba(255,255,255,0.12)" }}
+            >
+              {resolved.symbol[0]}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="font-grotesk text-[13px] uppercase tracking-wider" style={{ color: "#fff" }}>
+                {resolved.symbol}
+              </p>
+              <p className="font-mono text-[9px] truncate" style={{ color: "rgba(255,255,255,0.4)" }}>
+                {resolved.name}
+              </p>
+            </div>
+            <div className="text-right shrink-0">
+              <p className="font-mono text-[11px] tabular-nums" style={{ color: "rgba(255,255,255,0.8)" }}>
+                {formatAmount(resolved.balance, resolved.decimals)}
+              </p>
+              <p className="font-mono text-[9px]" style={{ color: "rgba(255,255,255,0.35)" }}>
+                balance
+              </p>
+            </div>
+          </div>
+        </button>
+      )}
+
+      {/* No balance warning */}
+      {resolved && resolved.balance === 0n && !excludeNative && (
+        <p className="font-mono text-[9px]" style={{ color: "rgba(255,180,50,0.8)" }}>
+          Your balance is 0 for this token.
+        </p>
+      )}
+
+      {/* Currently selected (different from input) */}
+      {selected && selected.address !== addr && (
+        <div
+          className="flex items-center gap-2 px-3 py-2 rounded-xl"
+          style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+        >
+          <Check className="w-3 h-3 shrink-0" style={{ color: "rgba(255,255,255,0.5)" }} />
+          <p className="font-mono text-[10px]" style={{ color: "rgba(255,255,255,0.6)" }}>
+            Selected: <span style={{ color: "#fff" }}>{selected.symbol}</span>
+          </p>
+        </div>
+      )}
     </div>
   );
 }
