@@ -1,24 +1,23 @@
 import { useAccount } from "wagmi";
-import { Link } from "@tanstack/react-router";
+import { useAppKit } from "@reown/appkit/react";
 
 function shorten(a: string) {
   return `${a.slice(0, 6)}…${a.slice(-4)}`;
 }
 
 /**
- * Read-only wallet status indicator for headers across the app. There is
- * intentionally NO connect/disconnect action here — the single source of
- * truth for that lives on /dashboard. If the user clicks the pill while
- * disconnected, we route them to /dashboard so they connect once and use
- * everywhere.
+ * The single Connect / wallet entry point. Clicking it opens the AppKit
+ * modal which handles connect, switch network, and disconnect natively.
  */
 export function WalletStatusPill() {
   const { address, isConnected } = useAccount();
+  const { open } = useAppKit();
 
   if (isConnected && address) {
     return (
-      <div
-        className="flex items-center gap-2 rounded-full px-3 py-2"
+      <button
+        onClick={() => open()}
+        className="flex items-center gap-2 rounded-full px-3 py-2 transition hover:bg-white/10"
         style={{
           background: "rgba(255,255,255,0.06)",
           border: "1px solid rgba(255,255,255,0.14)",
@@ -34,21 +33,21 @@ export function WalletStatusPill() {
         >
           {shorten(address)}
         </span>
-      </div>
+      </button>
     );
   }
 
   return (
-    <Link
-      to="/dashboard"
-      className="rounded-full px-4 py-2 font-grotesk text-[11px] uppercase tracking-wider transition hover:opacity-90"
+    <button
+      onClick={() => open()}
+      className="rounded-full px-4 py-2 font-grotesk text-[11px] uppercase tracking-wider transition hover:bg-white/10"
       style={{
-        background: "rgba(255,255,255,0.06)",
-        color: "rgba(255,255,255,0.7)",
-        border: "1px solid rgba(255,255,255,0.14)",
+        background: "rgba(255,255,255,0.08)",
+        color: "#fff",
+        border: "1px solid rgba(255,255,255,0.18)",
       }}
     >
-      Connect →
-    </Link>
+      Connect
+    </button>
   );
 }

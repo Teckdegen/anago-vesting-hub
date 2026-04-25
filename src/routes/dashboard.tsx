@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { useAccount } from "wagmi";
 import { AppShell } from "@/components/AppShell";
-import { WalletConnectCard } from "@/components/WalletConnectCard";
 import { useUserLocks, useUserVestings } from "@/lib/web3/hooks";
 import { shortAddr } from "@/lib/web3/format";
 
@@ -80,9 +79,6 @@ function DashboardPage() {
   return (
     <AppShell>
       <div className="max-w-[900px] mx-auto px-5 sm:px-8 lg:px-14 pt-10 pb-24">
-        {/* ── ONE PLACE TO CONNECT / DISCONNECT ── */}
-        <WalletConnectCard />
-
         {/* ── NET WORTH HEADER ── */}
         <div className="flex items-start justify-between flex-wrap gap-4 mb-10">
           <div>
