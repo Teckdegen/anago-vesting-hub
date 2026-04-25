@@ -1,30 +1,53 @@
+import { useEffect, useState } from "react";
+
 /**
- * USD price source. Today this is a static map per chain — every token
- * defaults to $0 unless listed here. Drop in a Pyth / Chainlink / API hook
- * later by changing only `useTokenPriceUsd` below; nothing else needs to
- * move.
- *
- * Prices are USD per whole token (decimals already applied).
- *
- * Add entries when you list a token. Lowercased addresses recommended.
+ * Static fallback prices — used when CoinGecko is unavailable.
+ * Keys are lowercased token addresses. address(0) = native MON.
  */
 export const PRICE_MAP: Record<number, Record<string, number>> = {
   10143: {
-    // Native MON — set when there's a market price; 0 keeps it out of TVL.
-    "0x0000000000000000000000000000000000000000": 0,
-    // "0xUsdcAddress": 1,
-    // "0xWmonAddress": 2.5,
+    "0x0000000000000000000000000000000000000000": 0, // overwritten by live fetch
   },
 };
 
-/**
- * Hook returning USD per whole token. Today: synchronous lookup. Tomorrow:
- * swap the body for a price-feed read; consumers don't change.
- */
+// ── Live MON price from CoinGecko ────────────────────────────────────────
+let cachedMonPrice = 0;
+let lastFetch = 0;
+
+export async function fetchMonPrice(): Promise<number> {
+  const now = Date.now();
+  if (now - lastFetch < 60_000 && cachedMonPrice > 0) return cachedMonPrice;
+  try {
+    const r = await fetch(
+      "https://api.coingecko.com/api/v3/simple/price?ids=monad&vs_currencies=usd",
+    );
+    const d = await r.json();
+    if (d?.monad?.usd) {
+      cachedMonPrice = d.monad.usd;
+      lastFetch = now;
+      PRICE_MAP[10143]["0x0000000000000000000000000000000000000000"] = cachedMonPrice;
+    }
+  } catch {
+    // silently fall back to cached / 0
+  }
+  return cachedMonPrice;
+}
+
+export function useMonPrice(): number {
+  const [price, setPrice] = useState(cachedMonPrice);
+  useEffect(() => {
+    fetchMonPrice().then(setPrice);
+    const id = setInterval(() => fetchMonPrice().then(setPrice), 60_000);
+    return () => clearInterval(id);
+  }, []);
+  return price;
+}
+
 export function useTokenPriceUsd(chainId: number, token: string): number {
+  const monPrice = useMonPrice();
   const lower = token.toLowerCase();
+  if (lower === "0x0000000000000000000000000000000000000000") return monPrice;
   const map = PRICE_MAP[chainId] ?? {};
-  // exact match first, else case-insensitive
   return (
     map[token] ??
     map[lower] ??
@@ -33,19 +56,8 @@ export function useTokenPriceUsd(chainId: number, token: string): number {
   );
 }
 
-/**
- * Convert a raw bigint amount (with `decimals`) and USD-per-token price
- * into a `number` of dollars. Lossy for huge values — only call for
- * display.
- */
-export function bigintToUsd(
-  amount: bigint,
-  decimals: number,
-  priceUsd: number,
-): number {
+export function bigintToUsd(amount: bigint, decimals: number, priceUsd: number): number {
   if (priceUsd === 0 || amount === 0n) return 0;
-  // Convert bigint to a regular number safely by going through a string.
-  // Acceptable because we only render this; never feed it back on-chain.
   const whole = Number(amount) / 10 ** decimals;
   return whole * priceUsd;
 }

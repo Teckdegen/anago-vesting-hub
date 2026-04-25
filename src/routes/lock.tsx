@@ -193,7 +193,7 @@ function TokenLeaderboard({
     contracts: tokenLb.flatMap((row) => [
       { address: row.address, abi: ERC20_ABI, functionName: "symbol" as const },
       { address: row.address, abi: ERC20_ABI, functionName: "decimals" as const },
-      { address: row.address, abi: [...ERC20_ABI, { type: "function", name: "totalSupply", stateMutability: "view", inputs: [], outputs: [{ type: "uint256" }] }] as const, functionName: "totalSupply" as const },
+      { address: row.address, abi: ERC20_ABI, functionName: "totalSupply" as const },
     ]),
     query: { enabled: tokenLb.length > 0 },
   });

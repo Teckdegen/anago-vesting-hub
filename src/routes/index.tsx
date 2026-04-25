@@ -247,7 +247,7 @@ function Index() {
               className="font-grotesk leading-none text-cream"
               style={{ fontSize: "clamp(40px, 5.5vw, 72px)", opacity: 0.55, fontWeight: 900 }}
             >
-              {tvlDisplay}
+              {tvlLoading ? "…" : `$${tvlDisplay}`}
             </span>
             <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.2em] text-cream/25">
               across all products
