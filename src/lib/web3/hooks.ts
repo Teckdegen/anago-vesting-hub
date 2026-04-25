@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   useAccount,
   useBalance,
@@ -7,7 +7,7 @@ import {
   useReadContracts,
 } from "wagmi";
 import { CONTRACTS, TOKEN_LOCK_ABI, VESTING_FACTORY_ABI } from "./contracts";
-import { ERC20_ABI, getTokenList, type TokenInfo } from "./tokens";
+import { ERC20_ABI, EXPLORER_API, getTokenList, type TokenInfo } from "./tokens";
 
 const ZERO = "0x0000000000000000000000000000000000000000" as const;
 
@@ -16,24 +16,91 @@ export function useContractAddresses() {
   return CONTRACTS[chainId] ?? CONTRACTS[10143];
 }
 
-/**
- * Returns the curated token list for the connected chain plus the user's
- * balance for each entry. Native token (zero address) reads from the chain
- * directly; ERC-20s use a single multicall.
- */
+// ──────────────────────────────────────────────────────────────────────────
+//  Discover all ERC-20 tokens the wallet has ever interacted with by
+//  querying the block explorer's token-transfer endpoint, then read live
+//  balances on-chain via multicall.
+// ──────────────────────────────────────────────────────────────────────────
 export function useUserTokens(): {
   tokens: (TokenInfo & { balance: bigint })[];
   isLoading: boolean;
 } {
   const chainId = useChainId();
   const { address } = useAccount();
-  const list = getTokenList(chainId);
+  const seed = getTokenList(chainId);
+  const explorerBase = EXPLORER_API[chainId];
 
-  const erc20s = useMemo(() => list.filter((t) => t.address !== ZERO), [list]);
-  const native = useMemo(() => list.find((t) => t.address === ZERO), [list]);
+  // Step 1 — fetch token list from explorer (ERC-20 transfer history)
+  const [discovered, setDiscovered] = useState<TokenInfo[]>([]);
+  const [discovering, setDiscovering] = useState(false);
 
-  const nativeBal = useBalance({ address, query: { enabled: !!address && !!native } });
+  useEffect(() => {
+    if (!address || !explorerBase) return;
+    let cancelled = false;
+    setDiscovering(true);
 
+    const url =
+      `${explorerBase}?module=account&action=tokentx` +
+      `&address=${address}&startblock=0&endblock=99999999&sort=asc`;
+
+    fetch(url)
+      .then((r) => r.json())
+      .then((json) => {
+        if (cancelled) return;
+        const txs: {
+          contractAddress: string;
+          tokenSymbol: string;
+          tokenName: string;
+          tokenDecimal: string;
+        }[] = Array.isArray(json?.result) ? json.result : [];
+
+        // Deduplicate by contract address
+        const seen = new Map<string, TokenInfo>();
+        for (const tx of txs) {
+          const addr = tx.contractAddress.toLowerCase() as `0x${string}`;
+          if (!seen.has(addr)) {
+            seen.set(addr, {
+              address: addr,
+              symbol: tx.tokenSymbol || addr.slice(0, 6),
+              name: tx.tokenName || addr.slice(0, 10),
+              decimals: parseInt(tx.tokenDecimal ?? "18", 10) || 18,
+            });
+          }
+        }
+        setDiscovered(Array.from(seen.values()));
+      })
+      .catch(() => {
+        // Explorer unavailable — fall back to seed list only
+        if (!cancelled) setDiscovered([]);
+      })
+      .finally(() => {
+        if (!cancelled) setDiscovering(false);
+      });
+
+    return () => { cancelled = true; };
+  }, [address, explorerBase]);
+
+  // Merge seed list + discovered, deduplicate
+  const erc20s = useMemo<TokenInfo[]>(() => {
+    const map = new Map<string, TokenInfo>();
+    for (const t of seed) {
+      if (t.address !== ZERO) map.set(t.address.toLowerCase(), t);
+    }
+    for (const t of discovered) {
+      if (!map.has(t.address.toLowerCase())) map.set(t.address.toLowerCase(), t);
+    }
+    return Array.from(map.values());
+  }, [seed, discovered]);
+
+  const hasNative = seed.some((t) => t.address === ZERO);
+
+  // Step 2 — read native balance
+  const nativeBal = useBalance({
+    address,
+    query: { enabled: !!address && hasNative },
+  });
+
+  // Step 3 — multicall balanceOf for all ERC-20s
   const reads = useReadContracts({
     allowFailure: true,
     contracts: erc20s.map((t) => ({
@@ -46,20 +113,29 @@ export function useUserTokens(): {
   });
 
   const tokens = useMemo(() => {
-    return list.map((t) => {
-      if (t.address === ZERO) {
-        return { ...t, balance: nativeBal.data?.value ?? 0n };
-      }
-      const idx = erc20s.findIndex((e) => e.address === t.address);
-      const r = reads.data?.[idx];
+    const result: (TokenInfo & { balance: bigint })[] = [];
+
+    // Native first
+    if (hasNative) {
+      const native = seed.find((t) => t.address === ZERO)!;
+      result.push({ ...native, balance: nativeBal.data?.value ?? 0n });
+    }
+
+    // ERC-20s — only include tokens with balance > 0
+    erc20s.forEach((t, i) => {
+      const r = reads.data?.[i];
       const balance = r?.status === "success" ? (r.result as bigint) : 0n;
-      return { ...t, balance };
+      if (balance > 0n) {
+        result.push({ ...t, balance });
+      }
     });
-  }, [list, erc20s, reads.data, nativeBal.data]);
+
+    return result;
+  }, [erc20s, reads.data, nativeBal.data, hasNative, seed]);
 
   return {
     tokens,
-    isLoading: nativeBal.isLoading || reads.isLoading,
+    isLoading: discovering || nativeBal.isLoading || reads.isLoading,
   };
 }
 

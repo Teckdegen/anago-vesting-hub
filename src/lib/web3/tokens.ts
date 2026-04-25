@@ -1,9 +1,7 @@
 /**
- * Curated token list per chain. Add/remove entries here — every page that
- * shows balances reads from this list.
- *
- * Replace the placeholder addresses with real Monad-testnet token addresses.
- * `logoURI` may be omitted; the UI falls back to a colored initial.
+ * Curated fallback token list per chain.
+ * Used as a seed — the live hook discovers tokens from on-chain transfer
+ * history via the block explorer API and merges them with this list.
  */
 export type TokenInfo = {
   address: `0x${string}`;
@@ -21,22 +19,18 @@ const NATIVE: TokenInfo = {
 };
 
 export const TOKEN_LISTS: Record<number, TokenInfo[]> = {
-  10143: [
-    NATIVE,
-    // Replace these with real testnet token addresses:
-    // {
-    //   address: "0x...",
-    //   symbol: "USDC",
-    //   name: "USD Coin",
-    //   decimals: 6,
-    //   logoURI: "https://...",
-    // },
-  ],
+  // Monad testnet — native token always included; ERC-20s are discovered live
+  10143: [NATIVE],
 };
 
 export function getTokenList(chainId: number): TokenInfo[] {
   return TOKEN_LISTS[chainId] ?? [];
 }
+
+// ── Explorer endpoints used for token discovery ───────────────────────────
+export const EXPLORER_API: Record<number, string> = {
+  10143: "https://testnet.monadexplorer.com/api",
+};
 
 export const ERC20_ABI = [
   {
@@ -76,6 +70,13 @@ export const ERC20_ABI = [
   {
     type: "function",
     name: "symbol",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ type: "string" }],
+  },
+  {
+    type: "function",
+    name: "name",
     stateMutability: "view",
     inputs: [],
     outputs: [{ type: "string" }],

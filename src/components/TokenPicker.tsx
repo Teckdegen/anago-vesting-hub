@@ -43,10 +43,10 @@ export function TokenPicker({ selected, onSelect, excludeNative }: Props) {
         }}
       >
         <p className="font-mono text-[10px]" style={{ color: "rgba(255,255,255,0.6)" }}>
-          No tokens detected in your wallet
+          No tokens found in your wallet
         </p>
         <p className="font-mono text-[9px] mt-1" style={{ color: "rgba(255,255,255,0.35)" }}>
-          Add token addresses in <code>src/lib/web3/tokens.ts</code>.
+          Make sure your wallet is connected and has token balances on Monad testnet.
         </p>
       </div>
     );
