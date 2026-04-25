@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { LayoutDashboard, Timer, LockKeyhole, BarChart2, Sprout } from "lucide-react";
+import { WalletStatusPill } from "./WalletStatusPill";
 
 const NAV = [
   { label: "Home",       href: "/"          },
@@ -80,17 +81,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           </ul>
         </nav>
 
-        {/* connect wallet */}
-        <button
-          className="rounded-full px-4 py-2 font-grotesk text-[11px] uppercase tracking-wider transition"
-          style={{
-            background: "rgba(255,255,255,0.08)",
-            color: "#fff",
-            border: "1px solid rgba(255,255,255,0.18)",
-          }}
-        >
-          Connect
-        </button>
+        {/* wallet status — read-only; the only Connect/Disconnect controls live on /dashboard */}
+        <WalletStatusPill />
       </header>
 
       {/* page content */}
