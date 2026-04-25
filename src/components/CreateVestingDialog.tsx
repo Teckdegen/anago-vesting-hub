@@ -160,20 +160,51 @@ export function CreateVestingDialog({ open, onClose }: Props) {
 
               {/* Step 3 — Beneficiary */}
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <Label>3. Beneficiary</Label>
-                  <button
-                    onClick={() => address && setBeneficiary(address)}
-                    className="font-mono text-[9px] uppercase tracking-wider transition hover:opacity-80"
-                    style={{ color: "rgba(255,255,255,0.45)" }}
+                <Label>3. Beneficiary</Label>
+
+                {/* "Use my address" checkbox card */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (address) {
+                      setBeneficiary(beneficiary === address ? "" : address);
+                    }
+                  }}
+                  className="w-full flex items-center gap-3 rounded-xl px-4 py-3 mb-3 transition"
+                  style={{
+                    background: beneficiary === address ? "rgba(255,255,255,0.07)" : "rgba(255,255,255,0.03)",
+                    border: `1px solid ${beneficiary === address ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.1)"}`,
+                  }}
+                >
+                  {/* checkbox */}
+                  <span
+                    className="w-4 h-4 rounded flex items-center justify-center shrink-0 transition"
+                    style={{
+                      background: beneficiary === address ? "#fff" : "transparent",
+                      border: `1.5px solid ${beneficiary === address ? "#fff" : "rgba(255,255,255,0.35)"}`,
+                    }}
                   >
-                    Use my address
-                  </button>
-                </div>
+                    {beneficiary === address && (
+                      <svg viewBox="0 0 10 8" className="w-2.5 h-2" fill="none">
+                        <path d="M1 4l2.5 2.5L9 1" stroke="#0D0B14" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                  </span>
+                  <div className="text-left min-w-0">
+                    <p className="font-grotesk text-[12px] uppercase tracking-wider" style={{ color: "#fff" }}>
+                      Use my address
+                    </p>
+                    <p className="font-mono text-[9px] truncate mt-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>
+                      {address ?? "Connect wallet first"}
+                    </p>
+                  </div>
+                </button>
+
+                {/* manual input */}
                 <input
                   value={beneficiary}
                   onChange={(e) => setBeneficiary(e.target.value.trim())}
-                  placeholder="0x…"
+                  placeholder="or paste any 0x… address"
                   className="w-full bg-transparent rounded-xl px-4 py-3 font-mono text-[12px] outline-none transition"
                   style={{
                     color: "#fff",
