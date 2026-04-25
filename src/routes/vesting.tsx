@@ -91,7 +91,10 @@ function VestingPage() {
   const { address } = useAccount();
   const { wallets, walletTokens, isLoading } = useUserVestings();
 
-  // Multicall: owner, end, releasable(token), token symbol, token decimals
+  // Wait until walletTokens are loaded before firing the multicall
+  const tokensReady = Object.keys(walletTokens).length > 0 || wallets.length === 0;
+
+  // Multicall: owner, end, releasable, symbol, decimals
   const reads = useReadContracts({
     allowFailure: true,
     contracts: wallets.flatMap((w) => {
@@ -100,21 +103,18 @@ function VestingPage() {
       return [
         { address: w, abi: VESTING_WALLET_ABI, functionName: "owner" as const },
         { address: w, abi: VESTING_WALLET_ABI, functionName: "end" as const },
-        // releasable: ERC-20 takes token arg, native takes no args
         isErc20
           ? { address: w, abi: VESTING_WALLET_ABI, functionName: "releasable" as const, args: [tok] as const }
           : { address: w, abi: VESTING_WALLET_ABI, functionName: "releasable" as const, args: [] as const },
-        // symbol
         isErc20
           ? { address: tok, abi: ERC20_ABI, functionName: "symbol" as const }
-          : { address: w, abi: VESTING_WALLET_ABI, functionName: "owner" as const }, // placeholder
-        // decimals
+          : { address: w, abi: VESTING_WALLET_ABI, functionName: "end" as const }, // harmless placeholder
         isErc20
           ? { address: tok, abi: ERC20_ABI, functionName: "decimals" as const }
-          : { address: w, abi: VESTING_WALLET_ABI, functionName: "owner" as const }, // placeholder
+          : { address: w, abi: VESTING_WALLET_ABI, functionName: "end" as const }, // harmless placeholder
       ];
     }),
-    query: { enabled: wallets.length > 0 },
+    query: { enabled: wallets.length > 0 && tokensReady },
   });
 
   const details = useMemo<WalletDetail[]>(() => {
@@ -123,9 +123,10 @@ function VestingPage() {
       const o = i * 5;
       const tok = walletTokens[w] ?? ZERO;
       const isErc20 = tok !== ZERO;
+      const owner = (reads.data[o]?.result as `0x${string}` | undefined);
       return {
         address: w,
-        owner: (reads.data[o]?.result as `0x${string}`) ?? ZERO,
+        owner: owner ?? w, // fallback to wallet address itself, never show zero address
         end: (reads.data[o + 1]?.result as bigint) ?? 0n,
         releasable: (reads.data[o + 2]?.result as bigint) ?? 0n,
         token: tok,
