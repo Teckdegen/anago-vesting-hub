@@ -2,12 +2,15 @@ import { useState } from "react";
 
 const DAY = 86400;
 const PRESETS = [
+  // Short presets are intentional — useful for testnet smoke-testing the
+  // unlock + leaderboard flow without waiting days.
+  { label: "5m",  seconds: 5 * 60 },
+  { label: "1h",  seconds: 60 * 60 },
+  { label: "1d",  seconds: DAY },
   { label: "7d",  seconds: 7 * DAY },
   { label: "30d", seconds: 30 * DAY },
   { label: "90d", seconds: 90 * DAY },
-  { label: "6m",  seconds: 180 * DAY },
   { label: "1y",  seconds: 365 * DAY },
-  { label: "2y",  seconds: 730 * DAY },
 ];
 
 type Props = {
