@@ -62,10 +62,7 @@ export function CreateLockDialog({ open, onClose }: Props) {
   };
 
   if (lockRcpt.isSuccess) {
-    setTimeout(() => {
-      lockTx.reset();
-      onClose();
-    }, 800);
+    setTimeout(() => { lockTx.reset(); onClose(); }, 800);
   }
 
   const factoryUnset = tokenLock === ZERO;
@@ -73,31 +70,33 @@ export function CreateLockDialog({ open, onClose }: Props) {
   return (
     <Modal open={open} onClose={onClose} title="New Lock">
       {factoryUnset ? (
-        <p className="font-mono text-[11px] text-amber-400">
-          TokenLock address not configured. Deploy the contract and set it in
-          <code className="ml-1">src/lib/web3/contracts.ts</code>.
+        <p className="font-mono text-[11px]" style={{ color: "rgba(255,180,50,0.9)" }}>
+          TokenLock address not configured. Deploy the contract and set it in{" "}
+          <code className="ml-1" style={{ color: "rgba(255,255,255,0.6)" }}>src/lib/web3/contracts.ts</code>.
         </p>
       ) : !address ? (
-        <p className="font-mono text-[11px] text-cream/65">Connect your wallet to continue.</p>
+        <p className="font-mono text-[11px]" style={{ color: "rgba(255,255,255,0.5)" }}>
+          Connect your wallet to continue.
+        </p>
       ) : (
         <div className="space-y-5">
+
+          {/* Step 1 — Token */}
           <div>
-            <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-cream/55 mb-2">
-              1. Token
-            </p>
+            <Label>1. Token</Label>
             <TokenPicker selected={token} onSelect={setToken} excludeNative />
           </div>
 
           {token && (
             <>
+              {/* Step 2 — Amount */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-cream/55">
-                    2. Amount
-                  </p>
+                  <Label>2. Amount</Label>
                   <button
                     onClick={() => setAmount(formatAmount(token.balance, token.decimals, 8))}
-                    className="font-mono text-[9px] uppercase tracking-wider text-purple-300 hover:text-purple-200"
+                    className="font-mono text-[9px] uppercase tracking-wider transition hover:opacity-80"
+                    style={{ color: "rgba(255,255,255,0.45)" }}
                   >
                     Max: {formatAmount(token.balance, token.decimals)}
                   </button>
@@ -108,50 +107,42 @@ export function CreateLockDialog({ open, onClose }: Props) {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value.replace(/[^0-9.]/g, ""))}
                   placeholder="0.0"
-                  className="w-full bg-transparent rounded-lg px-3 py-2.5 font-grotesk text-cream text-[18px] outline-none"
-                  style={{ border: "1px solid rgba(155,127,212,0.35)" }}
+                  className="w-full bg-transparent rounded-xl px-4 py-3 font-grotesk text-[20px] outline-none transition"
+                  style={{
+                    color: "#fff",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    background: "rgba(255,255,255,0.04)",
+                  }}
                 />
               </div>
 
+              {/* Step 3 — Duration */}
               <div>
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-cream/55 mb-2">
-                  3. Lock Duration
-                </p>
+                <Label>3. Lock Duration</Label>
                 <DurationPicker value={duration} onChange={setDuration} />
               </div>
 
+              {/* Action */}
               {needsApproval ? (
-                <button
+                <ActionButton
                   onClick={handleApprove}
                   disabled={parsedAmount === 0n || approveTx.isPending || approveRcpt.isLoading}
-                  className="w-full rounded-full py-3 font-grotesk text-[12px] uppercase tracking-wider transition disabled:opacity-50"
-                  style={{
-                    background: "rgba(155,127,212,0.25)",
-                    color: "#EDE0FF",
-                    border: "1px solid rgba(155,127,212,0.65)",
-                  }}
-                >
-                  {approveTx.isPending || approveRcpt.isLoading
-                    ? "Approving…"
-                    : `Approve ${token.symbol}`}
-                </button>
+                  loading={approveTx.isPending || approveRcpt.isLoading}
+                  label={`Approve ${token.symbol}`}
+                  loadingLabel="Approving…"
+                />
               ) : (
-                <button
+                <ActionButton
                   onClick={handleLock}
                   disabled={parsedAmount === 0n || lockTx.isPending || lockRcpt.isLoading}
-                  className="w-full rounded-full py-3 font-grotesk text-[12px] uppercase tracking-wider transition disabled:opacity-50"
-                  style={{
-                    background: "rgba(155,127,212,0.3)",
-                    color: "#EDE0FF",
-                    border: "1px solid rgba(155,127,212,0.7)",
-                  }}
-                >
-                  {lockTx.isPending || lockRcpt.isLoading ? "Locking…" : "Lock"}
-                </button>
+                  loading={lockTx.isPending || lockRcpt.isLoading}
+                  label="Lock Tokens"
+                  loadingLabel="Locking…"
+                />
               )}
 
               {(approveTx.error || lockTx.error) && (
-                <p className="font-mono text-[10px] text-red-400 break-words">
+                <p className="font-mono text-[10px] break-words" style={{ color: "rgba(255,100,100,0.9)" }}>
                   {(approveTx.error || lockTx.error)?.message}
                 </p>
               )}
@@ -160,5 +151,38 @@ export function CreateLockDialog({ open, onClose }: Props) {
         </div>
       )}
     </Modal>
+  );
+}
+
+function Label({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="font-mono text-[9px] uppercase tracking-[0.18em] mb-2" style={{ color: "rgba(255,255,255,0.4)" }}>
+      {children}
+    </p>
+  );
+}
+
+function ActionButton({
+  onClick, disabled, loading, label, loadingLabel,
+}: {
+  onClick: () => void;
+  disabled: boolean;
+  loading: boolean;
+  label: string;
+  loadingLabel: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className="w-full rounded-xl py-3 font-grotesk text-[12px] uppercase tracking-wider transition disabled:opacity-40 active:scale-[0.99]"
+      style={{
+        background: "rgba(255,255,255,0.1)",
+        color: "#fff",
+        border: "1px solid rgba(255,255,255,0.2)",
+      }}
+    >
+      {loading ? loadingLabel : label}
+    </button>
   );
 }
