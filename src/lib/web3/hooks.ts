@@ -168,6 +168,65 @@ export function useLockLeaderboards(limit = 50) {
 //                                 VESTINGS
 // ──────────────────────────────────────────────────────────────────────────
 
+// ──────────────────────────────────────────────────────────────────────────
+//                           PROTOCOL-WIDE STATS (TVL)
+// ──────────────────────────────────────────────────────────────────────────
+
+/**
+ * Aggregate stats across the whole protocol.
+ *
+ * Without a price oracle we can't produce a USD figure, but we can show
+ * meaningful on-chain numbers:
+ *   - totalLocks:      number of locks ever created in TokenLock
+ *   - totalSchedules:  number of vesting wallets ever deployed by VestingFactory
+ *   - tokensLocked:    distinct tokens that have ever been locked
+ *   - rawLockedSum:    naive bigint sum of currently-locked amounts (mixed
+ *                      decimals — only useful as a relative magnitude)
+ */
+export function useProtocolStats() {
+  const { tokenLock, vestingFactory } = useContractAddresses();
+
+  const locksLen = useReadContract({
+    address: tokenLock,
+    abi: TOKEN_LOCK_ABI,
+    functionName: "locksLength",
+    query: { enabled: tokenLock !== ZERO },
+  });
+
+  const walletsLen = useReadContract({
+    address: vestingFactory,
+    abi: VESTING_FACTORY_ABI,
+    functionName: "allWalletsLength",
+    query: { enabled: vestingFactory !== ZERO },
+  });
+
+  const board = useReadContract({
+    address: tokenLock,
+    abi: TOKEN_LOCK_ABI,
+    functionName: "tokenLeaderboard",
+    args: [0n, 200n],
+    query: { enabled: tokenLock !== ZERO },
+  });
+
+  const totalLocks = (locksLen.data as bigint | undefined) ?? 0n;
+  const totalSchedules = (walletsLen.data as bigint | undefined) ?? 0n;
+  const boardData = board.data as
+    | readonly [readonly `0x${string}`[], readonly bigint[]]
+    | undefined;
+  const tokensLocked = boardData ? boardData[0].length : 0;
+  const rawLockedSum = boardData
+    ? boardData[1].reduce((acc, v) => acc + v, 0n)
+    : 0n;
+
+  return {
+    totalLocks: Number(totalLocks),
+    totalSchedules: Number(totalSchedules),
+    tokensLocked,
+    rawLockedSum,
+    isLoading: locksLen.isLoading || walletsLen.isLoading || board.isLoading,
+  };
+}
+
 export function useUserVestings(): {
   wallets: `0x${string}`[];
   isLoading: boolean;

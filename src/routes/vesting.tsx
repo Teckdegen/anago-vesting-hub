@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Search, Timer } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
+import { CreateVestingDialog } from "@/components/CreateVestingDialog";
 
 export const Route = createFileRoute("/vesting")({
   component: VestingPage,
@@ -19,6 +20,7 @@ type Tab = typeof TABS[number];
 function VestingPage() {
   const [activeTab, setActiveTab] = useState<Tab>("All Schedules");
   const [search, setSearch] = useState("");
+  const [showCreate, setShowCreate] = useState(false);
 
   return (
     <AppShell>
@@ -35,6 +37,7 @@ function VestingPage() {
             </p>
           </div>
           <button
+            onClick={() => setShowCreate(true)}
             className="shrink-0 rounded-full px-3 py-1 font-grotesk text-[10px] uppercase tracking-wider transition active:scale-[0.97]"
             style={{ background: "rgba(255,255,255,0.08)", color: "#fff", border: "1px solid rgba(255,255,255,0.2)" }}
           >
@@ -117,6 +120,8 @@ function VestingPage() {
         </div>
 
       </div>
+
+      <CreateVestingDialog open={showCreate} onClose={() => setShowCreate(false)} />
     </AppShell>
   );
 }

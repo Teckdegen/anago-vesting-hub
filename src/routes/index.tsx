@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
 import { Send } from "lucide-react";
 import { HlsVideo } from "@/components/HlsVideo";
+import { useProtocolStats } from "@/lib/web3/hooks";
+import { formatAmount } from "@/lib/web3/format";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -82,6 +84,19 @@ function CyclingWord() {
 
 function Index() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { totalLocks, totalSchedules, tokensLocked, rawLockedSum, isLoading } =
+    useProtocolStats();
+  // Naive sum across mixed-decimal tokens — treat as 18-decimal magnitudes
+  // until a price oracle is wired. Shows the user that TVL is moving.
+  const tvlDisplay = isLoading
+    ? "…"
+    : rawLockedSum === 0n
+      ? "0"
+      : formatAmount(rawLockedSum, 18, 2);
+  const tvlSubtitle =
+    isLoading
+      ? "loading on-chain stats…"
+      : `${tokensLocked} tokens · ${totalLocks} locks · ${totalSchedules} schedules`;
 
   return (
     <main className="text-cream min-h-screen overflow-x-hidden" style={{ background: "#06040F" }}>
@@ -240,9 +255,11 @@ function Index() {
               className="font-grotesk leading-none text-cream"
               style={{ fontSize: "clamp(40px, 5.5vw, 72px)", opacity: 0.55, fontWeight: 900 }}
             >
-              $0
+              {tvlDisplay}
             </span>
-            <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.2em] text-cream/25">across all products</span>
+            <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.2em] text-cream/25">
+              {tvlSubtitle}
+            </span>
           </div>
         </div>
       </section>
