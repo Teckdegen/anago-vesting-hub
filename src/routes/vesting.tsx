@@ -5,6 +5,7 @@ import { Search, Timer } from "lucide-react";
 import { useAccount, useReadContracts, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { AppShell } from "@/components/AppShell";
 import { CreateVestingDialog } from "@/components/CreateVestingDialog";
+import { NewActionCTA } from "@/components/NewActionCTA";
 import { useUserVestings } from "@/lib/web3/hooks";
 import { VESTING_WALLET_ABI } from "@/lib/web3/contracts";
 import { ERC20_ABI } from "@/lib/web3/tokens";
@@ -159,11 +160,7 @@ function VestingPage() {
               Linear &amp; cliff vesting · teams, investors, contributors
             </p>
           </div>
-          <button onClick={() => setShowCreate(true)}
-            className="shrink-0 rounded-full px-3 py-1.5 font-grotesk text-[10px] uppercase tracking-wider transition active:scale-[0.97]"
-            style={{ background: "rgba(255,255,255,0.08)", color: "#fff", border: "1px solid rgba(255,255,255,0.2)" }}>
-            + New
-          </button>
+          <NewActionCTA label="New Schedule" onClick={() => setShowCreate(true)} />
         </div>
 
         <div className="flex items-center justify-between flex-wrap gap-3 mb-5">
