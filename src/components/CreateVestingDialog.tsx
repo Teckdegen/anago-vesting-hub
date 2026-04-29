@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { parseUnits } from "viem";
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { CheckCircle2 } from "lucide-react";
@@ -9,6 +9,7 @@ import { useContractAddresses } from "@/lib/web3/hooks";
 import { VESTING_FACTORY_ABI } from "@/lib/web3/contracts";
 import { ERC20_ABI, type TokenInfo } from "@/lib/web3/tokens";
 import { formatAmount } from "@/lib/web3/format";
+import { useToast } from "./Toast";
 
 const ZERO = "0x0000000000000000000000000000000000000000" as const;
 const isAddress = (s: string) => /^0x[a-fA-F0-9]{40}$/.test(s);
@@ -18,6 +19,7 @@ type Props = { open: boolean; onClose: () => void };
 export function CreateVestingDialog({ open, onClose }: Props) {
   const { address } = useAccount();
   const { vestingFactory } = useContractAddresses();
+  const { toast } = useToast();
 
   const [token, setToken] = useState<(TokenInfo & { balance: bigint }) | undefined>();
   const [amount, setAmount] = useState("");
@@ -51,6 +53,14 @@ export function CreateVestingDialog({ open, onClose }: Props) {
   const vestRcpt = useWaitForTransactionReceipt({ hash: vestTx.data });
 
   if (approveRcpt.isSuccess) allowanceQ.refetch();
+
+  // Fire toast when vesting is deployed
+  useEffect(() => {
+    if (vestRcpt.isSuccess && token) {
+      toast("success", "Vesting deployed & funded", `${token.symbol} schedule is live and releasing to the beneficiary.`);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vestRcpt.isSuccess]);
 
   const factoryUnset = vestingFactory === ZERO;
   const validBeneficiary = isAddress(beneficiary);

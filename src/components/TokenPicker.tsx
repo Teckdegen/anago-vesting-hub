@@ -88,7 +88,7 @@ export function TokenPicker({ selected, onSelect, excludeNative }: Props) {
 
       {/* Hint */}
       {!input && (
-        <p className="font-mono text-[9px]" style={{ color: "rgba(255,255,255,0.3)" }}>
+        <p className="font-mono text-[12px]" style={{ color: "rgba(255,255,255,0.45)" }}>
           Paste any ERC-20 contract address — symbol, name and balance will load automatically.
         </p>
       )}

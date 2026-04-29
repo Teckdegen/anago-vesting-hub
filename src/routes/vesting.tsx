@@ -1,9 +1,9 @@
-
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Search, Timer } from "lucide-react";
 import { useAccount, useReadContracts, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { AppShell } from "@/components/AppShell";
+import { useToast } from "@/components/Toast";
 import { CreateVestingDialog } from "@/components/CreateVestingDialog";
 import { NewActionCTA } from "@/components/NewActionCTA";
 import { useUserVestings } from "@/lib/web3/hooks";
@@ -39,10 +39,19 @@ function VestingRow({ wallet, isLast, onClaimed }: { wallet: WalletDetail; isLas
   const tx = useWriteContract();
   const rcpt = useWaitForTransactionReceipt({ hash: tx.data });
   const isErc20 = wallet.token !== ZERO;
+  const { toast } = useToast();
 
-  if (rcpt.isSuccess) {
-    onClaimed();
-  }
+  useEffect(() => {
+    if (rcpt.isSuccess) {
+      toast(
+        "success",
+        "Tokens claimed",
+        `${wallet.tokenSymbol} released from vesting schedule.`,
+      );
+      onClaimed();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rcpt.isSuccess]);
 
   const release = () => {
     if (isErc20) {
@@ -57,17 +66,17 @@ function VestingRow({ wallet, isLast, onClaimed }: { wallet: WalletDetail; isLas
   const endDate = wallet.end ? new Date(Number(wallet.end) * 1000).toLocaleDateString() : "—";
 
   return (
-    <div className="grid sm:grid-cols-[2fr_1fr_1fr_1fr_100px] grid-cols-[2fr_1fr_100px] gap-2 px-5 py-3.5 items-center hover:bg-white/[0.03] transition-colors"
-      style={{ borderBottom: isLast ? "none" : "1px solid rgba(255,255,255,0.06)" }}>
+    <div className="grid sm:grid-cols-[2fr_1fr_1fr_1fr_100px] grid-cols-[2fr_1fr_100px] gap-2 px-5 py-3.5 items-center hover:bg-[rgba(155,127,212,0.04)] transition-colors"
+      style={{ borderBottom: isLast ? "none" : "1px solid rgba(155,127,212,0.15)" }}>
       <div className="min-w-0">
-        <p className="font-grotesk uppercase text-[12px] tracking-wider truncate" style={{ color: "#fff" }}>{shortAddr(wallet.owner)}</p>
-        <p className="font-mono text-[9px] truncate" style={{ color: "rgba(255,255,255,0.4)" }}>{shortAddr(wallet.address)}</p>
+        <p className="font-grotesk uppercase text-[12px] tracking-wider truncate" style={{ color: "#EDE0FF" }}>{shortAddr(wallet.owner)}</p>
+        <p className="font-mono text-[9px] truncate" style={{ color: "rgba(196,168,240,0.5)" }}>{shortAddr(wallet.address)}</p>
       </div>
-      <div className="hidden sm:block text-right font-mono text-[10px]" style={{ color: "rgba(255,255,255,0.55)" }}>{wallet.tokenSymbol}</div>
-      <div className="text-right font-grotesk text-[12px] tabular-nums" style={{ color: "rgba(255,255,255,0.9)" }}>
+      <div className="hidden sm:block text-right font-mono text-[10px]" style={{ color: "rgba(196,168,240,0.65)" }}>{wallet.tokenSymbol}</div>
+      <div className="text-right font-grotesk text-[12px] tabular-nums" style={{ color: "rgba(237,224,255,0.9)" }}>
         {formatAmount(wallet.releasable, wallet.tokenDecimals)}
       </div>
-      <div className="hidden sm:block text-right font-mono text-[10px]" style={{ color: ended ? "rgba(100,220,100,0.8)" : "rgba(255,255,255,0.5)" }}>{endDate}</div>
+      <div className="hidden sm:block text-right font-mono text-[10px]" style={{ color: ended ? "rgba(100,220,100,0.8)" : "rgba(196,168,240,0.6)" }}>{endDate}</div>
       <div className="text-right">
         {wallet.releasable > 0n ? (
           <button onClick={release} disabled={tx.isPending || rcpt.isLoading}
@@ -76,7 +85,7 @@ function VestingRow({ wallet, isLast, onClaimed }: { wallet: WalletDetail; isLas
             {tx.isPending || rcpt.isLoading ? "…" : "Claim"}
           </button>
         ) : (
-          <span className="font-mono text-[9px] uppercase" style={{ color: "rgba(255,255,255,0.3)" }}>
+          <span className="font-mono text-[9px] uppercase" style={{ color: "rgba(155,127,212,0.45)" }}>
             {ended ? "Done" : "Vesting"}
           </span>
         )}
@@ -92,10 +101,8 @@ function VestingPage() {
   const { address } = useAccount();
   const { wallets, walletTokens, isLoading } = useUserVestings();
 
-  // Wait until walletTokens are loaded before firing the multicall
   const tokensReady = Object.keys(walletTokens).length > 0 || wallets.length === 0;
 
-  // Multicall: owner, end, releasable, symbol, decimals
   const reads = useReadContracts({
     allowFailure: true,
     contracts: wallets.flatMap((w) => {
@@ -109,10 +116,10 @@ function VestingPage() {
           : { address: w, abi: VESTING_WALLET_ABI, functionName: "releasable" as const, args: [] as const },
         isErc20
           ? { address: tok, abi: ERC20_ABI, functionName: "symbol" as const }
-          : { address: w, abi: VESTING_WALLET_ABI, functionName: "end" as const }, // harmless placeholder
+          : { address: w, abi: VESTING_WALLET_ABI, functionName: "end" as const },
         isErc20
           ? { address: tok, abi: ERC20_ABI, functionName: "decimals" as const }
-          : { address: w, abi: VESTING_WALLET_ABI, functionName: "end" as const }, // harmless placeholder
+          : { address: w, abi: VESTING_WALLET_ABI, functionName: "end" as const },
       ];
     }),
     query: { enabled: wallets.length > 0 && tokensReady },
@@ -127,7 +134,7 @@ function VestingPage() {
       const owner = (reads.data[o]?.result as `0x${string}` | undefined);
       return {
         address: w,
-        owner: owner ?? w, // fallback to wallet address itself, never show zero address
+        owner: owner ?? w,
         end: (reads.data[o + 1]?.result as bigint) ?? 0n,
         releasable: (reads.data[o + 2]?.result as bigint) ?? 0n,
         token: tok,
@@ -155,8 +162,8 @@ function VestingPage() {
 
         <div className="flex items-center justify-between gap-3 mb-7">
           <div>
-            <h1 className="font-grotesk uppercase text-[22px] sm:text-[28px] leading-none tracking-tight" style={{ color: "#fff" }}>Vesting</h1>
-            <p className="font-mono text-[10px] mt-1 tracking-wide" style={{ color: "rgba(255,255,255,0.45)" }}>
+            <h1 className="font-grotesk uppercase text-[22px] sm:text-[28px] leading-none tracking-tight" style={{ color: "#EDE0FF" }}>Vesting</h1>
+            <p className="font-mono text-[10px] mt-1 tracking-wide" style={{ color: "rgba(196,168,240,0.55)" }}>
               Linear &amp; cliff vesting · teams, investors, contributors
             </p>
           </div>
@@ -165,27 +172,29 @@ function VestingPage() {
 
         <div className="flex items-center justify-between flex-wrap gap-3 mb-5">
           <div className="flex items-center gap-0.5 p-1 rounded-full"
-            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}>
+            style={{ background: "rgba(155,127,212,0.08)", border: "1px solid rgba(155,127,212,0.25)" }}>
             {TABS.map((t) => (
               <button key={t} onClick={() => setActiveTab(t)}
                 className="px-4 py-1.5 rounded-full font-grotesk text-[11px] uppercase tracking-wider transition whitespace-nowrap"
-                style={activeTab === t ? { background: "rgba(255,255,255,0.12)", color: "#fff", border: "1px solid rgba(255,255,255,0.25)" } : { color: "rgba(255,255,255,0.5)" }}>
+                style={activeTab === t
+                  ? { background: "rgba(155,127,212,0.35)", color: "#EDE0FF", border: "1px solid rgba(155,127,212,0.6)" }
+                  : { color: "rgba(196,168,240,0.5)" }}>
                 {t}
               </button>
             ))}
           </div>
           <div className="flex items-center gap-2 px-3 py-2 rounded-full"
-            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}>
-            <Search className="w-3.5 h-3.5" style={{ color: "rgba(255,255,255,0.4)" }} strokeWidth={1.5} />
+            style={{ background: "rgba(155,127,212,0.08)", border: "1px solid rgba(155,127,212,0.25)" }}>
+            <Search className="w-3.5 h-3.5" style={{ color: "rgba(196,168,240,0.5)" }} strokeWidth={1.5} />
             <input type="text" placeholder="Search by address or token…" value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="bg-transparent font-mono text-[11px] outline-none w-40 sm:w-56" style={{ color: "#fff" }} />
+              className="bg-transparent font-mono text-[11px] outline-none w-40 sm:w-56" style={{ color: "#EDE0FF" }} />
           </div>
         </div>
 
-        <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
+        <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(155,127,212,0.35)" }}>
           <div className="hidden sm:grid px-5 py-3 text-[9px] font-mono uppercase tracking-[0.2em]"
-            style={{ gridTemplateColumns: "2fr 1fr 1fr 1fr 100px", borderBottom: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.45)" }}>
+            style={{ gridTemplateColumns: "2fr 1fr 1fr 1fr 100px", borderBottom: "1px solid rgba(155,127,212,0.2)", background: "rgba(155,127,212,0.08)", color: "rgba(196,168,240,0.6)" }}>
             <div>Recipient</div>
             <div className="text-right">Token</div>
             <div className="text-right">Releasable</div>
@@ -197,7 +206,8 @@ function VestingPage() {
             <Empty title="Wallet not connected" sub="Connect your wallet to see your schedules." />
           ) : loading ? (
             <div className="flex items-center justify-center py-16">
-              <div className="w-5 h-5 rounded-full border-2 border-white/20 border-t-white/70 animate-spin" />
+              <div className="w-5 h-5 rounded-full border-2 animate-spin"
+                style={{ borderColor: "rgba(155,127,212,0.2)", borderTopColor: "rgba(155,127,212,0.8)" }} />
             </div>
           ) : filtered.length === 0 ? (
             <Empty
@@ -218,11 +228,11 @@ function Empty({ title, sub }: { title: string; sub: string }) {
   return (
     <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
       <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-        style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)" }}>
-        <Timer className="w-4 h-4" style={{ color: "rgba(255,255,255,0.4)" }} strokeWidth={1.5} />
+        style={{ background: "rgba(155,127,212,0.12)", border: "1px solid rgba(155,127,212,0.3)" }}>
+        <Timer className="w-4 h-4" style={{ color: "rgba(196,168,240,0.6)" }} strokeWidth={1.5} />
       </div>
-      <p className="font-grotesk uppercase text-[13px] tracking-wider" style={{ color: "#fff" }}>{title}</p>
-      <p className="font-mono text-[10px] mt-1.5 max-w-[220px]" style={{ color: "rgba(255,255,255,0.5)" }}>{sub}</p>
+      <p className="font-grotesk uppercase text-[13px] tracking-wider" style={{ color: "#EDE0FF" }}>{title}</p>
+      <p className="font-mono text-[10px] mt-1.5 max-w-[220px]" style={{ color: "rgba(196,168,240,0.55)" }}>{sub}</p>
     </div>
   );
 }

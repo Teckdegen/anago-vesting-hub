@@ -27,6 +27,7 @@ export const Route = createFileRoute("/dashboard")({
 
 function DashboardPage() {
   const [hidden, setHidden] = useState(false);
+  const [unit, setUnit] = useState<"USD" | "MON">("USD");
   const { address, isConnected } = useAccount();
   const { locks } = useUserLocks();
   const { wallets: vestingWallets } = useUserVestings();
@@ -41,11 +42,21 @@ function DashboardPage() {
       .catch(() => {});
   }, []);
 
+  const monAmount = useMemo(() => {
+    if (!monBal.data) return null;
+    return Number(monBal.data.value) / 1e18;
+  }, [monBal.data]);
+
   const monUsd = useMemo(() => {
-    if (!monBal.data || monPrice === 0) return null;
-    const mon = Number(monBal.data.value) / 1e18;
-    return (mon * monPrice).toFixed(2);
-  }, [monBal.data, monPrice]);
+    if (monAmount === null || monPrice === 0) return null;
+    return (monAmount * monPrice).toFixed(2);
+  }, [monAmount, monPrice]);
+
+  const displayValue = useMemo(() => {
+    if (hidden) return "••••••";
+    if (unit === "MON") return monAmount !== null ? `${monAmount.toFixed(4)} MON` : "0.0000 MON";
+    return monUsd ? `$${monUsd}` : "$0.00";
+  }, [hidden, unit, monAmount, monUsd]);
 
   const activeLocks = locks.filter((l) => !l.withdrawn);
   const totalLocked = activeLocks.reduce((acc, l) => acc + l.amount, 0n);
@@ -98,19 +109,43 @@ function DashboardPage() {
         {/* ── NET WORTH HEADER ── */}
         <div className="flex items-start justify-between flex-wrap gap-4 mb-10">
           <div>
-            <p
-              className="font-mono text-[9px] uppercase tracking-[0.22em] mb-2"
-              style={{ color: "rgba(196,168,240,0.7)" }}
-            >
-              Net Worth
-            </p>
+            <div className="flex items-center gap-3 mb-2">
+              <p
+                className="font-mono text-[9px] uppercase tracking-[0.22em]"
+                style={{ color: "rgba(196,168,240,0.7)" }}
+              >
+                Net Worth
+              </p>
+              {/* USD / MON toggle */}
+              <div
+                className="flex items-center gap-0.5 p-0.5 rounded-full"
+                style={{ background: "rgba(155,127,212,0.12)", border: "1px solid rgba(155,127,212,0.3)" }}
+              >
+                {(["USD", "MON"] as const).map((u) => (
+                  <button
+                    key={u}
+                    onClick={() => setUnit(u)}
+                    className="px-2.5 py-0.5 rounded-full font-mono text-[9px] uppercase tracking-wider transition"
+                    style={
+                      unit === u
+                        ? { background: "rgba(155,127,212,0.45)", color: "#EDE0FF" }
+                        : { color: "rgba(196,168,240,0.5)" }
+                    }
+                  >
+                    {u}
+                  </button>
+                ))}
+              </div>
+            </div>
             <p className="font-grotesk text-cream leading-none tracking-tight text-[42px] sm:text-[54px]">
-              {hidden ? "••••••" : monUsd ? `$${monUsd}` : "$0.00"}
+              {displayValue}
             </p>
             <p className="font-mono text-[9px] mt-2" style={{ color: "rgba(196,168,240,0.65)" }}>
               {isConnected
                 ? monBal.data
-                  ? `${(Number(monBal.data.value) / 1e18).toFixed(4)} MON${monPrice ? ` · $${monPrice} / MON` : ""}`
+                  ? unit === "USD"
+                    ? `${monAmount?.toFixed(4) ?? "0.0000"} MON${monPrice ? ` · $${monPrice.toFixed(4)} / MON` : ""}`
+                    : monUsd ? `≈ $${monUsd} USD${monPrice ? ` · $${monPrice.toFixed(4)} / MON` : ""}` : "price unavailable"
                   : "loading…"
                 : "connect wallet to load balances"}
             </p>
@@ -239,7 +274,7 @@ function DashboardPage() {
             Total Portfolio
           </p>
           <p className="font-grotesk text-cream text-[20px] leading-none tabular-nums">
-            {hidden ? "••••••" : monUsd ? `$${monUsd}` : "$0.00"}
+            {displayValue}
           </p>
         </div>
 
