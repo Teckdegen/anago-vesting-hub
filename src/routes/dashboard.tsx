@@ -6,14 +6,10 @@ import {
   Sprout,
   BarChart2,
   ArrowRight,
-  Eye,
-  EyeOff,
-  Copy,
 } from "lucide-react";
 import { useAccount, useBalance } from "wagmi";
 import { AppShell } from "@/components/AppShell";
 import { useUserLocks, useUserVestings } from "@/lib/web3/hooks";
-import { shortAddr } from "@/lib/web3/format";
 
 export const Route = createFileRoute("/dashboard")({
   component: DashboardPage,
@@ -26,13 +22,11 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 function DashboardPage() {
-  const [hidden, setHidden] = useState(false);
   const [unit, setUnit] = useState<"USD" | "MON">("USD");
   const { address, isConnected } = useAccount();
   const { locks } = useUserLocks();
   const { wallets: vestingWallets } = useUserVestings();
 
-  // MON balance + CoinGecko price for USD value
   const monBal = useBalance({ address, query: { enabled: !!address } });
   const [monPrice, setMonPrice] = useState<number>(0);
   useEffect(() => {
@@ -53,13 +47,11 @@ function DashboardPage() {
   }, [monAmount, monPrice]);
 
   const displayValue = useMemo(() => {
-    if (hidden) return "••••••";
     if (unit === "MON") return monAmount !== null ? `${monAmount.toFixed(4)} MON` : "0.0000 MON";
     return monUsd ? `$${monUsd}` : "$0.00";
-  }, [hidden, unit, monAmount, monUsd]);
+  }, [unit, monAmount, monUsd]);
 
   const activeLocks = locks.filter((l) => !l.withdrawn);
-  const totalLocked = activeLocks.reduce((acc, l) => acc + l.amount, 0n);
   const claimableLocks = activeLocks.filter(
     (l) => Number(l.unlockAt) <= Math.floor(Date.now() / 1000),
   ).length;
@@ -67,19 +59,15 @@ function DashboardPage() {
   const POSITIONS = [
     {
       label: "Token Locks",
-      value: hidden
-        ? "••••"
-        : `${activeLocks.length} active`,
-      sub: claimableLocks
-        ? `${claimableLocks} claimable now`
-        : `${activeLocks.length} active locks`,
+      value: `${activeLocks.length} active`,
+      sub: claimableLocks ? `${claimableLocks} claimable now` : `${activeLocks.length} active locks`,
       color: "#C4A8F0",
       icon: LockKeyhole,
       href: "/lock",
     },
     {
       label: "Vesting",
-      value: hidden ? "••••" : `${vestingWallets.length} schedules`,
+      value: `${vestingWallets.length} schedules`,
       sub: `${vestingWallets.length} schedules`,
       color: "#9B7FD4",
       icon: Timer,
@@ -106,89 +94,49 @@ function DashboardPage() {
   return (
     <AppShell>
       <div className="max-w-[900px] mx-auto px-5 sm:px-8 lg:px-14 pt-10 pb-24">
+
         {/* ── NET WORTH HEADER ── */}
-        <div className="flex items-start justify-between flex-wrap gap-4 mb-10">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <p
-                className="font-mono text-[9px] uppercase tracking-[0.22em]"
-                style={{ color: "rgba(196,168,240,0.7)" }}
-              >
-                Net Worth
-              </p>
-              {/* USD / MON toggle */}
-              <div
-                className="flex items-center gap-0.5 p-0.5 rounded-full"
-                style={{ background: "rgba(155,127,212,0.12)", border: "1px solid rgba(155,127,212,0.3)" }}
-              >
-                {(["USD", "MON"] as const).map((u) => (
-                  <button
-                    key={u}
-                    onClick={() => setUnit(u)}
-                    className="px-2.5 py-0.5 rounded-full font-mono text-[9px] uppercase tracking-wider transition"
-                    style={
-                      unit === u
-                        ? { background: "rgba(155,127,212,0.45)", color: "#EDE0FF" }
-                        : { color: "rgba(196,168,240,0.5)" }
-                    }
-                  >
-                    {u}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <p className="font-grotesk text-cream leading-none tracking-tight text-[42px] sm:text-[54px]">
-              {displayValue}
-            </p>
-            <p className="font-mono text-[9px] mt-2" style={{ color: "rgba(196,168,240,0.65)" }}>
-              {isConnected
-                ? monBal.data
-                  ? unit === "USD"
-                    ? `${monAmount?.toFixed(4) ?? "0.0000"} MON${monPrice ? ` · $${monPrice.toFixed(4)} / MON` : ""}`
-                    : monUsd ? `≈ $${monUsd} USD${monPrice ? ` · $${monPrice.toFixed(4)} / MON` : ""}` : "price unavailable"
-                  : "loading…"
-                : "connect wallet to load balances"}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 self-start mt-1">
-            <button
-              onClick={() => setHidden((v) => !v)}
-              className="w-8 h-8 rounded-full flex items-center justify-center transition"
-              style={{
-                background: "rgba(155,127,212,0.12)",
-                border: "1px solid rgba(155,127,212,0.4)",
-                color: "rgba(196,168,240,0.8)",
-              }}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-2">
+            <p
+              className="font-mono text-[9px] uppercase tracking-[0.22em]"
+              style={{ color: "rgba(196,168,240,0.7)" }}
             >
-              {hidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-            </button>
-
-            {isConnected && address && (
-              <div
-                className="flex items-center gap-2 px-3.5 py-2 rounded-full"
-                style={{
-                  background: "rgba(155,127,212,0.12)",
-                  border: "1px solid rgba(155,127,212,0.35)",
-                }}
-              >
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                <span
-                  className="font-mono text-[10px]"
-                  style={{ color: "rgba(245,240,255,0.85)" }}
-                >
-                  {shortAddr(address)}
-                </span>
+              Net Worth
+            </p>
+            {/* USD / MON toggle */}
+            <div
+              className="flex items-center gap-0.5 p-0.5 rounded-full"
+              style={{ background: "rgba(155,127,212,0.12)", border: "1px solid rgba(155,127,212,0.3)" }}
+            >
+              {(["USD", "MON"] as const).map((u) => (
                 <button
-                  onClick={() => navigator.clipboard?.writeText(address)}
-                  style={{ color: "rgba(196,168,240,0.6)" }}
-                  className="hover:opacity-80 transition"
+                  key={u}
+                  onClick={() => setUnit(u)}
+                  className="px-2.5 py-0.5 rounded-full font-mono text-[9px] uppercase tracking-wider transition"
+                  style={
+                    unit === u
+                      ? { background: "rgba(155,127,212,0.45)", color: "#EDE0FF" }
+                      : { color: "rgba(196,168,240,0.5)" }
+                  }
                 >
-                  <Copy className="w-3 h-3" />
+                  {u}
                 </button>
-              </div>
-            )}
+              ))}
+            </div>
           </div>
+          <p className="font-grotesk text-cream leading-none tracking-tight text-[42px] sm:text-[54px]">
+            {displayValue}
+          </p>
+          <p className="font-mono text-[9px] mt-2" style={{ color: "rgba(196,168,240,0.65)" }}>
+            {isConnected
+              ? monBal.data
+                ? unit === "USD"
+                  ? `${monAmount?.toFixed(4) ?? "0.0000"} MON${monPrice ? ` · $${monPrice.toFixed(4)} / MON` : ""}`
+                  : monUsd ? `≈ $${monUsd} USD${monPrice ? ` · $${monPrice.toFixed(4)} / MON` : ""}` : "price unavailable"
+                : "loading…"
+              : "connect wallet to load balances"}
+          </p>
         </div>
 
         {/* ── BREAKDOWN BAR ── */}
@@ -212,12 +160,9 @@ function DashboardPage() {
             return (
               <div
                 key={p.label}
-                className="flex items-center justify-between px-6 py-5 hover:bg-white/[0.03] transition-colors"
+                className="flex items-center justify-between px-6 py-5 hover:bg-[rgba(155,127,212,0.04)] transition-colors"
                 style={{
-                  borderBottom:
-                    i < POSITIONS.length - 1
-                      ? "1px solid rgba(155,127,212,0.2)"
-                      : "none",
+                  borderBottom: i < POSITIONS.length - 1 ? "1px solid rgba(155,127,212,0.2)" : "none",
                 }}
               >
                 <div className="flex items-center gap-3">
@@ -230,15 +175,11 @@ function DashboardPage() {
                     <p className="font-grotesk uppercase text-cream text-[12px] tracking-wider">
                       {p.label}
                     </p>
-                    <p
-                      className="font-mono text-[9px] mt-0.5"
-                      style={{ color: "rgba(196,168,240,0.65)" }}
-                    >
+                    <p className="font-mono text-[9px] mt-0.5" style={{ color: "rgba(196,168,240,0.65)" }}>
                       {p.sub}
                     </p>
                   </div>
                 </div>
-
                 <div className="flex items-center gap-5">
                   <p
                     className="font-grotesk text-cream text-[18px] leading-none tabular-nums"

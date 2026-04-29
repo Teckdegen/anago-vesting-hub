@@ -34,7 +34,6 @@ export function DurationPicker({ value, onChange }: Props) {
   const [custom, setCustom] = useState<string>("");
   const isCustom = !PRESETS.some((p) => p.seconds === value);
 
-  // What to display in the input when isCustom is true
   const customDisplay = useMemo(() => {
     if (custom !== "") return custom;
     if (!isCustom) return "";
@@ -46,21 +45,19 @@ export function DurationPicker({ value, onChange }: Props) {
 
   return (
     <div>
+      {/* Preset pills */}
       <div className="flex flex-wrap gap-1.5 mb-3">
         {PRESETS.map((p) => {
           const active = value === p.seconds;
           return (
             <button
               key={p.label}
-              onClick={() => {
-                onChange(p.seconds);
-                setCustom("");
-              }}
+              onClick={() => { onChange(p.seconds); setCustom(""); }}
               className="px-3 py-1.5 rounded-full font-grotesk text-[11px] uppercase tracking-wider transition active:scale-[0.97]"
               style={{
-                background: active ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.04)",
-                color: active ? "#fff" : "rgba(255,255,255,0.55)",
-                border: `1px solid ${active ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.08)"}`,
+                background: active ? "rgba(155,127,212,0.35)" : "rgba(155,127,212,0.07)",
+                color: active ? "#EDE0FF" : "rgba(196,168,240,0.6)",
+                border: `1px solid ${active ? "rgba(155,127,212,0.7)" : "rgba(155,127,212,0.2)"}`,
               }}
             >
               {p.label}
@@ -69,11 +66,12 @@ export function DurationPicker({ value, onChange }: Props) {
         })}
       </div>
 
+      {/* Custom input + unit selector */}
       <div
         className="flex items-stretch rounded-xl overflow-hidden"
         style={{
-          background: "rgba(255,255,255,0.04)",
-          border: "1px solid rgba(255,255,255,0.1)",
+          background: "rgba(155,127,212,0.07)",
+          border: "1px solid rgba(155,127,212,0.25)",
         }}
       >
         <input
@@ -86,10 +84,10 @@ export function DurationPicker({ value, onChange }: Props) {
             const n = Number(e.target.value);
             if (Number.isFinite(n) && n > 0) onChange(Math.round(n * unit.factor));
           }}
-          className="bg-transparent font-mono text-[12px] outline-none w-full px-3 py-2.5"
-          style={{ color: "#fff" }}
+          className="bg-transparent font-mono text-[12px] outline-none w-full px-3 py-2.5 placeholder:text-[rgba(155,127,212,0.35)]"
+          style={{ color: "#EDE0FF" }}
         />
-        <div className="flex" style={{ borderLeft: "1px solid rgba(255,255,255,0.08)" }}>
+        <div className="flex" style={{ borderLeft: "1px solid rgba(155,127,212,0.2)" }}>
           {UNITS.map((u) => {
             const active = u.label === unit.label;
             return (
@@ -97,14 +95,13 @@ export function DurationPicker({ value, onChange }: Props) {
                 key={u.label}
                 onClick={() => {
                   setUnit(u);
-                  // re-interpret current custom value in the new unit if any
                   const n = Number(custom);
                   if (Number.isFinite(n) && n > 0) onChange(Math.round(n * u.factor));
                 }}
                 className="px-2.5 font-mono text-[10px] uppercase tracking-wider transition"
                 style={{
-                  background: active ? "rgba(255,255,255,0.08)" : "transparent",
-                  color: active ? "#fff" : "rgba(255,255,255,0.45)",
+                  background: active ? "rgba(155,127,212,0.3)" : "transparent",
+                  color: active ? "#EDE0FF" : "rgba(196,168,240,0.45)",
                 }}
               >
                 {u.label}
@@ -114,20 +111,21 @@ export function DurationPicker({ value, onChange }: Props) {
         </div>
       </div>
 
+      {/* Unlock date display */}
       <div
         className="mt-3 flex items-center justify-between px-3 py-2 rounded-lg"
         style={{
-          background: "rgba(255,255,255,0.025)",
-          border: "1px solid rgba(255,255,255,0.06)",
+          background: "rgba(155,127,212,0.06)",
+          border: "1px solid rgba(155,127,212,0.18)",
         }}
       >
         <span
           className="font-mono text-[9px] uppercase tracking-[0.18em]"
-          style={{ color: "rgba(255,255,255,0.4)" }}
+          style={{ color: "rgba(196,168,240,0.5)" }}
         >
           Unlocks
         </span>
-        <span className="font-mono text-[10px]" style={{ color: "rgba(255,255,255,0.85)" }}>
+        <span className="font-mono text-[10px]" style={{ color: "rgba(237,224,255,0.85)" }}>
           {unlockDate.toLocaleDateString(undefined, {
             year: "numeric",
             month: "short",

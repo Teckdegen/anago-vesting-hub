@@ -24,7 +24,6 @@ export function CreateLockDialog({ open, onClose }: Props) {
   const [duration, setDuration] = useState(30 * 86400);
   const [confirmed, setConfirmed] = useState(false);
 
-  // Track whether we should auto-trigger lock after approve confirms
   const autoLockRef = useRef(false);
 
   const parsedAmount = (() => {
@@ -50,7 +49,6 @@ export function CreateLockDialog({ open, onClose }: Props) {
   const approveRcpt = useWaitForTransactionReceipt({ hash: approveTx.data });
   const lockRcpt = useWaitForTransactionReceipt({ hash: lockTx.data });
 
-  // After approve confirms: refetch allowance and auto-trigger lock
   useEffect(() => {
     if (approveRcpt.isSuccess && autoLockRef.current) {
       autoLockRef.current = false;
@@ -68,7 +66,6 @@ export function CreateLockDialog({ open, onClose }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [approveRcpt.isSuccess]);
 
-  // Show confirmation screen when lock confirms
   useEffect(() => {
     if (lockRcpt.isSuccess) {
       setConfirmed(true);
@@ -81,8 +78,6 @@ export function CreateLockDialog({ open, onClose }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lockRcpt.isSuccess]);
 
-  // Approve with MaxUint256 so user never needs to approve again for this token,
-  // then automatically trigger the lock once approval is confirmed.
   const handleApproveAndLock = () => {
     if (!token) return;
     autoLockRef.current = true;
@@ -114,37 +109,35 @@ export function CreateLockDialog({ open, onClose }: Props) {
   };
 
   const factoryUnset = tokenLock === ZERO;
-
-  // Determine button state
   const approving = approveTx.isPending || approveRcpt.isLoading;
   const locking = lockTx.isPending || lockRcpt.isLoading;
   const busy = approving || locking;
-
   const unlockDate = new Date(Date.now() + duration * 1000);
 
   return (
     <Modal open={open} onClose={handleClose} title="New Lock">
+
       {/* ── Confirmation screen ── */}
       {confirmed ? (
         <div className="flex flex-col items-center gap-5 py-4 text-center">
           <div
             className="w-14 h-14 rounded-full flex items-center justify-center"
-            style={{ background: "rgba(100,255,160,0.12)", border: "1px solid rgba(100,255,160,0.3)" }}
+            style={{ background: "rgba(155,127,212,0.2)", border: "1px solid rgba(155,127,212,0.55)" }}
           >
-            <CheckCircle2 className="w-7 h-7" style={{ color: "rgba(100,255,160,0.9)" }} strokeWidth={1.5} />
+            <CheckCircle2 className="w-7 h-7" style={{ color: "#C4A8F0" }} strokeWidth={1.5} />
           </div>
           <div>
-            <p className="font-grotesk text-[18px] uppercase tracking-wider" style={{ color: "#fff" }}>
+            <p className="font-grotesk text-[18px] uppercase tracking-wider" style={{ color: "#EDE0FF" }}>
               Tokens Locked
             </p>
-            <p className="font-mono text-[12px] mt-1" style={{ color: "rgba(255,255,255,0.5)" }}>
+            <p className="font-mono text-[12px] mt-1" style={{ color: "rgba(196,168,240,0.6)" }}>
               Your lock has been created successfully.
             </p>
           </div>
           {token && (
             <div
               className="w-full rounded-xl px-4 py-3 space-y-2"
-              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+              style={{ background: "rgba(155,127,212,0.08)", border: "1px solid rgba(155,127,212,0.25)" }}
             >
               <ConfirmRow label="Token" value={token.symbol} />
               <ConfirmRow
@@ -163,9 +156,9 @@ export function CreateLockDialog({ open, onClose }: Props) {
             onClick={handleClose}
             className="w-full rounded-xl py-3 font-grotesk text-[12px] uppercase tracking-wider transition active:scale-[0.99]"
             style={{
-              background: "rgba(100,255,160,0.12)",
-              color: "rgba(100,255,160,0.9)",
-              border: "1px solid rgba(100,255,160,0.25)",
+              background: "rgba(155,127,212,0.2)",
+              color: "#EDE0FF",
+              border: "1px solid rgba(155,127,212,0.5)",
             }}
           >
             Done
@@ -175,10 +168,10 @@ export function CreateLockDialog({ open, onClose }: Props) {
       ) : factoryUnset ? (
         <p className="font-mono text-[11px]" style={{ color: "rgba(255,180,50,0.9)" }}>
           TokenLock address not configured. Deploy the contract and set it in{" "}
-          <code className="ml-1" style={{ color: "rgba(255,255,255,0.6)" }}>src/lib/web3/contracts.ts</code>.
+          <code className="ml-1" style={{ color: "rgba(196,168,240,0.7)" }}>src/lib/web3/contracts.ts</code>.
         </p>
       ) : !address ? (
-        <p className="font-mono text-[11px]" style={{ color: "rgba(255,255,255,0.5)" }}>
+        <p className="font-mono text-[11px]" style={{ color: "rgba(196,168,240,0.6)" }}>
           Connect your wallet to continue.
         </p>
       ) : (
@@ -199,7 +192,7 @@ export function CreateLockDialog({ open, onClose }: Props) {
                   <button
                     onClick={() => setAmount(formatAmount(token.balance, token.decimals, 8))}
                     className="font-mono text-[9px] uppercase tracking-wider transition hover:opacity-80"
-                    style={{ color: "rgba(255,255,255,0.45)" }}
+                    style={{ color: "rgba(196,168,240,0.55)" }}
                   >
                     Max: {formatAmount(token.balance, token.decimals)}
                   </button>
@@ -210,11 +203,11 @@ export function CreateLockDialog({ open, onClose }: Props) {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value.replace(/[^0-9.]/g, ""))}
                   placeholder="0.0"
-                  className="w-full bg-transparent rounded-xl px-4 py-3 font-grotesk text-[20px] outline-none transition"
+                  className="w-full bg-transparent rounded-xl px-4 py-3 font-grotesk text-[20px] outline-none transition placeholder:text-[rgba(155,127,212,0.3)]"
                   style={{
-                    color: "#fff",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    background: "rgba(255,255,255,0.04)",
+                    color: "#EDE0FF",
+                    border: "1px solid rgba(155,127,212,0.3)",
+                    background: "rgba(155,127,212,0.06)",
                   }}
                 />
               </div>
@@ -225,14 +218,14 @@ export function CreateLockDialog({ open, onClose }: Props) {
                 <DurationPicker value={duration} onChange={setDuration} />
               </div>
 
-              {/* Progress indicator when approve is pending and auto-lock is queued */}
+              {/* Step progress */}
               {approving && (
                 <div
                   className="flex items-center gap-3 px-4 py-3 rounded-xl"
-                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+                  style={{ background: "rgba(155,127,212,0.08)", border: "1px solid rgba(155,127,212,0.2)" }}
                 >
                   <StepDot active done={false} />
-                  <p className="font-mono text-[11px]" style={{ color: "rgba(255,255,255,0.7)" }}>
+                  <p className="font-mono text-[11px]" style={{ color: "rgba(196,168,240,0.8)" }}>
                     Step 1 of 2 — Approving {token.symbol}…
                   </p>
                 </div>
@@ -240,16 +233,16 @@ export function CreateLockDialog({ open, onClose }: Props) {
               {locking && (
                 <div
                   className="flex items-center gap-3 px-4 py-3 rounded-xl"
-                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+                  style={{ background: "rgba(155,127,212,0.08)", border: "1px solid rgba(155,127,212,0.2)" }}
                 >
                   <StepDot active done={false} />
-                  <p className="font-mono text-[11px]" style={{ color: "rgba(255,255,255,0.7)" }}>
+                  <p className="font-mono text-[11px]" style={{ color: "rgba(196,168,240,0.8)" }}>
                     {needsApproval ? "Step 2 of 2 — " : ""}Locking tokens…
                   </p>
                 </div>
               )}
 
-              {/* Action */}
+              {/* Action button */}
               {needsApproval ? (
                 <ActionButton
                   onClick={handleApproveAndLock}
@@ -281,9 +274,11 @@ export function CreateLockDialog({ open, onClose }: Props) {
   );
 }
 
+// ── Helpers ───────────────────────────────────────────────────────────────
+
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <p className="font-mono text-[9px] uppercase tracking-[0.18em] mb-2" style={{ color: "rgba(255,255,255,0.4)" }}>
+    <p className="font-mono text-[9px] uppercase tracking-[0.18em] mb-2" style={{ color: "rgba(196,168,240,0.55)" }}>
       {children}
     </p>
   );
@@ -292,10 +287,10 @@ function Label({ children }: { children: React.ReactNode }) {
 function ConfirmRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="font-mono text-[10px] uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)" }}>
+      <span className="font-mono text-[10px] uppercase tracking-wider" style={{ color: "rgba(196,168,240,0.5)" }}>
         {label}
       </span>
-      <span className="font-mono text-[11px]" style={{ color: "rgba(255,255,255,0.85)" }}>
+      <span className="font-mono text-[11px]" style={{ color: "rgba(237,224,255,0.9)" }}>
         {value}
       </span>
     </div>
@@ -310,8 +305,8 @@ function StepDot({ active, done }: { active: boolean; done: boolean }) {
         background: done
           ? "rgba(100,255,160,0.8)"
           : active
-          ? "rgba(255,255,255,0.7)"
-          : "rgba(255,255,255,0.2)",
+          ? "#9B7FD4"
+          : "rgba(155,127,212,0.25)",
       }}
     />
   );
@@ -332,9 +327,9 @@ function ActionButton({
       disabled={disabled}
       className="w-full rounded-xl py-3 font-grotesk text-[12px] uppercase tracking-wider transition disabled:opacity-40 active:scale-[0.99]"
       style={{
-        background: "rgba(255,255,255,0.1)",
-        color: "#fff",
-        border: "1px solid rgba(255,255,255,0.2)",
+        background: "rgba(155,127,212,0.2)",
+        color: "#EDE0FF",
+        border: "1px solid rgba(155,127,212,0.5)",
       }}
     >
       {loading ? loadingLabel : label}

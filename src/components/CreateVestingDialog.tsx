@@ -33,7 +33,6 @@ export function CreateVestingDialog({ open, onClose }: Props) {
     try { return parseUnits(amount, token.decimals); } catch { return 0n; }
   })();
 
-  // Allowance check — same pattern as CreateLockDialog
   const allowanceQ = useReadContract({
     address: token?.address,
     abi: ERC20_ABI,
@@ -54,7 +53,6 @@ export function CreateVestingDialog({ open, onClose }: Props) {
 
   if (approveRcpt.isSuccess) allowanceQ.refetch();
 
-  // Fire toast when vesting is deployed
   useEffect(() => {
     if (vestRcpt.isSuccess && token) {
       toast("success", "Vesting deployed & funded", `${token.symbol} schedule is live and releasing to the beneficiary.`);
@@ -124,7 +122,7 @@ export function CreateVestingDialog({ open, onClose }: Props) {
       {factoryUnset ? (
         <Notice tone="warn">
           VestingFactory not configured. Set the address in{" "}
-          <code style={{ color: "rgba(255,255,255,0.7)" }}>src/lib/web3/contracts.ts</code>.
+          <code style={{ color: "rgba(196,168,240,0.7)" }}>src/lib/web3/contracts.ts</code>.
         </Notice>
       ) : !address ? (
         <Notice tone="info">Connect your wallet to continue.</Notice>
@@ -148,7 +146,7 @@ export function CreateVestingDialog({ open, onClose }: Props) {
                   <button
                     onClick={() => setAmount(formatAmount(token.balance, token.decimals, 8))}
                     className="font-mono text-[9px] uppercase tracking-wider transition hover:opacity-80"
-                    style={{ color: "rgba(255,255,255,0.45)" }}
+                    style={{ color: "rgba(196,168,240,0.55)" }}
                   >
                     Max: {formatAmount(token.balance, token.decimals)}
                   </button>
@@ -159,11 +157,11 @@ export function CreateVestingDialog({ open, onClose }: Props) {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value.replace(/[^0-9.]/g, ""))}
                   placeholder="0.0"
-                  className="w-full bg-transparent rounded-xl px-4 py-3 font-grotesk text-[20px] outline-none transition"
+                  className="w-full bg-transparent rounded-xl px-4 py-3 font-grotesk text-[20px] outline-none transition placeholder:text-[rgba(155,127,212,0.3)]"
                   style={{
-                    color: "#fff",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    background: "rgba(255,255,255,0.04)",
+                    color: "#EDE0FF",
+                    border: "1px solid rgba(155,127,212,0.3)",
+                    background: "rgba(155,127,212,0.06)",
                   }}
                 />
               </div>
@@ -176,22 +174,20 @@ export function CreateVestingDialog({ open, onClose }: Props) {
                 <button
                   type="button"
                   onClick={() => {
-                    if (address) {
-                      setBeneficiary(beneficiary === address ? "" : address);
-                    }
+                    if (address) setBeneficiary(beneficiary === address ? "" : address);
                   }}
                   className="w-full flex items-center gap-3 rounded-xl px-4 py-3 mb-3 transition"
                   style={{
-                    background: beneficiary === address ? "rgba(255,255,255,0.07)" : "rgba(255,255,255,0.03)",
-                    border: `1px solid ${beneficiary === address ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.1)"}`,
+                    background: beneficiary === address ? "rgba(155,127,212,0.15)" : "rgba(155,127,212,0.05)",
+                    border: `1px solid ${beneficiary === address ? "rgba(155,127,212,0.55)" : "rgba(155,127,212,0.2)"}`,
                   }}
                 >
                   {/* checkbox */}
                   <span
                     className="w-4 h-4 rounded flex items-center justify-center shrink-0 transition"
                     style={{
-                      background: beneficiary === address ? "#fff" : "transparent",
-                      border: `1.5px solid ${beneficiary === address ? "#fff" : "rgba(255,255,255,0.35)"}`,
+                      background: beneficiary === address ? "#9B7FD4" : "transparent",
+                      border: `1.5px solid ${beneficiary === address ? "#9B7FD4" : "rgba(155,127,212,0.4)"}`,
                     }}
                   >
                     {beneficiary === address && (
@@ -201,10 +197,10 @@ export function CreateVestingDialog({ open, onClose }: Props) {
                     )}
                   </span>
                   <div className="text-left min-w-0">
-                    <p className="font-grotesk text-[12px] uppercase tracking-wider" style={{ color: "#fff" }}>
+                    <p className="font-grotesk text-[12px] uppercase tracking-wider" style={{ color: "#EDE0FF" }}>
                       Use my address
                     </p>
-                    <p className="font-mono text-[9px] truncate mt-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>
+                    <p className="font-mono text-[9px] truncate mt-0.5" style={{ color: "rgba(196,168,240,0.5)" }}>
                       {address ?? "Connect wallet first"}
                     </p>
                   </div>
@@ -215,11 +211,11 @@ export function CreateVestingDialog({ open, onClose }: Props) {
                   value={beneficiary}
                   onChange={(e) => setBeneficiary(e.target.value.trim())}
                   placeholder="or paste any 0x… address"
-                  className="w-full bg-transparent rounded-xl px-4 py-3 font-mono text-[12px] outline-none transition"
+                  className="w-full bg-transparent rounded-xl px-4 py-3 font-mono text-[12px] outline-none transition placeholder:text-[rgba(155,127,212,0.35)]"
                   style={{
-                    color: "#fff",
-                    background: "rgba(255,255,255,0.04)",
-                    border: `1px solid ${beneficiary && !validBeneficiary ? "rgba(255,100,100,0.55)" : "rgba(255,255,255,0.12)"}`,
+                    color: "#EDE0FF",
+                    background: "rgba(155,127,212,0.06)",
+                    border: `1px solid ${beneficiary && !validBeneficiary ? "rgba(255,100,100,0.55)" : "rgba(155,127,212,0.25)"}`,
                   }}
                 />
                 {beneficiary && !validBeneficiary && (
@@ -241,15 +237,15 @@ export function CreateVestingDialog({ open, onClose }: Props) {
                   onClick={() => setWithCliff((v) => !v)}
                   className="w-full flex items-center justify-between rounded-xl px-4 py-3 transition"
                   style={{
-                    background: withCliff ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.03)",
-                    border: `1px solid ${withCliff ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.08)"}`,
+                    background: withCliff ? "rgba(155,127,212,0.12)" : "rgba(155,127,212,0.05)",
+                    border: `1px solid ${withCliff ? "rgba(155,127,212,0.45)" : "rgba(155,127,212,0.18)"}`,
                   }}
                 >
                   <div className="text-left">
-                    <p className="font-grotesk text-[11px] uppercase tracking-wider" style={{ color: "#fff" }}>
+                    <p className="font-grotesk text-[11px] uppercase tracking-wider" style={{ color: "#EDE0FF" }}>
                       Add a cliff
                     </p>
-                    <p className="font-mono text-[9px] mt-0.5" style={{ color: "rgba(255,255,255,0.45)" }}>
+                    <p className="font-mono text-[9px] mt-0.5" style={{ color: "rgba(196,168,240,0.5)" }}>
                       Nothing vests until cliff date
                     </p>
                   </div>
@@ -267,7 +263,7 @@ export function CreateVestingDialog({ open, onClose }: Props) {
                 )}
               </div>
 
-              {/* Action — approve first, then deploy+fund */}
+              {/* Action */}
               {needsApproval ? (
                 <ActionButton
                   onClick={handleApprove}
@@ -309,7 +305,7 @@ export function CreateVestingDialog({ open, onClose }: Props) {
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <p className="font-mono text-[9px] uppercase tracking-[0.18em] mb-2" style={{ color: "rgba(255,255,255,0.4)" }}>
+    <p className="font-mono text-[9px] uppercase tracking-[0.18em] mb-2" style={{ color: "rgba(196,168,240,0.55)" }}>
       {children}
     </p>
   );
@@ -317,10 +313,14 @@ function Label({ children }: { children: React.ReactNode }) {
 
 function Toggle({ on }: { on: boolean }) {
   return (
-    <span className="relative w-9 h-5 rounded-full transition shrink-0"
-      style={{ background: on ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.1)" }}>
-      <span className="absolute top-0.5 w-4 h-4 rounded-full transition-all"
-        style={{ left: on ? "calc(100% - 18px)" : "2px", background: on ? "#0D0B14" : "rgba(255,255,255,0.6)" }} />
+    <span
+      className="relative w-9 h-5 rounded-full transition shrink-0"
+      style={{ background: on ? "#9B7FD4" : "rgba(155,127,212,0.15)", border: "1px solid rgba(155,127,212,0.4)" }}
+    >
+      <span
+        className="absolute top-0.5 w-4 h-4 rounded-full transition-all"
+        style={{ left: on ? "calc(100% - 18px)" : "2px", background: on ? "#0D0B14" : "rgba(155,127,212,0.5)" }}
+      />
     </span>
   );
 }
@@ -333,7 +333,7 @@ function ActionButton({ onClick, disabled, loading, label, loadingLabel }: {
       onClick={onClick}
       disabled={disabled}
       className="w-full rounded-xl py-3 font-grotesk text-[12px] uppercase tracking-wider transition disabled:opacity-40 active:scale-[0.99]"
-      style={{ background: "rgba(255,255,255,0.1)", color: "#fff", border: "1px solid rgba(255,255,255,0.2)" }}
+      style={{ background: "rgba(155,127,212,0.2)", color: "#EDE0FF", border: "1px solid rgba(155,127,212,0.5)" }}
       dangerouslySetInnerHTML={{ __html: loading ? loadingLabel : label }}
     />
   );
@@ -341,8 +341,11 @@ function ActionButton({ onClick, disabled, loading, label, loadingLabel }: {
 
 function Notice({ children, tone }: { children: React.ReactNode; tone: "info" | "warn" }) {
   return (
-    <div className="rounded-xl px-4 py-3" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
-      <p className="font-mono text-[11px] leading-relaxed" style={{ color: tone === "warn" ? "rgba(255,180,50,0.9)" : "rgba(255,255,255,0.55)" }}>
+    <div
+      className="rounded-xl px-4 py-3"
+      style={{ background: "rgba(155,127,212,0.06)", border: "1px solid rgba(155,127,212,0.2)" }}
+    >
+      <p className="font-mono text-[11px] leading-relaxed" style={{ color: tone === "warn" ? "rgba(255,180,50,0.9)" : "rgba(196,168,240,0.7)" }}>
         {children}
       </p>
     </div>
@@ -352,19 +355,23 @@ function Notice({ children, tone }: { children: React.ReactNode; tone: "info" | 
 function SuccessState({ onDone }: { onDone: () => void }) {
   return (
     <div className="text-center py-3">
-      <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
-        style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.18)" }}>
-        <CheckCircle2 className="w-5 h-5" style={{ color: "#fff" }} strokeWidth={1.5} />
+      <div
+        className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
+        style={{ background: "rgba(155,127,212,0.2)", border: "1px solid rgba(155,127,212,0.55)" }}
+      >
+        <CheckCircle2 className="w-6 h-6" style={{ color: "#C4A8F0" }} strokeWidth={1.5} />
       </div>
-      <p className="font-grotesk uppercase tracking-wider text-[14px] mb-1" style={{ color: "#fff" }}>
+      <p className="font-grotesk uppercase tracking-wider text-[16px] mb-1" style={{ color: "#EDE0FF" }}>
         Vesting deployed &amp; funded
       </p>
-      <p className="font-mono text-[10px] max-w-[280px] mx-auto leading-relaxed" style={{ color: "rgba(255,255,255,0.5)" }}>
+      <p className="font-mono text-[10px] max-w-[280px] mx-auto leading-relaxed mt-1" style={{ color: "rgba(196,168,240,0.6)" }}>
         Tokens are now locked in the vesting wallet and will release linearly to the beneficiary.
       </p>
-      <button onClick={onDone}
-        className="mt-5 rounded-xl px-5 py-2.5 font-grotesk text-[11px] uppercase tracking-wider transition"
-        style={{ background: "rgba(255,255,255,0.1)", color: "#fff", border: "1px solid rgba(255,255,255,0.2)" }}>
+      <button
+        onClick={onDone}
+        className="mt-5 w-full rounded-xl py-3 font-grotesk text-[12px] uppercase tracking-wider transition active:scale-[0.99]"
+        style={{ background: "rgba(155,127,212,0.2)", color: "#EDE0FF", border: "1px solid rgba(155,127,212,0.5)" }}
+      >
         Done
       </button>
     </div>
