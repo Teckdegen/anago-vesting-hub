@@ -57,7 +57,7 @@ export function PortfolioPage({
       {/* top nav */}
       <header className="relative z-10 max-w-[1280px] mx-auto px-6 sm:px-10 py-6 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
-          <img src="/logo.png" alt="" className="w-8 h-8 rounded-md" />
+          <img src="/logo.png" alt="" className="w-12 h-12 rounded-md" />
           <span className="font-grotesk uppercase text-[13px] tracking-wider">Dog House</span>
         </Link>
         <nav className="hidden md:flex items-center gap-6 text-[12px] uppercase font-mono tracking-wider text-cream/70">
