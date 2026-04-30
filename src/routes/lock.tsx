@@ -138,11 +138,10 @@ function LockRow({
         ]}
       />
 
-  return (
-    <div
-      className="grid sm:grid-cols-[2fr_1fr_1fr_1fr_1fr_100px] grid-cols-2 gap-2 px-5 py-3.5 items-center hover:bg-[rgba(155,127,212,0.04)] transition-colors"
-      style={{ borderBottom: isLast ? "none" : "1px solid rgba(155,127,212,0.15)" }}
-    >
+      <div
+        className="grid sm:grid-cols-[2fr_1fr_1fr_1fr_1fr_100px] grid-cols-2 gap-2 px-5 py-3.5 items-center hover:bg-[rgba(155,127,212,0.04)] transition-colors"
+        style={{ borderBottom: isLast ? "none" : "1px solid rgba(155,127,212,0.15)" }}
+      >
       <div className="flex items-center gap-2.5">
         <div
           className="w-7 h-7 rounded-full flex items-center justify-center font-grotesk text-[10px]"
