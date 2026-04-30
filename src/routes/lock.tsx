@@ -5,6 +5,8 @@ import { useAccount, useReadContracts, useWriteContract, useWaitForTransactionRe
 import { AppShell } from "@/components/AppShell";
 import { useToast } from "@/components/Toast";
 import { CreateLockDialog } from "@/components/CreateLockDialog";
+import { ConfirmModal } from "@/components/ConfirmModal";
+import { SuccessModal } from "@/components/SuccessModal";
 import { NewActionCTA } from "@/components/NewActionCTA";
 import {
   useUserLocks,
@@ -101,17 +103,18 @@ function LockRow({
   const tx = useWriteContract();
   const rcpt = useWaitForTransactionReceipt({ hash: tx.data });
   const [localWithdrawn, setLocalWithdrawn] = useState(withdrawn);
+  const [successOpen, setSuccessOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     if (rcpt.isSuccess && !localWithdrawn) {
       setLocalWithdrawn(true);
-      toast("success", "Tokens withdrawn", `${symbol} lock #${lockId.toString()} has been withdrawn.`);
+      setSuccessOpen(true);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rcpt.isSuccess]);
 
-  const onWithdraw = () => {
+  const doWithdraw = () => {
     tx.writeContract({
       address: tokenLock,
       abi: TOKEN_LOCK_ABI,
@@ -119,6 +122,21 @@ function LockRow({
       args: [lockId],
     });
   };
+
+  return (
+    <>
+      <SuccessModal
+        open={successOpen}
+        onClose={() => setSuccessOpen(false)}
+        title="Token Lock"
+        heading="Tokens Withdrawn"
+        subtext="Your locked tokens have been returned to your wallet."
+        rows={[
+          { label: "Token", value: symbol },
+          { label: "Amount", value: `${formatAmount(amount, decimals)} ${symbol}` },
+          { label: "Lock ID", value: `#${lockId.toString()}` },
+        ]}
+      />
 
   return (
     <div
@@ -154,7 +172,7 @@ function LockRow({
           <span className="font-mono text-[9px] uppercase" style={{ color: "rgba(155,127,212,0.45)" }}>Withdrawn</span>
         ) : unlocked && isOwner ? (
           <button
-            onClick={onWithdraw}
+            onClick={doWithdraw}
             disabled={tx.isPending || rcpt.isLoading}
             className="px-3 py-1 rounded-full font-grotesk text-[10px] uppercase tracking-wider disabled:opacity-50"
             style={{ background: "rgba(155,127,212,0.25)", color: "#EDE0FF", border: "1px solid rgba(155,127,212,0.6)" }}
@@ -168,6 +186,7 @@ function LockRow({
         )}
       </div>
     </div>
+    </>
   );
 }
 

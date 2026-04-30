@@ -152,17 +152,19 @@ function DashboardPage() {
 
         {/* ── VALUE ROWS ── */}
         <div
-          className="rounded-xl overflow-hidden mb-4"
+          className="rounded-xl overflow-hidden"
           style={{ border: "1px solid rgba(155,127,212,0.4)" }}
         >
           {POSITIONS.map((p, i) => {
             const Icon = p.icon;
             return (
-              <div
+              <Link
                 key={p.label}
-                className="flex items-center justify-between px-6 py-5 hover:bg-[rgba(155,127,212,0.04)] transition-colors"
+                to={p.href}
+                className="flex items-center justify-between px-6 py-5 hover:bg-[rgba(155,127,212,0.06)] transition-colors"
                 style={{
                   borderBottom: i < POSITIONS.length - 1 ? "1px solid rgba(155,127,212,0.2)" : "none",
+                  display: "flex",
                 }}
               >
                 <div className="flex items-center gap-3">
@@ -172,51 +174,26 @@ function DashboardPage() {
                   />
                   <Icon className="w-4 h-4" style={{ color: p.color }} strokeWidth={1.5} />
                   <div>
-                    <p className="font-grotesk uppercase text-cream text-[12px] tracking-wider">
+                    <p className="font-grotesk uppercase text-cream text-[13px] tracking-wider">
                       {p.label}
                     </p>
-                    <p className="font-mono text-[9px] mt-0.5" style={{ color: "rgba(196,168,240,0.65)" }}>
+                    <p className="font-mono text-[11px] mt-0.5" style={{ color: "rgba(196,168,240,0.75)" }}>
                       {p.sub}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-5">
+                <div className="flex items-center gap-4">
                   <p
                     className="font-grotesk text-cream text-[18px] leading-none tabular-nums"
                     style={{ opacity: isConnected ? 1 : 0.55 }}
                   >
                     {p.value}
                   </p>
-                  <Link
-                    to={p.href}
-                    className="flex items-center gap-1 font-mono text-[9px] uppercase tracking-widest hover:opacity-90 transition"
-                    style={{ color: p.color, opacity: 0.65 }}
-                  >
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
+                  <ArrowRight className="w-4 h-4" style={{ color: p.color, opacity: 0.6 }} />
                 </div>
-              </div>
+              </Link>
             );
           })}
-        </div>
-
-        {/* ── TOTAL ROW ── */}
-        <div
-          className="flex items-center justify-between px-6 py-4 rounded-xl"
-          style={{
-            background: "rgba(155,127,212,0.14)",
-            border: "1px solid rgba(155,127,212,0.45)",
-          }}
-        >
-          <p
-            className="font-mono text-[9px] uppercase tracking-[0.2em]"
-            style={{ color: "rgba(196,168,240,0.8)" }}
-          >
-            Total Portfolio
-          </p>
-          <p className="font-grotesk text-cream text-[20px] leading-none tabular-nums">
-            {displayValue}
-          </p>
         </div>
 
       </div>

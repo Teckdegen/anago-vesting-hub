@@ -5,6 +5,8 @@ import { useAccount, useReadContracts, useWriteContract, useWaitForTransactionRe
 import { AppShell } from "@/components/AppShell";
 import { useToast } from "@/components/Toast";
 import { CreateVestingDialog } from "@/components/CreateVestingDialog";
+import { ConfirmModal } from "@/components/ConfirmModal";
+import { SuccessModal } from "@/components/SuccessModal";
 import { NewActionCTA } from "@/components/NewActionCTA";
 import { useUserVestings } from "@/lib/web3/hooks";
 import { VESTING_WALLET_ABI } from "@/lib/web3/contracts";
@@ -40,20 +42,17 @@ function VestingRow({ wallet, isLast, onClaimed }: { wallet: WalletDetail; isLas
   const rcpt = useWaitForTransactionReceipt({ hash: tx.data });
   const isErc20 = wallet.token !== ZERO;
   const { toast } = useToast();
+  const [successOpen, setSuccessOpen] = useState(false);
 
   useEffect(() => {
     if (rcpt.isSuccess) {
-      toast(
-        "success",
-        "Tokens claimed",
-        `${wallet.tokenSymbol} released from vesting schedule.`,
-      );
+      setSuccessOpen(true);
       onClaimed();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rcpt.isSuccess]);
 
-  const release = () => {
+  const doRelease = () => {
     if (isErc20) {
       tx.writeContract({ address: wallet.address, abi: VESTING_WALLET_ABI, functionName: "release", args: [wallet.token] });
     } else {
@@ -66,34 +65,47 @@ function VestingRow({ wallet, isLast, onClaimed }: { wallet: WalletDetail; isLas
   const endDate = wallet.end ? new Date(Number(wallet.end) * 1000).toLocaleDateString() : "—";
 
   return (
-    <div className="grid sm:grid-cols-[2fr_1fr_1fr_1fr_100px] grid-cols-[2fr_1fr_100px] gap-2 px-5 py-3.5 items-center hover:bg-[rgba(155,127,212,0.04)] transition-colors"
-      style={{ borderBottom: isLast ? "none" : "1px solid rgba(155,127,212,0.15)" }}>
-      <div className="min-w-0">
-        <p className="font-grotesk uppercase text-[12px] tracking-wider truncate" style={{ color: "#EDE0FF" }}>{shortAddr(wallet.owner)}</p>
-        <p className="font-mono text-[9px] truncate" style={{ color: "rgba(196,168,240,0.5)" }}>{shortAddr(wallet.address)}</p>
+    <>
+      <SuccessModal
+        open={successOpen}
+        onClose={() => setSuccessOpen(false)}
+        title="Vesting"
+        heading="Tokens Claimed"
+        subtext="Your vested tokens have been released to the beneficiary."
+        rows={[
+          { label: "Token", value: wallet.tokenSymbol },
+          { label: "Amount", value: `${formatAmount(wallet.releasable, wallet.tokenDecimals)} ${wallet.tokenSymbol}` },
+          { label: "Schedule", value: shortAddr(wallet.address) },
+        ]}
+      />
+      <div className="grid sm:grid-cols-[2fr_1fr_1fr_1fr_100px] grid-cols-[2fr_1fr_100px] gap-2 px-5 py-3.5 items-center hover:bg-[rgba(155,127,212,0.04)] transition-colors"
+        style={{ borderBottom: isLast ? "none" : "1px solid rgba(155,127,212,0.15)" }}>
+        <div className="min-w-0">
+          <p className="font-grotesk uppercase text-[12px] tracking-wider truncate" style={{ color: "#EDE0FF" }}>{shortAddr(wallet.owner)}</p>
+          <p className="font-mono text-[9px] truncate" style={{ color: "rgba(196,168,240,0.5)" }}>{shortAddr(wallet.address)}</p>
+        </div>
+        <div className="hidden sm:block text-right font-mono text-[10px]" style={{ color: "rgba(196,168,240,0.65)" }}>{wallet.tokenSymbol}</div>
+        <div className="text-right font-grotesk text-[12px] tabular-nums" style={{ color: "rgba(237,224,255,0.9)" }}>
+          {formatAmount(wallet.releasable, wallet.tokenDecimals)}
+        </div>
+        <div className="hidden sm:block text-right font-mono text-[10px]" style={{ color: ended ? "rgba(100,220,100,0.8)" : "rgba(196,168,240,0.6)" }}>{endDate}</div>
+        <div className="text-right">
+          {wallet.releasable > 0n ? (
+            <button onClick={doRelease} disabled={tx.isPending || rcpt.isLoading}
+              className="px-3 py-1 rounded-full font-grotesk text-[10px] uppercase tracking-wider disabled:opacity-50 transition"
+              style={{ background: "rgba(155,127,212,0.25)", color: "#EDE0FF", border: "1px solid rgba(155,127,212,0.6)" }}>
+              {tx.isPending || rcpt.isLoading ? "…" : "Claim"}
+            </button>
+          ) : (
+            <span className="font-mono text-[9px] uppercase" style={{ color: "rgba(155,127,212,0.45)" }}>
+              {ended ? "Done" : "Vesting"}
+            </span>
+          )}
+        </div>
       </div>
-      <div className="hidden sm:block text-right font-mono text-[10px]" style={{ color: "rgba(196,168,240,0.65)" }}>{wallet.tokenSymbol}</div>
-      <div className="text-right font-grotesk text-[12px] tabular-nums" style={{ color: "rgba(237,224,255,0.9)" }}>
-        {formatAmount(wallet.releasable, wallet.tokenDecimals)}
-      </div>
-      <div className="hidden sm:block text-right font-mono text-[10px]" style={{ color: ended ? "rgba(100,220,100,0.8)" : "rgba(196,168,240,0.6)" }}>{endDate}</div>
-      <div className="text-right">
-        {wallet.releasable > 0n ? (
-          <button onClick={release} disabled={tx.isPending || rcpt.isLoading}
-            className="px-3 py-1 rounded-full font-grotesk text-[10px] uppercase tracking-wider disabled:opacity-50 transition"
-            style={{ background: "rgba(155,127,212,0.25)", color: "#EDE0FF", border: "1px solid rgba(155,127,212,0.6)" }}>
-            {tx.isPending || rcpt.isLoading ? "…" : "Claim"}
-          </button>
-        ) : (
-          <span className="font-mono text-[9px] uppercase" style={{ color: "rgba(155,127,212,0.45)" }}>
-            {ended ? "Done" : "Vesting"}
-          </span>
-        )}
-      </div>
-    </div>
+    </>
   );
 }
-
 function VestingPage() {
   const [activeTab, setActiveTab] = useState<Tab>("My Schedules");
   const [search, setSearch] = useState("");
