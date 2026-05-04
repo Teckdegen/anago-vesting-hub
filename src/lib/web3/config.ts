@@ -17,6 +17,8 @@ if (projectId === "REPLACE_ME" && import.meta.env.DEV) {
 
 export const monadTestnet = defineChain({
   id: 10143,
+  caipNetworkId: "eip155:10143",
+  chainNamespace: "eip155",
   name: "Monad Testnet",
   nativeCurrency: { name: "Monad", symbol: "MON", decimals: 18 },
   rpcUrls: {
