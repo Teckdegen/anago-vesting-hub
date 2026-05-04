@@ -310,3 +310,64 @@ export function useUserVestings(): {
     isLoading: beneficiaryQ.isLoading || creatorQ.isLoading || tokenReads.isLoading,
   };
 }
+
+// ──────────────────────────────────────────────────────────────────────────
+//                         TOKEN BALANCES (AUTO-DISCOVERY)
+// ──────────────────────────────────────────────────────────────────────────
+import { usePublicClient } from "wagmi";
+import { fetchAllBalances, type TokenBalance } from "./tokenBalances";
+
+/**
+ * Hook to fetch all token balances for the connected wallet
+ * Automatically discovers tokens from Monad Explorer API
+ * No need to manually enter token addresses!
+ */
+export function useAllTokenBalances(): {
+  balances: TokenBalance[];
+  isLoading: boolean;
+  error: Error | null;
+  refetch: () => void;
+} {
+  const { address } = useAccount();
+  const chainId = useChainId();
+  const publicClient = usePublicClient();
+  
+  const [balances, setBalances] = useState<TokenBalance[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    if (!address || !publicClient) {
+      setBalances([]);
+      return;
+    }
+
+    let cancelled = false;
+    setIsLoading(true);
+    setError(null);
+
+    fetchAllBalances(address, chainId, publicClient)
+      .then((results) => {
+        if (!cancelled) {
+          setBalances(results);
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err : new Error(String(err)));
+          setBalances([]);
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [address, chainId, publicClient, refreshKey]);
+
+  const refetch = () => setRefreshKey((k) => k + 1);
+
+  return { balances, isLoading, error, refetch };
+}
